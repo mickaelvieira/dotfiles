@@ -1,8 +1,12 @@
 [core]
-	excludesfile = /home/mickael/.gitignore
+	excludesfile = ~/.gitignore
+	attributesfile = ~/.gitattributes
+	editor = vim
+
 [user]
 	email = contact@mickael-vieira.com
 	name = Mickael Vieira
+
 [alias]
 	st = status
 	co = checkout
@@ -10,9 +14,24 @@
 	cl = clone
 	br = branch
 	fo = fetch origin
+
 [push]
 	default = current
+
 [difftool]
 	prompt = false
+
 [merge]
+	# Let's use meld as a merge tool
 	tool = meld
+
+[mergetool]
+	# Do not keep .orig files after merging
+	keepBackup = false
+
+[help]
+	# Automatically correct
+	# and execute mistyped commands
+	# after 2s
+	autocorrect = 20
+	

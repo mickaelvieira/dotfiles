@@ -40,6 +40,10 @@ ln -s "${df_dir}/git/.gitconfig" "${home_dir}/.gitconfig"
 rm -f "${home_dir}/.gitignore"
 ln -s "${df_dir}/git/.gitignore" "${home_dir}/.gitignore"
 
+rm -f "${home_dir}/.gitattributes"
+ln -s "${df_dir}/git/.gitattributes" "${home_dir}/.gitattributes"
+
+
 
 exit 0
 
