@@ -52,6 +52,11 @@ ln -s "${df_dir}/git/.gitignore" "${home_dir}/.gitignore"
 rm -f "${home_dir}/.gitattributes"
 ln -s "${df_dir}/git/.gitattributes" "${home_dir}/.gitattributes"
 
+info "Creating vim symlinks"
+
+rm -f "${home_dir}/.vimrc"
+ln -s "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
+
 source ~/.bashrc
 
 exit 0
