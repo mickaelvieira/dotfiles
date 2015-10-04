@@ -33,6 +33,15 @@ fi
 
 declare -r df_dir="${repo_dir}/dotfiles"
 
+info "Creating bash symlink"
+
+rm -f "${home_dir}/.bash_aliases"
+ln -s "${df_dir}/bash/.bash_aliases" "${home_dir}/.bash_aliases"
+
+rm -f "${home_dir}/.bash_functions"
+ln -s "${df_dir}/bash/.bash_functions" "${home_dir}/.bash_functions"
+
+info "Creating git symlinks"
 
 rm -f "${home_dir}/.gitconfig"
 ln -s "${df_dir}/git/.gitconfig" "${home_dir}/.gitconfig"
@@ -43,7 +52,7 @@ ln -s "${df_dir}/git/.gitignore" "${home_dir}/.gitignore"
 rm -f "${home_dir}/.gitattributes"
 ln -s "${df_dir}/git/.gitattributes" "${home_dir}/.gitattributes"
 
-
+source ~/.bashrc
 
 exit 0
 
