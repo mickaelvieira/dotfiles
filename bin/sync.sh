@@ -57,6 +57,16 @@ info "Creating vim symlinks"
 rm -f "${home_dir}/.vimrc"
 ln -s "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
 
+info "Creating MySQL symlinks"
+
+rm -f "${home_dir}/.my.cnf"
+ln -s "${df_dir}/mysql/.my.cnf" "${home_dir}/.my.cnf"
+
+info "Creating GRC symlinks"
+
+rm -f "${home_dir}/.grcat"
+ln -s "${df_dir}/grc/.grcat" "${home_dir}/.grcat"
+
 source ~/.bashrc
 
 exit 0

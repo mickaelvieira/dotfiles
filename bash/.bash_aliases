@@ -22,4 +22,4 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias rpwd='pwd -P'
 alias dev="cd ~/Development"
 alias doc="cd ~/Documents"
-
+alias dl="cd ~/Downloads"
