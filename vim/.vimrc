@@ -1,7 +1,7 @@
 
 call plug#begin('~/.vim/plugged')
 
-" # Plugin
+" Plugin
 Plug 'scrooloose/syntastic'
 Plug 'airblade/vim-gitgutter'
 Plug 'Raimondi/delimitMate'
@@ -9,6 +9,7 @@ Plug 'kien/ctrlp.vim'
 Plug 'bling/vim-airline'
 Plug 'Shougo/unite.vim'
 Plug 'suan/vim-instant-markdown'
+Plug 'altercation/vim-colors-solarized'
 
 call plug#end()
 
@@ -16,6 +17,17 @@ call plug#end()
 syntax on
 syntax enable
 set t_Co=256
+
+let g:solarized_termcolors= 256
+let g:solarized_termtrans = 0
+let g:solarized_degrade = 0
+let g:solarized_bold = 1
+let g:solarized_underline = 1
+let g:solarized_italic = 1
+let g:solarized_contrast = "normal"
+let g:solarized_visibility= "normal"
+set background=dark
+colorscheme solarized
 
 " Enable file type detection and do language-dependent indenting.
 filetype plugin on              " load filetype-specific plugins

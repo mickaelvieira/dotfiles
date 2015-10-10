@@ -67,6 +67,10 @@ info "Creating GRC symlinks"
 rm -f "${home_dir}/.grcat"
 ln -s "${df_dir}/grc/.grcat" "${home_dir}/.grcat"
 
+info "Creating Terminator syslinks"
+rm -f "${home_dir}/.config/terminator/config"
+ln -s "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
+
 source ~/.bashrc
 
 exit 0

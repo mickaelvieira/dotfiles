@@ -1,0 +1,22 @@
+[global_config]
+    window_state = "maximise"
+    title_transmit_bg_color = "#0091FF"
+[keybindings]
+[profiles]
+  [[default]]
+    background_image = None
+    background_color = "#002B36" # "#060606"
+    foreground_color = "#FFFFFF" # "#2D6CA2"
+    background_type = "solid"
+    background_darkness = 1
+    scrollback_lines = 1000
+  [[Mickael]]
+[layouts]
+  [[default]]
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+    [[[window0]]]
+      type = Window
+      parent = ""
+[plugins]

@@ -24,4 +24,4 @@ alias dev="cd ~/Development"
 alias doc="cd ~/Documents"
 alias dl="cd ~/Downloads"
 alias hst="history | less -RSFXin"
-
+alias th='thunar'
