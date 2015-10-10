@@ -32,6 +32,6 @@
 [help]
 	# Automatically correct
 	# and execute mistyped commands
-	# after 2s
-	autocorrect = 20
+	# after 1s
+	autocorrect = 10
 	

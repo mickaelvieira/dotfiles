@@ -23,3 +23,5 @@ alias rpwd='pwd -P'
 alias dev="cd ~/Development"
 alias doc="cd ~/Documents"
 alias dl="cd ~/Downloads"
+alias hst="history | less -RSFXin"
+
