@@ -34,4 +34,32 @@
 	# and execute mistyped commands
 	# after 1s
 	autocorrect = 10
-	
+
+[color]
+    ui = auto
+
+# The colors accepted are normal, black, red, green, yellow, blue, magenta, cyan and white.
+# The attributes are bold, dim, ul, blink and reverse.
+
+[color "branch"]
+    current = green         # default: green, current branch
+    local = white           # default: white, a local branch
+    remote = blue           # default red, a remote-tracking branch in refs/remotes/
+#    upstream = white       # upstream tracking branch
+#    plain = white          # other refs
+[color "diff"]
+#    meta = yellow bold     # meta information
+#    frag = magenta bold    # hunk header
+#    func = red bold        # function in hunk header
+    old = red bold          # default: red, removed lines
+    new = yellow bold       # default: green, added lines
+#    commit = white         # commit headers
+#    whitespace = red       # highlighting whitespace errors
+[color "status"]
+    added = cyan bold     # default: green, added or updated, files which are added but not committed
+    changed = red bold      # default: red, files which are changed but not added in the index
+    untracked = red bold    # default: red, files which are not tracked by Git
+    # branch (the current branch)
+    # nobranch (the color the no branch warning is shown in, defaulting to red).
+
+
