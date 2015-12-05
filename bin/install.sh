@@ -49,12 +49,13 @@ create_symlink() {
     fi
 }
 
-if [[ ! -d "${home_dir}/.config/terminator/config" ]]; then
-    mkdir -p "${home_dir}/.config/terminator/config"
+if [[ ! -d "${home_dir}/.config/terminator" ]]; then
+    mkdir -p "${home_dir}/.config/terminator"
 fi
 
 create_symlink "${df_dir}/bash/.bash_aliases" "${home_dir}/.bash_aliases"
 create_symlink "${df_dir}/bash/.bash_functions" "${home_dir}/.bash_functions"
+create_symlink "${df_dir}/bash/.dircolors" "${home_dir}/.dircolors"
 create_symlink "${df_dir}/git/.gitconfig" "${home_dir}/.gitconfig"
 create_symlink "${df_dir}/git/.gitignore" "${home_dir}/.gitignore"
 create_symlink "${df_dir}/git/.gitattributes" "${home_dir}/.gitattributes"
