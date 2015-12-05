@@ -10,6 +10,8 @@ Plug 'bling/vim-airline'
 Plug 'Shougo/unite.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
+Plug 'zenorocha/dracula-theme'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 call plug#end()
 
@@ -18,16 +20,17 @@ syntax on
 syntax enable
 set t_Co=256
 
-let g:solarized_termcolors= 256
-let g:solarized_termtrans = 0
-let g:solarized_degrade = 0
-let g:solarized_bold = 1
-let g:solarized_underline = 1
-let g:solarized_italic = 1
-let g:solarized_contrast = "normal"
-let g:solarized_visibility= "normal"
-set background=dark
-colorscheme solarized
+"let g:solarized_termcolors= 256
+"let g:solarized_termtrans = 0
+"let g:solarized_degrade = 0
+"let g:solarized_bold = 1
+"let g:solarized_underline = 1
+"let g:solarized_italic = 1
+"let g:solarized_contrast = "normal"
+"let g:solarized_visibility= "normal"
+"set background=dark
+"colorscheme solarized
+color atom-dark-256
 
 " Enable file type detection and do language-dependent indenting.
 filetype plugin on              " load filetype-specific plugins
@@ -42,7 +45,7 @@ set backspace=indent,eol,start  " Allow backspace in insert mode
 set autowrite                   " Automatically save before commands like :next and :make
 set autoread                    " Reload files changed outside vim
 set hidden                      " Hide buffers when they are abandoned
-
+set noswapfile                  " Disable use of swap files
 " Mouse
 set mouse=a                     " Enable mouse usage (all modes)
 
@@ -94,6 +97,7 @@ let g:syntastic_check_on_wq = 1
 
 let g:syntastic_error_symbol = "✗"
 let g:syntastic_warning_symbol = "⚠"
+
 let g:syntastic_javascript_checkers = ["eslint"]
 
 let g:syntastic_php_checkers=['php', 'phpcs']
