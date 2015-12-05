@@ -64,12 +64,18 @@ ask_confirm() {
     echo ${confirm_config}
 }
 
-
 # Bash configuration
 if [[ $(ask_confirm "bash" ) == "y" ]]; then
     create_symlink "${df_dir}/bash/.bash_aliases" "${home_dir}/.bash_aliases"
     create_symlink "${df_dir}/bash/.bash_functions" "${home_dir}/.bash_functions"
     create_symlink "${df_dir}/bash/.dircolors" "${home_dir}/.dircolors"
+
+    if [[ -z $(grep bash_aliases ~/.bashrc) ]]; then
+        echo "if [ -f ~/.bash_aliases ]; then source ~/.bash_aliases; fi" >> ~/.bashrc
+    fi
+    if [[ -z $(grep bash_functions ~/.bashrc) ]]; then
+        echo "if [ -f ~/.bash_functions ]; then source ~/.bash_functions; fi" >> ~/.bashrc
+    fi
 fi
 
 # Git configuration
@@ -98,7 +104,4 @@ if [[ $(ask_confirm "Terminator" ) == "y" ]]; then
     create_symlink "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
 fi
 
-source ~/.bashrc
-
 exit 0
-
