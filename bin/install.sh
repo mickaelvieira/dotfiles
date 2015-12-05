@@ -49,6 +49,10 @@ create_symlink() {
     fi
 }
 
+if [[ ! -d "${home_dir}/.config/terminator/config" ]]; then
+    mkdir -p "${home_dir}/.config/terminator/config"
+fi
+
 create_symlink "${df_dir}/bash/.bash_aliases" "${home_dir}/.bash_aliases"
 create_symlink "${df_dir}/bash/.bash_functions" "${home_dir}/.bash_functions"
 create_symlink "${df_dir}/git/.gitconfig" "${home_dir}/.gitconfig"
