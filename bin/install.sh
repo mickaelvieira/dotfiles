@@ -45,24 +45,58 @@ create_symlink() {
 
     if [[ ! -h "${symlink}" ]]; then
         info "Creating symlink ${symlink}"
-        ln -s "${target}" "${symlink}"
+        ln -s "${target}" "${symlink}"i
+    else
+        info "Symlink ${symlink} already exists"
     fi
 }
 
-if [[ ! -d "${home_dir}/.config/terminator" ]]; then
-    mkdir -p "${home_dir}/.config/terminator"
+ask_confirm() {
+    local confirm_config=""
+    local type_config="$1"
+    read -e -p "Do you want install the ${type_config} configuration? [Y/n]: " confirm_config
+
+    # default to yes
+    if [[ -z "${confirm_config}" ]]; then
+        confirm_config="y"
+    fi
+
+    echo ${confirm_config}
+}
+
+
+# Bash configuration
+if [[ $(ask_confirm "bash" ) == "y" ]]; then
+    create_symlink "${df_dir}/bash/.bash_aliases" "${home_dir}/.bash_aliases"
+    create_symlink "${df_dir}/bash/.bash_functions" "${home_dir}/.bash_functions"
+    create_symlink "${df_dir}/bash/.dircolors" "${home_dir}/.dircolors"
 fi
 
-create_symlink "${df_dir}/bash/.bash_aliases" "${home_dir}/.bash_aliases"
-create_symlink "${df_dir}/bash/.bash_functions" "${home_dir}/.bash_functions"
-create_symlink "${df_dir}/bash/.dircolors" "${home_dir}/.dircolors"
-create_symlink "${df_dir}/git/.gitconfig" "${home_dir}/.gitconfig"
-create_symlink "${df_dir}/git/.gitignore" "${home_dir}/.gitignore"
-create_symlink "${df_dir}/git/.gitattributes" "${home_dir}/.gitattributes"
-create_symlink "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
-create_symlink "${df_dir}/mysql/.my.cnf" "${home_dir}/.my.cnf"
-create_symlink "${df_dir}/grc/.grcat" "${home_dir}/.grcat"
-create_symlink "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
+# Git configuration
+if [[ $(ask_confirm "git" ) == "y" ]]; then
+    create_symlink "${df_dir}/git/.gitconfig" "${home_dir}/.gitconfig"
+    create_symlink "${df_dir}/git/.gitignore" "${home_dir}/.gitignore"
+    create_symlink "${df_dir}/git/.gitattributes" "${home_dir}/.gitattributes"
+fi
+
+# Vim configuration
+if [[ $(ask_confirm "vim" ) == "y" ]]; then
+    create_symlink "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
+fi
+
+# MySQL configuration
+if [[ $(ask_confirm "MySQL" ) == "y" ]]; then
+    create_symlink "${df_dir}/mysql/.my.cnf" "${home_dir}/.my.cnf"
+    create_symlink "${df_dir}/grc/.grcat" "${home_dir}/.grcat"
+fi
+
+# Terminator configuration
+if [[ $(ask_confirm "Terminator" ) == "y" ]]; then
+    if [[ ! -d "${home_dir}/.config/terminator" ]]; then
+        mkdir -p "${home_dir}/.config/terminator"
+    fi
+    create_symlink "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
+fi
 
 source ~/.bashrc
 
