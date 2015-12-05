@@ -1,16 +1,16 @@
 [global_config]
-    window_state = "maximise"
-    title_transmit_bg_color = "#0091FF"
+  window_state = maximise
 [keybindings]
 [profiles]
   [[default]]
-    background_image = None
-    background_color = "#002B36" # "#060606"
-    foreground_color = "#FFFFFF" # "#2D6CA2"
-    background_type = "solid"
-    background_darkness = 1
+    background_darkness = 1.0
     scrollback_lines = 1000
+    background_image = None
+    foreground_color = "#00ff00"
   [[Mickael]]
+    background_image = None
+    use_theme_colors = True
+    foreground_color = "#00ff00"
 [layouts]
   [[default]]
     [[[child1]]]
