@@ -1,0 +1,18 @@
+#!/bin/bash
+
+export PATH="$HOME/bin:$PATH"
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+export HISTCONTROL=ignoreboth
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+
+# Change grep matches color
+export GREP_COLOR='1;30;47'
+
+# Default text editor
+export EDITOR=/usr/bin/vim
+
