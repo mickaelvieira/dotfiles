@@ -71,10 +71,10 @@ if [[ $(ask_confirm "bash" ) == "y" ]]; then
     create_symlink "${df_dir}/bash/.dircolors" "${home_dir}/.dircolors"
 
     if [[ -z $(grep bash_aliases ~/.bashrc) ]]; then
-        echo "if [ -f ~/.bash_aliases ]; then source ~/.bash_aliases; fi" >> ~/.bashrc
+        echo "[[ -f ~/.bash_aliases ]] && source ~/.bash_aliases" >> ~/.bashrc
     fi
     if [[ -z $(grep bash_functions ~/.bashrc) ]]; then
-        echo "if [ -f ~/.bash_functions ]; then source ~/.bash_functions; fi" >> ~/.bashrc
+        echo "[[ -f ~/.bash_functions ]] && source ~/.bash_functions" >> ~/.bashrc
     fi
 fi
 
