@@ -30,7 +30,7 @@ set t_Co=256
 "let g:solarized_visibility= "normal"
 "set background=dark
 "colorscheme solarized
-color atom-dark-256
+"color atom-dark-256
 
 " Enable file type detection and do language-dependent indenting.
 filetype plugin on              " load filetype-specific plugins
