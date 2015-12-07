@@ -11,7 +11,7 @@ export HISTSIZE=10000
 export HISTFILESIZE=20000
 
 # Change grep matches color
-export GREP_COLOR='1;30;47'
+export GREP_COLOR='1;97;101'
 
 # Default text editor
 export EDITOR=/usr/bin/vim
@@ -20,7 +20,7 @@ export EDITOR=/usr/bin/vim
 export GIT_PS1_SHOWDIRTYSTATE=1
 
 # If something is stashed, then a '$' will be shown next to the branch name.
-export GIT_PS1_SHOWSTASHSTATE=1
+# export GIT_PS1_SHOWSTASHSTATE=1
 
 # If there're untracked files, then a '%' will be shown next to the branch name
 export GIT_PS1_SHOWUNTRACKEDFILES=1
