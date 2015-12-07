@@ -16,3 +16,18 @@ export GREP_COLOR='1;30;47'
 # Default text editor
 export EDITOR=/usr/bin/vim
 
+# unstaged (*) and staged (+) changes will be shown next to the branch name
+export GIT_PS1_SHOWDIRTYSTATE=1
+
+# If something is stashed, then a '$' will be shown next to the branch name.
+export GIT_PS1_SHOWSTASHSTATE=1
+
+# If there're untracked files, then a '%' will be shown next to the branch name
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+
+# "<" indicates you are behind,
+# ">" indicates you are ahead,
+# "<>" indicates you have diverged
+# "=" indicates that there is no difference
+export GIT_PS1_SHOWUPSTREAM="auto"
+
