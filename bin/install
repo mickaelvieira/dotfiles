@@ -37,12 +37,8 @@ create_symlink() {
         exit 1
     fi
 
-    if [[ ! -h "${symlink}" ]]; then
-        info "Creating symlink ${symlink}"
-        ln -s "${target}" "${symlink}"
-    else
-        info "Symlink ${symlink} already exists"
-    fi
+    info "Creating symlink ${symlink}"
+    ln -fs "${target}" "${symlink}"
 }
 
 ask_confirm() {
@@ -64,9 +60,9 @@ ask_confirm() {
 if [[ $(ask_confirm "bash" ) == "y" ]]; then
 
     # Make a copy of the original bashrc file
-    if [[ -f ~/.bashrc && ! -L ~/.bashrc ]]
+    if [[ -f "${home_dir}/.bashrc" && ! -L "${home_dir}/.bashrc" ]]
     then
-        mv ~/.bashrc ~/.bashrc.orig
+        mv "${home_dir}/.bashrc" "${home_dir}/.bashrc.orig"
     fi
 
     # Create bash symlinks
@@ -79,6 +75,11 @@ fi
 
 # Git configuration
 if [[ $(ask_confirm "git") == "y" ]]; then
+
+    if [[ ! -f "${home_dir}/git-prompt.sh" ]]
+    then
+        curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o "${home_dir}/git-prompt.sh"
+    fi
     declare -a files=(.gitconfig .gitignore .gitattributes)
     for item in ${files[*]}
     do

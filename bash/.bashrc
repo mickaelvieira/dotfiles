@@ -16,6 +16,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+if [[ -r ~/git-prompt.sh ]]
+then
+    source ~/git-prompt.sh
+fi
+
 declare -a files=(.bash_options .bash_export .bash_aliases .bash_prompt .bash_functions .bash_projects)
 for item in ${files[*]}
 do
