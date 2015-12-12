@@ -3,6 +3,15 @@
 
 ## Softwares
 
+- Firefox
+- Keepass2
+- Thunderbird
+- Git
+- Mercurial
+- MariaDB
+
+
+
 
 ## JS
 - [Node](https://nodejs.org)
