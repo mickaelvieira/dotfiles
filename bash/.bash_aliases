@@ -22,5 +22,6 @@ alias dev="cd ~/Development"
 alias doc="cd ~/Documents"
 alias dl="cd ~/Downloads"
 alias hst="history | less -RSFXin"
-alias th='thunar'
+
+alias wth='curl -4 http://wttr.in/London'
 
