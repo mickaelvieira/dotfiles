@@ -77,9 +77,8 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-autocmd filetype make setlocal noexpandtab
-
-set list listchars=tab:\ \ ,trail:·   " Display tabs and trailing spaces visually
+set list
+set listchars=tab:\ \ ,trail:·   " Display tabs and trailing spaces visually
 set nowrap                            " Don't wrap lines
 
 " Start scrolling when we're getting close to margins
