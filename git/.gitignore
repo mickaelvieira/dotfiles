@@ -1,4 +1,9 @@
 .idea
 *.swp
 *.orig
+*.pyc
 MICKAEL.md
+.vagrant
+__pycache__
+venv/
+

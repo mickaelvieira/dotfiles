@@ -58,9 +58,9 @@ set title                       " Show the filename in the window titlebar
 set number                      " Show line number
 set showmatch                   " Show matching brackets.
 set wildmenu                    " visual autocomplete for command menu
-" set showcmd                     " Show the (partial) command as it’s being typed
+set showcmd                     " Show the (partial) command as it’s being typed
 " set cursorline                  " Highlight current line
-" set laststatus=2                " Always show status line
+set laststatus=2                " Always show status line
 
 " Search
 set ignorecase                  " Do case insensitive matching
