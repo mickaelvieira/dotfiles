@@ -78,7 +78,7 @@ set softtabstop=4
 set shiftwidth=4
 
 set list
-set listchars=tab:\ \ ,trail:·   " Display tabs and trailing spaces visually
+set listchars=tab:!.,trail:·   " Display tabs and trailing spaces visually
 set nowrap                            " Don't wrap lines
 
 " Start scrolling when we're getting close to margins
