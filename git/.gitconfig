@@ -6,11 +6,13 @@
 [user]
 	email = contact@mickael-vieira.com
 	name = Mickael Vieira
+	signingkey = A71A22C9
 
 [alias]
 	st = status
 	co = checkout
-	ci = commit
+    ci = commit -m
+    sc = commit -S -m
 	cl = clone
 	br = branch
 	fo = fetch origin
