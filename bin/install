@@ -78,6 +78,7 @@ if [[ $(ask_confirm "git") == "y" ]]; then
 
     if [[ ! -f "${home_dir}/git-prompt.sh" ]]
     then
+        info "Fetching git-prompt.sh"
         curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o "${home_dir}/git-prompt.sh"
     fi
     declare -a files=(.gitconfig .gitignore .gitattributes)
@@ -97,9 +98,14 @@ if [[ $(ask_confirm "vim") == "y" ]]; then
 
     create_symlink "${df_dir}/vim/.vim" "${home_dir}/.vim"
     create_symlink "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
-    curl -fLo ~/.vim/after/ftplugin/markdown/instant-markdown.vim https://raw.githubusercontent.com/suan/vim-instant-markdown/master/after/ftplugin/markdown/instant-markdown.vim
-    curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    info "Don't forget to run PlugInstall"
+
+    info "Fetching instant-markdown.vim "
+    curl -s https://raw.githubusercontent.com/suan/vim-instant-markdown/master/after/ftplugin/markdown/instant-markdown.vim -o "${home_dir}/.vim/after/ftplugin/markdown/instant-markdown.vim"
+
+    info "Fetching plug.vim"
+    curl -s https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${home_dir}/.vim/autoload/plug.vim" 
+
+    info "Don't forget to run PlugInstall!"
 fi
 
 # MySQL configuration
