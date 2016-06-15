@@ -50,11 +50,11 @@
 #    upstream = white       # upstream tracking branch
 #    plain = white          # other refs
 [color "diff"]
-    meta = blue     # meta information
+    meta = white     # meta information
 #    frag = magenta bold    # hunk header
 #    func = red bold        # function in hunk header
 #    old = red bold          # default: red, removed lines
-    new = white       # default: green, added lines
+    new = blue       # default: green, added lines
 #    commit = white         # commit headers
 #    whitespace = red       # highlighting whitespace errors
 [color "status"]
