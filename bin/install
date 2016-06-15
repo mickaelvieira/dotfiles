@@ -97,6 +97,7 @@ if [[ $(ask_confirm "vim") == "y" ]]; then
 
     create_symlink "${df_dir}/vim/.vim" "${home_dir}/.vim"
     create_symlink "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
+    curl -fLo ~/.vim/after/ftplugin/markdown/instant-markdown.vim https://raw.githubusercontent.com/suan/vim-instant-markdown/master/after/ftplugin/markdown/instant-markdown.vim
     curl -fLo ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     info "Don't forget to run PlugInstall"
 fi
