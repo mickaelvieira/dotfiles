@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+# set -x
+
+
+# Ask sudo upfront
+sudo -s
+
+sudo apt-get install -y nodejs
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+
+sudo npm install -g bower
+
+sudo apt-get install -y php5 mysql-server libapache2-mod-auth-mysql php5-mysql
+
+
+sudo https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+sudo chmod +x /usr/local/bin/composer
+
