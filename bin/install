@@ -8,15 +8,20 @@ set -o pipefail
 declare -r RESET_ALL="\x1b[0m"
 declare -r BG_RED="\x1b[41m"
 declare -r BG_BLUE="\x1b[44m"
+declare -r BG_MAGENTA="\x1b[45m"
 declare -r FG_WHITE="\x1b[97m"
 declare -r FG_RED="\x1b[31m"
 declare -r FG_BLUE="\x1b[34m"
+declare -r FG_MAGENTA="\x1b[35m"
 
 error() {
     echo -e "${BG_RED}${FG_WHITE}ERROR${RESET_ALL}  ${FG_RED}$1${RESET_ALL}" >&2
 }
 info() {
     echo -e "${BG_BLUE}${FG_WHITE}INFO${RESET_ALL}  ${FG_BLUE}$1${RESET_ALL}"
+}
+warning() {
+    echo -e "${BG_MAGENTA}${FG_WHITE}WARNING${RESET_ALL}  ${FG_MAGENTA}$1${RESET_ALL}"
 }
 
 declare -r home_dir=${HOME:-}
@@ -105,13 +110,14 @@ if [[ $(ask_confirm "vim") == "y" ]]; then
     info "Fetching plug.vim"
     curl -s https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${home_dir}/.vim/autoload/plug.vim" 
 
-    info "Don't forget to run PlugInstall!"
+    warning "Don't forget to run PlugInstall!"
 fi
 
 # MySQL configuration
 if [[ $(ask_confirm "MySQL") == "y" ]]; then
     create_symlink "${df_dir}/mysql/.my.cnf" "${home_dir}/.my.cnf"
     create_symlink "${df_dir}/grc/.grcat" "${home_dir}/.grcat"
+    warning "Don't forget to install grc 'sudo apt-get install -y grc'"
 fi
 
 # Terminator configuration
@@ -123,3 +129,4 @@ if [[ $(ask_confirm "Terminator") == "y" ]]; then
 fi
 
 exit 0
+
