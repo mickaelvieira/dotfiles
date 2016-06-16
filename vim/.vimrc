@@ -32,6 +32,12 @@ set t_Co=256
 "colorscheme solarized
 "color atom-dark-256
 
+" Airline theme
+let g:airline_theme = "darcula"
+"
+" Vim colorscheme
+colorscheme py-darcula
+
 " Enable file type detection and do language-dependent indenting.
 filetype plugin on              " load filetype-specific plugins
 filetype indent on              " load filetype-specific indent files
@@ -77,9 +83,11 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 
-set list
-set listchars=tab:!.,trail:·   " Display tabs and trailing spaces visually
-set nowrap                            " Don't wrap lines
+"set list
+"set listchars=tab:!·,trail:·   " Display tabs and trailing spaces visually
+set nowrap                     " Don't wrap lines
+
+autocmd BufWritePre * :%s/\s\+$//e
 
 " Start scrolling when we're getting close to margins
 set scrolloff=10
