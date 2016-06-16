@@ -2,6 +2,7 @@
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
 	editor = vim
+	autocrlf = input
 
 [user]
 	email = contact@mickael-vieira.com
@@ -50,11 +51,11 @@
 #    upstream = white       # upstream tracking branch
 #    plain = white          # other refs
 [color "diff"]
-    meta = white     # meta information
+	meta = blue black bold
 #    frag = magenta bold    # hunk header
 #    func = red bold        # function in hunk header
 #    old = red bold          # default: red, removed lines
-    new = blue       # default: green, added lines
+    new = white black       # default: green, added lines
 #    commit = white         # commit headers
 #    whitespace = red       # highlighting whitespace errors
 [color "status"]
