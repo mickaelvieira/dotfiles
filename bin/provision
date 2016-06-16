@@ -3,21 +3,45 @@
 set -o nounset
 set -o errexit
 set -o pipefail
-# set -x
+set -x
 
+# Let's do our shit in our home directory
+cd ~
 
 # Ask sudo upfront
-sudo -s
+#sudo -s
 
-sudo apt-get install -y nodejs
-sudo ln -s /usr/bin/nodejs /usr/bin/node
+# Install NodeJS
+#sudo apt-get install -y nodejs
+#sudo ln -s /usr/bin/nodejs /usr/bin/node
 
-sudo npm install -g bower
-
-sudo apt-get install -y php5 mysql-server libapache2-mod-auth-mysql php5-mysql
+#apt-get install -y php5 mysql-server libapache2-mod-auth-mysql php5-mysql
 
 
-sudo https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer
-sudo chmod +x /usr/local/bin/composer
+
+curl -s https://composer.github.io/installer.sig -o installer.sig
+curl -s https://getcomposer.org/installer -o composer-setup.php
+
+composer_signature=$(cat "./installer.sig")
+
+check_signature() {
+    local script=("if (hash_file('SHA384', 'composer-setup.php' === '${composer_signature}') { echo 'yop'; } else { echo 'nope'; }")
+    local cmd=(php -r "${script[@]}")
+    "${cmd[@]}"
+}
+
+
+check_signature
+
+exit
+
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+
+
+#mv composer.phar /usr/local/bin/composer
+#chmod u+x /usr/local/bin/composer
+
+
+#pip install mycli
 
