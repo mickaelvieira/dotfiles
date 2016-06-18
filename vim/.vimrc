@@ -10,7 +10,7 @@ Plug 'bling/vim-airline'
 Plug 'Shougo/unite.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
-Plug 'zenorocha/dracula-theme'
+Plug 'dracula/vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 call plug#end()
@@ -19,7 +19,7 @@ call plug#end()
 syntax on
 syntax enable
 set t_Co=256
-
+color dracula
 "let g:solarized_termcolors= 256
 "let g:solarized_termtrans = 0
 "let g:solarized_degrade = 0
@@ -33,10 +33,10 @@ set t_Co=256
 "color atom-dark-256
 
 " Airline theme
-let g:airline_theme = "darcula"
+"let g:airline_theme = "darcula"
 "
 " Vim colorscheme
-colorscheme py-darcula
+"colorscheme py-darcula
 
 " Enable file type detection and do language-dependent indenting.
 filetype plugin on              " load filetype-specific plugins
