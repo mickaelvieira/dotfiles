@@ -6,4 +6,5 @@ MICKAEL.md
 .vagrant
 __pycache__
 venv/
+.DS_Store
 
