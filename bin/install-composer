@@ -5,7 +5,7 @@ set -o errexit
 set -o pipefail
 #set -x
 
-declare -r composer_bin="/usr/local/bin/composer.phar"
+declare -r composer_bin="/usr/local/bin/composer"
 declare -r composer_signature="installer.sig"
 declare -r composer_setup="composer-setup.php"
 
@@ -27,14 +27,8 @@ remove_composer_installer() {
 
 is_installer_checksum_valid() {
     local checksum=$(read_composer_signature)
-    local script=("if (hash_file(\"SHA384\", \"${composer_setup}\") === \"${checksum}\") { echo \"y\"; } else { echo \"n\"; }")
-    local cmd=(php -r "${script[@]}")
-    "${cmd[@]}"
-}
-
-build_composer() {
-    local cmd=(php "${composer_setup}")
-    "${cmd[@]}"
+    local script="if (hash_file(\"SHA384\", \"${composer_setup}\") === \"${checksum}\") { echo \"y\"; } else { echo \"n\"; }"
+    echo $(php -r "${script}")
 }
 
 cd /tmp
@@ -56,7 +50,7 @@ else
         info "Composer installer checksun is verified"
         info "Building Composer..."
 
-        build_composer
+        php "${composer_setup}"
 
         info "Moving binary file and changing file permission using 'sudo'..."
         sudo mv composer.phar "${composer_bin}"
@@ -69,6 +63,7 @@ else
         info "Composer was not installed"
     fi
 
+    info "Clean up"
     remove_composer_signature
     remove_composer_installer
 fi
