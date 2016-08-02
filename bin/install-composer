@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -x
+
+declare -r composer_bin="/usr/local/bin/composer.phar"
+declare -r composer_signature="installer.sig"
+declare -r composer_setup="composer-setup.php"
+
+info() {
+    echo -e "> $1"
+}
+
+remove_composer_signature() {
+    rm "${composer_signature}"
+}
+
+read_composer_signature() {
+    echo $(cat "${composer_signature}")
+}
+
+remove_composer_installer() {
+    rm "${composer_setup}"
+}
+
+is_installer_checksum_valid() {
+    local checksum=$(read_composer_signature)
+    local script=("if (hash_file(\"SHA384\", \"${composer_setup}\") === \"${checksum}\") { echo \"y\"; } else { echo \"n\"; }")
+    local cmd=(php -r "${script[@]}")
+    "${cmd[@]}"
+}
+
+build_composer() {
+    local cmd=(php "${composer_setup}")
+    "${cmd[@]}"
+}
+
+cd /tmp
+info "Working directory: $(pwd -P)"
+
+if [[ -f "${composer_bin}" ]];
+then
+    info "Composer is already installed in ${composer_bin}"
+    info "Please run 'sudo ${composer_bin} self-update' to get the latest version"
+else
+    info "Downloading installer and signature..."
+
+    curl -s https://composer.github.io/installer.sig -o "${composer_signature}"
+    curl -s https://getcomposer.org/installer -o "${composer_setup}"
+
+    info "Checking Composer installer checksum..."
+    if [[ $(is_installer_checksum_valid) == 'y' ]];
+    then
+        info "Composer installer checksun is verified"
+        info "Building Composer..."
+
+        build_composer
+
+        info "Moving binary file and changing file permission using 'sudo'..."
+        sudo mv composer.phar "${composer_bin}"
+        sudo chmod u+x "${composer_bin}"
+
+        info "Composer was installed: '$(command -v composer)'"
+
+    else
+        info "Composer installer is corrupt!!!"
+        info "Composer was not installed"
+    fi
+
+    remove_composer_signature
+    remove_composer_installer
+fi
+
+exit 0
+
