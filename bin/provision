@@ -3,10 +3,30 @@
 set -o nounset
 set -o errexit
 set -o pipefail
-set -x
+#set -x
 
+declare -r RESET_ALL="\x1b[0m"
+declare -r BG_RED="\x1b[41m"
+declare -r BG_BLUE="\x1b[44m"
+declare -r BG_MAGENTA="\x1b[45m"
+declare -r FG_WHITE="\x1b[97m"
+declare -r FG_RED="\x1b[31m"
+declare -r FG_BLUE="\x1b[34m"
+declare -r FG_MAGENTA="\x1b[35m"
+
+error() {
+    echo -e "${BG_RED}${FG_WHITE}ERROR${RESET_ALL}  ${FG_RED}$1${RESET_ALL}" >&2
+}
+info() {
+    echo -e "${BG_BLUE}${FG_WHITE}INFO${RESET_ALL}  ${FG_BLUE}$1${RESET_ALL}"
+}
+warning() {
+    echo -e "${BG_MAGENTA}${FG_WHITE}WARNING${RESET_ALL}  ${FG_MAGENTA}$1${RESET_ALL}"
+}
+
+info "Working directory: $(pwd -P)"
 # Let's do our shit in our home directory
-cd ~
+# cd ~
 
 # Ask sudo upfront
 #sudo -s
@@ -16,32 +36,6 @@ cd ~
 #sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 #apt-get install -y php5 mysql-server libapache2-mod-auth-mysql php5-mysql
-
-
-
-curl -s https://composer.github.io/installer.sig -o installer.sig
-curl -s https://getcomposer.org/installer -o composer-setup.php
-
-composer_signature=$(cat "./installer.sig")
-
-check_signature() {
-    local script=("if (hash_file('SHA384', 'composer-setup.php' === '${composer_signature}') { echo 'yop'; } else { echo 'nope'; }")
-    local cmd=(php -r "${script[@]}")
-    "${cmd[@]}"
-}
-
-
-check_signature
-
-exit
-
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
-
-
-#mv composer.phar /usr/local/bin/composer
-#chmod u+x /usr/local/bin/composer
-
 
 #pip install mycli
 
