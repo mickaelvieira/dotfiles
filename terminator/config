@@ -1,22 +1,23 @@
 [global_config]
   window_state = maximise
 [keybindings]
-[profiles]
-  [[default]]
-    background_darkness = 1.0
-    scrollback_lines = 1000
-    background_image = None
-    foreground_color = "#00ff00"
-  [[Mickael]]
-    background_image = None
-    use_theme_colors = True
-    foreground_color = "#00ff00"
 [layouts]
   [[default]]
     [[[child1]]]
-      type = Terminal
       parent = window0
+      profile = default
+      type = Terminal
     [[[window0]]]
-      type = Window
       parent = ""
+      type = Window
 [plugins]
+[profiles]
+  [[default]]
+    background_darkness = 1.0
+    background_image = None
+    foreground_color = "#9341cc"
+    scrollback_lines = 1000
+  [[Mickael]]
+    background_image = None
+    foreground_color = "#00ff00"
+    use_theme_colors = True
