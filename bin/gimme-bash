@@ -1,0 +1,6 @@
+#!/bin/sh
+
+declare -r user=$(whoami)
+
+/usr/bin/chsh -s /bin/bash "${user}"
+
