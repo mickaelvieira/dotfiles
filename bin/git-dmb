@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script will delete locally all merged branches
+# It will ignores branches such master, dev, staging, etc...
+
 set -o nounset
 set -o errexit
 set -o pipefail
