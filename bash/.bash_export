@@ -43,3 +43,6 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 # "=" indicates that there is no difference
 export GIT_PS1_SHOWUPSTREAM="auto"
 
+
+export PATH="/home/mickael/Development/dotfiles/bin:/home/mickael/bin:/home/mickael/.gem/ruby/2.3.0/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/mickael/.fzf/bin"
+

@@ -27,7 +27,8 @@ warning() {
 declare -r home_dir=${HOME:-}
 declare -r df_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
-if [[ -z "${home_dir}" ]]; then
+if [[ -z "${home_dir}" ]];
+then
     error "HOME directory cannot be an empty string"
     exit 1
 fi
@@ -36,8 +37,16 @@ create_symlink() {
 
     local target="$1"
     local symlink="$2"
+    local backup="${symlink}.orig"
 
-    if [[ ! -f "${target}" && ! -d "${target}" ]]; then
+    if [[ -f "${symlink}" || -d "${symlink}" ]];
+    then
+        info "Moving existing location ${symlink} to ${backup}"
+        mv "${symlink}" "${backup}"
+    fi
+
+    if [[ ! -f "${target}" && ! -d "${target}" ]];
+    then
         error "Target ${target} is neither a file nor a directory"
         exit 1
     fi
@@ -54,7 +63,8 @@ ask_confirm() {
     read -e -p "Do you want install the ${type_config} configuration? [Y/n]: " confirm_config
 
     # default to yes
-    if [[ -z "${confirm_config}" ]]; then
+    if [[ -z "${confirm_config}" ]];
+    then
         confirm_config="y"
     fi
 
@@ -64,42 +74,32 @@ ask_confirm() {
 # Bash configuration
 if [[ $(ask_confirm "bash" ) == "y" ]]; then
 
-    # Make a copy of the original bashrc file
-    if [[ -f "${home_dir}/.bashrc" && ! -L "${home_dir}/.bashrc" ]]
-    then
-        mv "${home_dir}/.bashrc" "${home_dir}/.bashrc.orig"
-    fi
-
     # Create bash symlinks
     declare -a files=(.bashrc .bash_prompt .bash_options .bash_export .bash_profile .bash_aliases .bash_functions .dircolors)
-    for item in ${files[*]}
+    for file in ${files[*]}
     do
-        create_symlink "${df_dir}/bash/$item" "${home_dir}/$item"
+        create_symlink "${df_dir}/bash/$file" "${home_dir}/$file"
     done
 fi
 
 # Git configuration
 if [[ $(ask_confirm "git") == "y" ]]; then
 
-    if [[ ! -f "${home_dir}/git-prompt.sh" ]]
+    if [[ ! -f "${home_dir}/git-prompt.sh" ]];
     then
         info "Fetching git-prompt.sh"
         curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o "${home_dir}/git-prompt.sh"
     fi
+
     declare -a files=(.gitconfig .gitignore .gitattributes)
-    for item in ${files[*]}
+    for file in ${files[*]}
     do
-        create_symlink "${df_dir}/git/$item" "${home_dir}/$item"
+        create_symlink "${df_dir}/git/$file" "${home_dir}/$file"
     done
 fi
 
 # Vim configuration
 if [[ $(ask_confirm "vim") == "y" ]]; then
-
-    if [[ -d "${home_dir}/.vim" && ! -L "${home_dir}/.vim" ]]
-    then
-        mv "${home_dir}/.vim" "${home_dir}/.vim.orig"
-    fi
 
     create_symlink "${df_dir}/vim/.vim" "${home_dir}/.vim"
     create_symlink "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
@@ -108,7 +108,7 @@ if [[ $(ask_confirm "vim") == "y" ]]; then
     curl -s https://raw.githubusercontent.com/suan/vim-instant-markdown/master/after/ftplugin/markdown/instant-markdown.vim -o "${home_dir}/.vim/after/ftplugin/markdown/instant-markdown.vim"
 
     info "Fetching plug.vim"
-    curl -s https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${home_dir}/.vim/autoload/plug.vim" 
+    curl -s https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${home_dir}/.vim/autoload/plug.vim"
 
     warning "Don't forget to run PlugInstall!"
 fi
@@ -127,6 +127,10 @@ if [[ $(ask_confirm "Terminator") == "y" ]]; then
     fi
     create_symlink "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
 fi
+
+echo -e "\nexport PATH=\"${df_dir}/bin:$PATH\"\n" >> "${home_dir}/.bash_export"
+
+source ~/.bashrc
 
 exit 0
 
