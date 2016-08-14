@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -x
+
+sudo pacman -Syu
+sudo pacman -Sc
+
+exit 0
+
