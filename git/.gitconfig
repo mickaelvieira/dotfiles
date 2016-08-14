@@ -65,4 +65,5 @@
     # branch (the current branch)
     # nobranch (the color the no branch warning is shown in, defaulting to red).
 
-
+[diff]
+	compactionHeuristic = 1
