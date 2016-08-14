@@ -1,6 +1,15 @@
 #!/bin/bash
 
-export PATH="$HOME/bin:$HOME/.gem/ruby/2.3.0/bin:$PATH"
+find_dotfiles() {
+    local this_file=$(ls -l ${BASH_SOURCE[0]} | awk '{print $11}')
+    local df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
+
+    echo $df_dir
+}
+
+export DOTFILES_DIR=$(find_dotfiles)
+
+export PATH="$HOME/bin:$DOTFILES_DIR/bin:$HOME/.gem/ruby/2.3.0/bin:$PATH"
 
 # https://wiki.archlinux.org/index.php/Color_output_in_console#less
 export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
@@ -42,7 +51,4 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 # "<>" indicates you have diverged
 # "=" indicates that there is no difference
 export GIT_PS1_SHOWUPSTREAM="auto"
-
-
-export PATH="/home/mickael/Development/dotfiles/bin:/home/mickael/bin:/home/mickael/.gem/ruby/2.3.0/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/home/mickael/.fzf/bin"
 
