@@ -1,0 +1,181 @@
+#!/bin/bash
+
+#############################################################################
+#                              Tasks Runner                                 #
+#############################################################################
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -x
+
+info() {
+    echo -e "> $1"
+}
+
+error() {
+    echo -e "! $1" 1>&2
+    exit 1
+}
+
+declare -r tmux_session="tasks-runner"
+declare -r base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+
+declare -a tasks=( watch )
+declare -a entries=($(find ./html/js -name index.js))
+
+cd "${base_dir}"
+
+info "Working directory $(pwd -P)"
+
+# Add node modules binaries to the path
+export PATH="${base_dir}/node_modules/.bin:$PATH"
+
+usage() {
+    help="\n"
+    help+="Usage:\n"
+    help+=" $0 [task]\n"
+    help+="Tasks: \n"
+    help+=" ${tasks[@]}\n"
+    echo -e ${help} 1>&2
+    exit 1
+}
+
+check_dependencies() {
+    local dependencies=(tmux npm browserify exorcist watchify uglifyjs karma mocha phantomjs)
+    for dependency in ${dependencies[@]}
+    do
+        command -v "${dependency}" >/dev/null 2>&1 || error "'${dependency}' is required but it is not installed."
+    done
+}
+
+start_tmux() {
+    tmux new-session -s "${tmux_session}" -d
+}
+
+clean() {
+    rm -rf "./dist/*"
+    mkdir -p "./dist/js"
+    mkdir -p "./dist/css"
+}
+
+run_build_js() {
+
+    info "Starting Browserify"
+
+    for entry in ${entries[@]}
+    do
+        build_entry "${entry}"
+    done
+}
+
+build_entry() {
+
+    local entry="$1"
+    local dir=$(dirname ${entry})
+    local bundle="${dir}/bundle.js"
+    local name=${dir##*/}
+
+    info "Bundle '${name}': ${entry} > ${bundle}"
+
+   browserify -e ${entry} --debug | uglifyjs --compress --mangle --screw-ie8 --output "${bundle}"
+}
+
+run_watch() {
+
+    info "Starting Watchify"
+
+    for entry in ${entries[@]}
+    do
+        watch_entry "${entry}"
+    done
+}
+
+watch_entry() {
+
+    local entry="$1"
+    local dir=$(dirname ${entry})
+    local bundle="bundle.js"
+    local map="bundle.js.map"
+    local name=${dir##*/}
+
+    info "Bundle '${name}': ${entry} > ${bundle} ( ${map} )"
+
+    tmux new-window -c "${base_dir}" -n ${name} "watchify ${entry} -v -d -o \"exorcist ${dir}/${map} > ${dir}/${bundle}\""
+}
+run_karma() {
+
+    info "Starting Karma test runner"
+
+    tmux new-window -c "${base_dir}" -n "karma" "karma start"
+}
+
+watch() {
+
+    info "Starting to watch"
+
+    start_tmux
+    run_karma
+    run_watch
+
+    tmux ls
+    tmux list-windows
+
+    tmux attach-session -t "${tmux_session}"
+}
+
+build() {
+
+    polyfills
+    vendors
+    build_js
+}
+
+build_js() {
+
+    info "Starting to build JS"
+    run_build_js
+}
+
+polyfills() {
+
+    info "Starting to build Polyfills"
+
+    local target="polyfills.min.js"
+    local files=()
+
+    cat ${files[@]} | uglifyjs --compress --mangle --screw-ie8 --output "${target}"
+}
+
+vendors() {
+
+    info "Starting to build vendor libraries"
+
+    local target="vendor.min.js"
+    local files=()
+
+    cat ${files[@]} | uglifyjs --compress --mangle --screw-ie8 --output "${target}"
+}
+
+# Make all dependencies are installed
+check_dependencies
+
+declare -r task="${1:-}"
+
+# Show help if no tasks is provided
+if [[ -z "${task}" ]]
+then
+    usage
+fi
+
+# Make sure the task is a valid one
+declare test=$(type -t "${task}")
+# @TODO need to check the task against the tasks list instead
+if [[ -z ${test} || ${test} != "function" ]]
+then
+    usage
+fi
+
+eval "${task}"
+
+exit 0
