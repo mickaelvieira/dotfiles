@@ -113,6 +113,11 @@ if [[ $(ask_confirm "vim") == "y" ]]; then
     warning "Don't forget to run PlugInstall!"
 fi
 
+# Tmux configuration
+if [[ $(ask_confirm "tmux") == "y" ]]; then
+    create_symlink "${df_dir}/tmux/.tmux.conf" "${home_dir}/.tmux.conf"
+fi
+
 # MySQL configuration
 if [[ $(ask_confirm "MySQL") == "y" ]]; then
     create_symlink "${df_dir}/mysql/.my.cnf" "${home_dir}/.my.cnf"
@@ -127,8 +132,6 @@ if [[ $(ask_confirm "Terminator") == "y" ]]; then
     fi
     create_symlink "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
 fi
-
-echo -e "\nexport PATH=\"${df_dir}/bin:$PATH\"\n" >> "${home_dir}/.bash_export"
 
 source ~/.bashrc
 
