@@ -13,12 +13,12 @@ info() {
 }
 
 error() {
-    echo -e "\x1b[41m\x21 \x1b[0m $1" 1>&2
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m $1" 1>&2
     exit 1
 }
 
 warning() {
-    echo -e "\x1b[35m\x21 \x1b[0m $1"
+    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
 }
 
 info "Working directory: $(pwd -P)"

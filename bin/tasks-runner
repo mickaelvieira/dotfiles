@@ -10,23 +10,25 @@ set -o pipefail
 #set -x
 
 info() {
-    echo -e "> $1"
+    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
 }
 
 error() {
-    echo -e "! $1" 1>&2
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m $1" 1>&2
     exit 1
 }
 
-declare -r tmux_session="tasks-runner"
-declare -r base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+warning() {
+    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
+}
 
-declare -a tasks=( watch )
-declare -a entries=($(find ./html/js -name index.js))
+declare -r tmux_session="tasks-runner"
+declare -a tasks=( watch unwatch test build_js vendors polyfills)
+#declare -r base_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 cd "${base_dir}"
 
-info "Working directory $(pwd -P)"
+declare -a entries=($(find ./html/js -name index.js))
 
 # Add node modules binaries to the path
 export PATH="${base_dir}/node_modules/.bin:$PATH"
@@ -34,23 +36,49 @@ export PATH="${base_dir}/node_modules/.bin:$PATH"
 usage() {
     help="\n"
     help+="Usage:\n"
-    help+=" $0 [task]\n"
-    help+="Tasks: \n"
+    help+=" $(basename $0) [task]\n\n"
+    help+="Tasks available: \n"
     help+=" ${tasks[@]}\n"
     echo -e ${help} 1>&2
     exit 1
 }
 
 check_dependencies() {
+
     local dependencies=(tmux npm browserify exorcist watchify uglifyjs karma mocha phantomjs)
+
     for dependency in ${dependencies[@]}
     do
         command -v "${dependency}" >/dev/null 2>&1 || error "'${dependency}' is required but it is not installed."
     done
 }
 
+is_server_up() {
+    tmux info &> /dev/null
+}
+
+has_session() {
+    tmux has-session -t "${tmux_session}" &> /dev/null
+}
+
 start_tmux() {
-    tmux new-session -s "${tmux_session}" -d
+
+    is_server_up && has_session
+
+    if [[ $? -eq 1  ]]
+    then
+        tmux new-session -s "${tmux_session}" -d
+    fi
+}
+
+stop_tmux() {
+
+    has_session
+
+    if [[ $? -ne 1 ]]
+    then
+        tmux kill-session -t "${tmux_session}"
+    fi
 }
 
 clean() {
@@ -60,9 +88,6 @@ clean() {
 }
 
 run_build_js() {
-
-    info "Starting Browserify"
-
     for entry in ${entries[@]}
     do
         build_entry "${entry}"
@@ -78,13 +103,10 @@ build_entry() {
 
     info "Bundle '${name}': ${entry} > ${bundle}"
 
-   browserify -e ${entry} --debug | uglifyjs --compress --mangle --screw-ie8 --output "${bundle}"
+    browserify -e ${entry} --debug | uglifyjs --compress --mangle --screw-ie8 --output "${bundle}"
 }
 
 run_watch() {
-
-    info "Starting Watchify"
-
     for entry in ${entries[@]}
     do
         watch_entry "${entry}"
@@ -103,17 +125,17 @@ watch_entry() {
 
     tmux new-window -c "${base_dir}" -n ${name} "watchify ${entry} -v -d -o \"exorcist ${dir}/${map} > ${dir}/${bundle}\""
 }
+
 run_karma() {
-
-    info "Starting Karma test runner"
-
     tmux new-window -c "${base_dir}" -n "karma" "karma start"
 }
 
+test() {
+    start_tmux
+    run_karma
+}
+
 watch() {
-
-    info "Starting to watch"
-
     start_tmux
     run_karma
     run_watch
@@ -121,25 +143,24 @@ watch() {
     tmux ls
     tmux list-windows
 
-    tmux attach-session -t "${tmux_session}"
+#    tmux attach-session -t "${tmux_session}"
+}
+
+unwatch() {
+    stop_tmux
 }
 
 build() {
-
     polyfills
     vendors
     build_js
 }
 
 build_js() {
-
-    info "Starting to build JS"
     run_build_js
 }
 
 polyfills() {
-
-    info "Starting to build Polyfills"
 
     local target="polyfills.min.js"
     local files=()
@@ -149,33 +170,54 @@ polyfills() {
 
 vendors() {
 
-    info "Starting to build vendor libraries"
-
     local target="vendor.min.js"
     local files=()
 
     cat ${files[@]} | uglifyjs --compress --mangle --screw-ie8 --output "${target}"
 }
 
+is_valid_task() {
+
+    local needle="${1}"
+    shift
+    local haystack=("${@}")
+    local found=""
+
+    for t in "${haystack[@]}"
+    do
+        if [[ "${t}" == "${needle}" ]]
+        then
+            found="${t}"
+            break
+        fi
+    done
+
+    echo ${found}
+}
+
+
 # Make all dependencies are installed
 check_dependencies
 
 declare -r task="${1:-}"
 
-# Show help if no tasks is provided
-if [[ -z "${task}" ]]
+if [[ "${task}" == "--help" ]]
 then
     usage
 fi
 
 # Make sure the task is a valid one
-declare test=$(type -t "${task}")
-# @TODO need to check the task against the tasks list instead
-if [[ -z ${test} || ${test} != "function" ]]
+declare -r task_exists=$(is_valid_task ${task} ${tasks[@]})
+
+if [[ -z "${task}" || -z "${task_exists}" ]]
 then
-    usage
+    error "Please provide a valid task to run, see '$(basename $0) --help'"
 fi
+
+info "Working directory $(pwd -P)"
+info "Starting ${task}"
 
 eval "${task}"
 
 exit 0
+
