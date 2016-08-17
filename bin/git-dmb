@@ -40,7 +40,7 @@ else
 
     for branch in ${branches[@]}
     do
-        echo "- ${branch}"
+        echo -e "\t- ${branch}"
     done
 
     read -e -p "Do you want to proceed? [y/N]: " answer
