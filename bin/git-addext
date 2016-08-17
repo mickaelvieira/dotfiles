@@ -36,24 +36,31 @@ info "Directory: ${directory}"
 
 declare -a files=($(git diff --name-only | grep -E "${directory}" | grep -E ".${extension}$"))
 
-info "The following files will be added:"
-for file in ${files[@]}
-do
-    echo -e "\t- ${file}"
-done
+if [[ ${#files[@]} -eq 0 ]]
+then
+    info "No files found"
+else
 
-read -e -p "Do you want to proceed? [y/N]: " answer
-
-if [[ ${answer} == "y" ]]; then
+    info "The following files will be added:"
 
     for file in ${files[@]}
     do
-        info "Adding file: ${file}"
-        git add "${file}"
+        echo -e "\t- ${file}"
     done
 
-else
-    info "Skipped!"
+    read -e -p "Do you want to proceed? [y/N]: " answer
+
+    if [[ ${answer} == "y" ]]; then
+
+        for file in ${files[@]}
+        do
+            info "Adding file: ${file}"
+            git add "${file}"
+        done
+
+    else
+        info "Skipped!"
+    fi
 fi
 
 exit 0
