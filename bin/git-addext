@@ -6,11 +6,11 @@ set -o pipefail
 #set -x
 
 info() {
-    echo -e "> $1"
+    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
 }
 
 error() {
-    echo -e "! $1" 1>&2
+    echo -e "\x1b[41m\x21 \x1b[0m $1" 1>&2
     exit 1
 }
 
@@ -18,7 +18,7 @@ usage() {
     help="\n"
     help+="Usage:\n"
     help+=" $(basename $0) [extension] [directory]\n"
-    echo -e ${help} 1>&2
+    echo -e ${help}
     exit 1
 }
 
@@ -34,11 +34,11 @@ info "Working directory: $(pwd -P)"
 info "Extension: ${extension}"
 info "Directory: ${directory}"
 
-declare -a files=($(git diff --name-only | grep -E "${directory}" | grep -E ".${extension}$"))
+declare -a files=($(git diff --name-only | grep -E "${directory}" | grep -E "\.${extension}$"))
 
 if [[ ${#files[@]} -eq 0 ]]
 then
-    info "No files found"
+    info "No files found!"
 else
 
     info "The following files will be added:"
