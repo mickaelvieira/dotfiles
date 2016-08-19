@@ -8,23 +8,17 @@ set -o errexit
 set -o pipefail
 #set -x
 
-declare -r RESET_ALL="\x1b[0m"
-declare -r BG_RED="\x1b[41m"
-declare -r BG_BLUE="\x1b[44m"
-declare -r BG_MAGENTA="\x1b[45m"
-declare -r FG_WHITE="\x1b[97m"
-declare -r FG_RED="\x1b[31m"
-declare -r FG_BLUE="\x1b[34m"
-declare -r FG_MAGENTA="\x1b[35m"
+info() {
+    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+}
 
 error() {
-    echo -e "${BG_RED}${FG_WHITE}ERROR${RESET_ALL}  ${FG_RED}$1${RESET_ALL}" >&2
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m $1" 1>&2
+    exit 1
 }
-info() {
-    echo -e "${BG_BLUE}${FG_WHITE}INFO${RESET_ALL}  ${FG_BLUE}$1${RESET_ALL}"
-}
+
 warning() {
-    echo -e "${BG_MAGENTA}${FG_WHITE}WARNING${RESET_ALL}  ${FG_MAGENTA}$1${RESET_ALL}"
+    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
 }
 
 info "Working directory: $(pwd -P)"
@@ -40,7 +34,7 @@ else
 
     for branch in ${branches[@]}
     do
-        echo "- ${branch}"
+        echo -e "\t- ${branch}"
     done
 
     read -e -p "Do you want to proceed? [y/N]: " answer
@@ -49,7 +43,7 @@ else
 
         for branch in ${branches[@]}
         do
-            warning "Deleting branch: ${branch}"
+            warning "\xE2\x98\xA0 ${branch}"
             git branch -d "${branch}"
         done
 

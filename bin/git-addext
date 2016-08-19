@@ -1,0 +1,71 @@
+#!/bin/bash
+
+set -o nounset
+set -o errexit
+set -o pipefail
+#set -x
+
+info() {
+    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+}
+
+error() {
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m $1" 1>&2
+    exit 1
+}
+
+warning() {
+    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
+}
+
+usage() {
+    help="\n"
+    help+="Usage:\n"
+    help+=" $(basename $0) [extension] [directory]\n"
+    echo -e ${help}
+    exit 1
+}
+
+declare -r extension="${1:-}"
+declare -r directory="${2:-}"
+
+if [[ "${extension}" == "--help" ]]
+then
+    usage
+fi
+
+info "Working directory: $(pwd -P)"
+info "Extension: ${extension}"
+info "Directory: ${directory}"
+
+declare -a files=($(git diff --name-only | grep -E "${directory}" | grep -E "\.${extension}$"))
+
+if [[ ${#files[@]} -eq 0 ]]
+then
+    info "No files found!"
+else
+
+    info "The following files will be added:"
+
+    for file in ${files[@]}
+    do
+        echo -e "\t- ${file}"
+    done
+
+    read -e -p "Do you want to proceed? [y/N]: " answer
+
+    if [[ ${answer} == "y" ]]; then
+
+        for file in ${files[@]}
+        do
+            info "Adding file: ${file}"
+            git add "${file}"
+        done
+
+    else
+        info "Skipped!"
+    fi
+fi
+
+exit 0
+
