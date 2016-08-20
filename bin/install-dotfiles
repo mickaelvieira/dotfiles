@@ -43,7 +43,7 @@ create_symlink() {
         mv "${symlink}" "${backup}"
     fi
 
-    if [[ ! -f $target && ! -d $target} ]]; then
+    if [[ ! -f $target && ! -d $target ]]; then
         error "Target ${target} is neither a file nor a directory"
         exit 1
     fi
