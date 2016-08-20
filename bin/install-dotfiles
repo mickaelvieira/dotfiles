@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -o nounset
-set -o errexit
-set -o pipefail
+set -e -u -o pipefail
 # set -x
 
 declare -r RESET_ALL="\x1b[0m"
@@ -17,18 +15,19 @@ declare -r FG_MAGENTA="\x1b[35m"
 error() {
     echo -e "${BG_RED}${FG_WHITE}ERROR${RESET_ALL}  ${FG_RED}$1${RESET_ALL}" >&2
 }
+
 info() {
     echo -e "${BG_BLUE}${FG_WHITE}INFO${RESET_ALL}  ${FG_BLUE}$1${RESET_ALL}"
 }
+
 warning() {
     echo -e "${BG_MAGENTA}${FG_WHITE}WARNING${RESET_ALL}  ${FG_MAGENTA}$1${RESET_ALL}"
 }
 
-declare -r home_dir=${HOME:-}
-declare -r df_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+declare -r HOME_DIR=${HOME:-}
+declare -r DF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
-if [[ -z "${home_dir}" ]];
-then
+if [[ -z "${HOME_DIR}" ]]; then
     error "HOME directory cannot be an empty string"
     exit 1
 fi
@@ -39,14 +38,12 @@ create_symlink() {
     local symlink="$2"
     local backup="${symlink}.orig"
 
-    if [[ -f "${symlink}" || -d "${symlink}" ]];
-    then
+    if [[ -f $symlink || -d $symlink ]]; then
         info "Moving existing location ${symlink} to ${backup}"
         mv "${symlink}" "${backup}"
     fi
 
-    if [[ ! -f "${target}" && ! -d "${target}" ]];
-    then
+    if [[ ! -f $target && ! -d $target} ]]; then
         error "Target ${target} is neither a file nor a directory"
         exit 1
     fi
@@ -57,83 +54,88 @@ create_symlink() {
 
 ask_confirm() {
 
-    local confirm_config=""
+    local confirm_config=
     local type_config="$1"
 
     read -e -p "Do you want install the ${type_config} configuration? [Y/n]: " confirm_config
 
-    # default to yes
-    if [[ -z "${confirm_config}" ]];
-    then
-        confirm_config="y"
-    fi
+    [[ -z $confirm_config ]] && confirm_config="y"
 
-    echo ${confirm_config}
+    echo $confirm_config
 }
 
-# Bash configuration
-if [[ $(ask_confirm "bash" ) == "y" ]]; then
+install_bash() {
+    local files=(
+        .bashrc
+        .bash_prompt
+        .bash_options
+        .bash_export
+        .bash_profile
+        .bash_aliases
+        .bash_functions
+        .dircolors
+    )
 
-    # Create bash symlinks
-    declare -a files=(.bashrc .bash_prompt .bash_options .bash_export .bash_profile .bash_aliases .bash_functions .dircolors)
-    for file in ${files[*]}
-    do
-        create_symlink "${df_dir}/bash/$file" "${home_dir}/$file"
+    for file in ${files[*]}; do
+        create_symlink "${DF_DIR}/bash/$file" "${HOME_DIR}/$file"
     done
-fi
+}
 
-# Git configuration
-if [[ $(ask_confirm "git") == "y" ]]; then
-
-    if [[ ! -f "${home_dir}/git-prompt.sh" ]];
-    then
+install_git() {
+    if [[ ! -f "${HOME_DIR}/git-prompt.sh" ]]; then
         info "Fetching git-prompt.sh"
-        curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o "${home_dir}/git-prompt.sh"
+        curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o "${HOME_DIR}/git-prompt.sh"
     fi
 
-    declare -a files=(.gitconfig .gitignore .gitattributes)
-    for file in ${files[*]}
-    do
-        create_symlink "${df_dir}/git/$file" "${home_dir}/$file"
+    local files=(
+        .gitconfig
+        .gitignore
+        .gitattributes
+    )
+
+    for file in ${files[*]}; do
+        create_symlink "${DF_DIR}/git/$file" "${HOME_DIR}/$file"
     done
-fi
+}
 
-# Vim configuration
-if [[ $(ask_confirm "vim") == "y" ]]; then
-
-    create_symlink "${df_dir}/vim/.vim" "${home_dir}/.vim"
-    create_symlink "${df_dir}/vim/.vimrc" "${home_dir}/.vimrc"
+install_vim() {
+    create_symlink "${DF_DIR}/vim/.vim" "${HOME_DIR}/.vim"
+    create_symlink "${DF_DIR}/vim/.vimrc" "${HOME_DIR}/.vimrc"
 
     info "Fetching instant-markdown.vim "
-    curl -s https://raw.githubusercontent.com/suan/vim-instant-markdown/master/after/ftplugin/markdown/instant-markdown.vim -o "${home_dir}/.vim/after/ftplugin/markdown/instant-markdown.vim"
+    curl -s https://raw.githubusercontent.com/suan/vim-instant-markdown/master/after/ftplugin/markdown/instant-markdown.vim -o "${HOME_DIR}/.vim/after/ftplugin/markdown/instant-markdown.vim"
 
     info "Fetching plug.vim"
-    curl -s https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${home_dir}/.vim/autoload/plug.vim"
+    curl -s https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim -o "${HOME_DIR}/.vim/autoload/plug.vim"
 
     warning "Don't forget to run PlugInstall!"
-fi
+}
 
-# Tmux configuration
-if [[ $(ask_confirm "tmux") == "y" ]]; then
-    create_symlink "${df_dir}/tmux/.tmux.conf" "${home_dir}/.tmux.conf"
-fi
+install_tmux() {
+    create_symlink "${DF_DIR}/tmux/.tmux.conf" "${HOME_DIR}/.tmux.conf"
+}
 
-# MySQL configuration
-if [[ $(ask_confirm "MySQL") == "y" ]]; then
-    create_symlink "${df_dir}/mysql/.my.cnf" "${home_dir}/.my.cnf"
-    create_symlink "${df_dir}/grc/.grcat" "${home_dir}/.grcat"
+install_mysql() {
+    create_symlink "${DF_DIR}/mysql/.my.cnf" "${HOME_DIR}/.my.cnf"
+    create_symlink "${DF_DIR}/grc/.grcat" "${HOME_DIR}/.grcat"
     warning "Don't forget to install grc 'sudo apt-get install -y grc'"
-fi
+}
 
-# Terminator configuration
-if [[ $(ask_confirm "Terminator") == "y" ]]; then
-    if [[ ! -d "${home_dir}/.config/terminator" ]]; then
-        mkdir -p "${home_dir}/.config/terminator"
-    fi
-    create_symlink "${df_dir}/terminator/config" "${home_dir}/.config/terminator/config"
-fi
+install_terminator() {
+    [[ ! -d "${HOME_DIR}/.config/terminator" ]] && mkdir -p "${HOME_DIR}/.config/terminator"
+    create_symlink "${DF_DIR}/terminator/config" "${HOME_DIR}/.config/terminator/config"
+}
 
-source ~/.bashrc
+main() {
+    [[ $(ask_confirm "bash" ) == "y" ]] && install_bash
+    [[ $(ask_confirm "git") == "y" ]] && install_git
+    [[ $(ask_confirm "vim") == "y" ]] && install_vim
+    [[ $(ask_confirm "tmux") == "y" ]] && install_tmux
+    [[ $(ask_confirm "MySQL") == "y" ]] && install_mysql
+    [[ $(ask_confirm "Terminator") == "y" ]] && install_terminator
 
-exit 0
+    source ~/.bashrc
+}
+
+main
 
