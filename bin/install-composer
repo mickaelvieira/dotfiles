@@ -35,7 +35,7 @@ is_installer_checksum_valid() {
 }
 
 main() {
-    if [[ -f $COMPOSER_BIN ]];
+    if [[ -x $COMPOSER_BIN ]];
     then
         info "Composer is already installed in ${COMPOSER_BIN}"
         info "Please run 'sudo ${COMPOSER_BIN} self-update' to get the latest version"
@@ -43,7 +43,6 @@ main() {
     else
         cd /tmp
         info "Working directory: $(pwd -P)"
-
         info "Downloading installer and signature..."
 
         curl -s https://composer.github.io/installer.sig -o $COMPOSER_SIGNATURE
