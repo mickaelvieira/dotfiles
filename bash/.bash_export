@@ -1,9 +1,8 @@
 #!/bin/bash
 
 find_dotfiles() {
-    local this_file=$(ls -l ${BASH_SOURCE[0]} | awk '{print $11}')
+    local this_file=$(readlink ${BASH_SOURCE[0]})
     local df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
-
     echo $df_dir
 }
 
