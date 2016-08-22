@@ -1,0 +1,79 @@
+#!/bin/bash
+
+set -u -e -o pipefail
+
+declare -r WORKING_DIR=""
+declare -r JS_DIR="${WORKING_DIR}/js"
+declare -r SPECS_DIR="${WORKING_DIR}/tests"
+
+info() {
+    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+}
+
+error() {
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m$1\x1b[0m" 1>&2
+    exit 1
+}
+
+split_path() {
+    local IFS='/'
+    local parts=("$1")
+    echo $parts
+}
+
+get_relative_sut_path() {
+    local filepath="$1"
+    local relpath=$(dirname ${filepath/$WORKING_DIR/})
+    local parts=($(split_path $relpath))
+
+    local sut_rel_path=""
+    for part in ${parts[@]}; do
+        sut_rel_path+="../"
+    done
+    sut_rel_path+=${file/${WORKING_DIR}\/}
+
+    echo ${sut_rel_path%.*s}
+}
+
+gen_tree() {
+    local directories=$(find $JS_DIR -type d)
+    local path=
+    for directory in ${directories[@]}; do
+        path=${directory/$JS_DIR/$SPECS_DIR}
+        if [[ ! -d $path ]]; then
+            info "Creating directory: ${path}"
+            mkdir -p $path
+        fi
+    done
+}
+
+gen_specs() {
+    local files=$(find $JS_DIR -type f -name '*.js' ! -name 'bundle.js' ! -name 'index.js')
+    local filepath=
+    local relpath=
+
+    for file in ${files[@]}; do
+        filepath=${file/$JS_DIR/$SPECS_DIR}
+        relpath=$(get_relative_sut_path $filepath)
+        if [[ ! -f $filepath ]]; then
+            info "Generating spec: ${filepath}"
+            touch $filepath
+            echo -e "import sinon from 'sinon';" >> $filepath
+            echo -e "import should from 'should';" >> $filepath
+            echo -e "import sut from '${relpath}';" >> $filepath
+        fi
+    done
+}
+
+main() {
+    echo "Working directory: $(pwd -P)"
+
+    [[ ! -d $JS_DIR ]] && error "${JS_DIR} is not a directory"
+    [[ ! -d $SPECS_DIR ]] && error "${SPECS_DIR} is not a directory"
+
+    gen_tree
+    gen_specs
+}
+
+main
+
