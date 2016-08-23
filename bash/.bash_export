@@ -1,5 +1,12 @@
 #!/bin/bash
 
+
+get_gem_path() {
+    local ruby_path=$(ruby -e 'print Gem.user_dir')
+    local gem_bin="${ruby_path}/bin"
+    echo $gem_bin
+}
+
 find_dotfiles() {
     local this_file=$(readlink ${BASH_SOURCE[0]})
     local df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
@@ -8,7 +15,7 @@ find_dotfiles() {
 
 export DOTFILES_DIR=$(find_dotfiles)
 
-export PATH="$HOME/bin:$DOTFILES_DIR/bin:$HOME/.gem/ruby/2.3.0/bin:$PATH"
+export PATH="$HOME/bin:$DOTFILES_DIR/bin:$(get_gem_path):$PATH"
 
 # https://wiki.archlinux.org/index.php/Color_output_in_console#less
 export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
