@@ -41,7 +41,7 @@ do
     fi
 done
 
-[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
+#[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
 
 export NODE_ENV='development'
 export NVM_DIR="$HOME/.nvm"
