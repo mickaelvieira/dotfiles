@@ -52,18 +52,16 @@ else
         echo -e "\t- ${file}"
     done
 
-    read -e -p "Do you want to proceed? [y/N]: " answer
+    read -e -p "Do you want to proceed? [Y/n]: " answer
 
-    if [[ ${answer} == "y" ]]; then
-
+    if [[ ${answer} == "n" ]]; then
+        info "Skipped!"
+    else
         for file in ${files[@]}
         do
             info "Adding file: ${file}"
             git add "${file}"
         done
-
-    else
-        info "Skipped!"
     fi
 fi
 
