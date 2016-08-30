@@ -2,9 +2,10 @@
 
 set -u -e -o pipefail
 
+declare -r SCRIPT=$(basename $0)
 declare -r WORKING_DIR=$(pwd -P)
-declare -r JS_DIR="${WORKING_DIR}/html/js"
-declare -r SPECS_DIR="${WORKING_DIR}/test"
+declare -r DEFAULT_JS_DIR="js"
+declare -r DEFAULT_SPECS_DIR="test"
 
 info() {
     echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
@@ -12,6 +13,24 @@ info() {
 
 error() {
     echo -e "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m$1\x1b[0m" 1>&2
+    exit 1
+}
+
+read_help() {
+    cat <<eom
+Usage: ${SCRIPT} [options] -s <source> -t <target> -f <file>
+Options:
+  -h: This help
+  -d: Debug mode
+  -s: JS source directory, default '${DEFAULT_JS_DIR}'
+  -t: Specs directory, default '${DEFAULT_SPECS_DIR}'
+  -f: The file for which we want to generate the spec.
+      It will generate all specs if no file is provided
+eom
+}
+
+show_usage() {
+    echo -e "$(read_help)" 1>&2
     exit 1
 }
 
@@ -88,17 +107,40 @@ gen_spec() {
 }
 
 main() {
-    echo "Working directory: ${WORKING_DIR}"
+    info "Working directory: ${WORKING_DIR}"
+
+    local file=
+    local js_dir=
+    local specs_dir=
+
+    while getopts "dhf:s:t:" opt; do
+        case $opt in
+            d) set -x;;
+            h) show_usage;;
+            s) js_dir=$OPTARG;;
+            t) specs_dir=$OPTARG;;
+            f) file=$OPTARG;;
+            *) show_usage;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    [[ -z $js_dir  ]] && js_dir=$DEFAULT_JS_DIR
+    [[ -z $specs_dir ]] && specs_dir=$DEFAULT_SPECS_DIR
+
+    readonly JS_DIR="${WORKING_DIR}/${js_dir}"
+    readonly SPECS_DIR="${WORKING_DIR}/${specs_dir}"
 
     [[ ! -d $JS_DIR ]] && error "${JS_DIR} is not a directory"
     [[ ! -d $SPECS_DIR ]] && error "${SPECS_DIR} is not a directory"
 
-    local file="${1:-}"
+    info "Sources: ${JS_DIR}"
+    info "Specs: ${SPECS_DIR}"
 
     if [[ ! -z $file ]]; then
         gen_spec $file
     else
-        read -p "Do you want to generate all the specs? (y/N)" choice
+        read -p "Do you want to generate all the specs? (y/N): " choice
 
         [[ -z $choice ]] && choice="n"
 
