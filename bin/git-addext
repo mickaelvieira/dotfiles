@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -o nounset
-set -o errexit
-set -o pipefail
+set -e -u -o pipefail
 #set -x
 
 info() {
@@ -29,8 +27,7 @@ usage() {
 declare -r extension="${1:-}"
 declare -r directory="${2:-}"
 
-if [[ "${extension}" == "--help" ]]
-then
+if [[ $extension == "--help" ]]; then
     usage
 fi
 
@@ -47,8 +44,7 @@ else
 
     info "The following files will be added:"
 
-    for file in ${files[@]}
-    do
+    for file in ${files[@]}; do
         echo -e "\t- ${file}"
     done
 
@@ -57,8 +53,7 @@ else
     if [[ ${answer} == "n" ]]; then
         info "Skipped!"
     else
-        for file in ${files[@]}
-        do
+        for file in ${files[@]}; do
             info "Adding file: ${file}"
             git add "${file}"
         done
