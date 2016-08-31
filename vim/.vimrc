@@ -12,6 +12,8 @@ Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
 Plug 'dracula/vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'https://github.com/pangloss/vim-javascript'
+Plug 'https://github.com/StanAngeloff/php.vim'
 
 call plug#end()
 
@@ -19,24 +21,16 @@ call plug#end()
 syntax on
 syntax enable
 set t_Co=256
+
 color dracula
-"let g:solarized_termcolors= 256
-"let g:solarized_termtrans = 0
-"let g:solarized_degrade = 0
-"let g:solarized_bold = 1
-"let g:solarized_underline = 1
-"let g:solarized_italic = 1
-"let g:solarized_contrast = "normal"
-"let g:solarized_visibility= "normal"
-"set background=dark
-"colorscheme solarized
-"color atom-dark-256
+colorscheme dracula
 
 " Airline theme
-"let g:airline_theme = "darcula"
-"
-" Vim colorscheme
-"colorscheme py-darcula
+let g:airline_theme = "darcula"
+
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 0
+let g:javascript_plugin_flow = 0
 
 " Enable file type detection and do language-dependent indenting.
 filetype plugin on              " load filetype-specific plugins
@@ -65,7 +59,7 @@ set number                      " Show line number
 set showmatch                   " Show matching brackets.
 set wildmenu                    " visual autocomplete for command menu
 set showcmd                     " Show the (partial) command as it’s being typed
-" set cursorline                  " Highlight current line
+set cursorline                  " Highlight current line
 set laststatus=2                " Always show status line
 
 " Search
