@@ -3,9 +3,7 @@
 # This script will delete locally all merged branches
 # It will ignores branches such master, dev, staging, etc...
 
-set -o nounset
-set -o errexit
-set -o pipefail
+set -u -e -o pipefail
 #set -x
 
 info() {
@@ -29,24 +27,19 @@ if [[ ${#branches[@]} -eq 0 ]];
 then
     info "No branches to delete!"
 else
-
     info "The following branches will be deleted locally:"
 
-    for branch in ${branches[@]}
-    do
+    for branch in ${branches[@]}; do
         echo -e "\t- ${branch}"
     done
 
     read -e -p "Do you want to proceed? [y/N]: " answer
 
-    if [[ ${answer} == "y" ]]; then
-
-        for branch in ${branches[@]}
-        do
+    if [[ $answer == y ]]; then
+        for branch in ${branches[@]}; do
             warning "\xE2\x98\xA0 ${branch}"
             git branch -d "${branch}"
         done
-
     else
         info "Skipped!"
     fi
