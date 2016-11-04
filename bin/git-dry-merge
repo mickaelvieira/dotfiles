@@ -3,8 +3,6 @@
 set -u -e -o pipefail
 #set -x
 
-declare -r YELLOW="\e[93m"
-
 info() {
     echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
 }
@@ -22,10 +20,6 @@ get_current_branch() {
     echo $(git branch | grep "^*" | awk '{print $2}')
 }
 
-dry_merge() {
-    git merge --no-commit --no-ff $1
-}
-
 info "Working directory: \x1b[93m$(pwd -P)\x1b[0m"
 
 main() {
@@ -36,7 +30,7 @@ main() {
 
     info "Merging \x1b[93m${branch}\x1b[0m into \x1b[93m${cwb}\x1b[0m"
 
-    local output=$(dry_merge $branch)
+    local output=$(git merge --no-commit --no-ff $branch)
 
     echo
     info "Merge result"
@@ -47,7 +41,6 @@ main() {
     git status
 
     if [[ ! -z $output ]]; then
-        echo
         info "Aborting merge"
         git merge --abort
     fi
