@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -u -e -o pipefail
+#set -x
+
+info() {
+    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+}
+
+error() {
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m $1" 1>&2
+    exit 1
+}
+
+warning() {
+    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
+}
+
+get_current_branch() {
+    echo $(git branch | grep "^*" | awk '{print $2}')
+}
+
+info "Working directory: \x1b[93m$(pwd -P)\x1b[0m"
+
+main() {
+    local cwb=$(get_current_branch)
+    local branch=${1:-}
+
+    [[ -z $branch ]] && error "Please specify a branch name"
+
+    info "Merging \x1b[93m${branch}\x1b[0m into \x1b[93m${cwb}\x1b[0m"
+
+    local output=$(git merge --no-commit --no-ff $branch)
+
+    echo
+    info "Merge result"
+    echo -e "$output"
+
+    echo
+    info "Branch status"
+    git status
+
+    if [[ ! -z $output ]]; then
+        info "Aborting merge"
+        git merge --abort
+    fi
+}
+
+main "$@"
