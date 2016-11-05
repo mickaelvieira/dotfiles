@@ -18,10 +18,10 @@ alias la='ls -hla'
 alias lt='ls -tla'
 
 alias rpwd='pwd -P'
-alias dev="cd ~/Development"
+alias dev="cd ~/dev"
 alias doc="cd ~/Documents"
 alias dl="cd ~/Downloads"
 alias hst="history | less -RSFXin"
-alias storm='pstorm'
+alias storm='~/PhpStorm/bin/phpstorm.sh'
 alias wth='curl -4 http://wttr.in/London'
 

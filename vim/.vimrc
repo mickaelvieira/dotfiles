@@ -26,7 +26,7 @@ color dracula
 colorscheme dracula
 
 " Airline theme
-let g:airline_theme = "darcula"
+"let g:airline_theme = "darcula"
 
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 0
