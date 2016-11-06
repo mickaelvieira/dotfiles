@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 #`mkd` and `tre` were stolen from: https://github.com/mathiasbynens/dotfiles/blob/master/.functions
 
