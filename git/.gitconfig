@@ -10,13 +10,13 @@
 	signingkey = A71A22C9
 
 [alias]
-    st = status
-    co = checkout
-    ci = commit -m
-    sc = commit -S -m
-    cl = clone
-    br = branch
-    fo = fetch origin
+	st = status
+	co = checkout
+	ci = commit -m
+	sc = commit -S -m
+	cl = clone
+	br = branch
+	fo = fetch origin
 
 [push]
 	default = current
@@ -39,7 +39,7 @@
 	autocorrect = 10
 
 [color]
-    ui = auto
+	ui = auto
 
 # The colors accepted are normal, black, red, green, yellow, blue, magenta, cyan and white.
 # The attributes are bold, dim, ul, blink and reverse.
@@ -62,8 +62,8 @@
 #    added = cyan bold     # default: green, added or updated, files which are added but not committed
 #    changed = white        # default: red, files which are changed but not added in the index
 #    untracked = red bold    # default: red, files which are not tracked by Git
-    # branch (the current branch)
-    # nobranch (the color the no branch warning is shown in, defaulting to red).
+# branch (the current branch)
+# nobranch (the color the no branch warning is shown in, defaulting to red).
 
 [diff]
 	compactionHeuristic = 1
