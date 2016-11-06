@@ -10,13 +10,13 @@
 	signingkey = A71A22C9
 
 [alias]
-	st = status
-	co = checkout
+    st = status
+    co = checkout
     ci = commit -m
     sc = commit -S -m
-	cl = clone
-	br = branch
-	fo = fetch origin
+    cl = clone
+    br = branch
+    fo = fetch origin
 
 [push]
 	default = current
