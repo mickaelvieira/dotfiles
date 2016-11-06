@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -u -e -o pipefail
+#set -x
+
+docx2txt.pl $1 -

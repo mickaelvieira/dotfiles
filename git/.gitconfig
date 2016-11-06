@@ -67,3 +67,7 @@
 
 [diff]
 	compactionHeuristic = 1
+[diff "exif"]
+	textconv = exiftool
+[diff "word"]
+	textconv = docx2txt
