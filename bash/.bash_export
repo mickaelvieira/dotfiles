@@ -12,6 +12,15 @@ get_dotfiles_path() {
     echo $df_dir
 }
 
+has_vagrant_user() {
+    grep -q '^vagrant:' /etc/passwd && echo true
+}
+
+is_vagrant_machine() {
+    has_vagrant_user || echo false
+}
+
+export IS_VAGRANT=$(is_vagrant_machine)
 export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_gem_path):$PATH"
 export GOPATH="$HOME/dev/go"
 
