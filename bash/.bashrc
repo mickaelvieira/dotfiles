@@ -40,11 +40,5 @@ for item in ${files[*]}; do
     fi
 done
 
-#[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
+export DEV_DIR="$HOME/dev"
 
-export NODE_ENV='development'
-export DEV_DIR="$HOME/Development"
-
-[[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
-[[ -d "$HOME/.yarn" ]] && export PATH="$HOME/.yarn/bin:$PATH"

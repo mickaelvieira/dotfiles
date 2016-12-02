@@ -22,7 +22,19 @@ is_vagrant_machine() {
 
 export IS_VAGRANT=$(is_vagrant_machine)
 export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_gem_path):$PATH"
+
+# GO configuration
 export GOPATH="$HOME/dev/go"
+
+# Python configuration
+export PIP_REQUIRE_VIRTUALENV=true
+
+# Javascript configuration
+export NODE_ENV='development'
+
+[[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
+[[ -d "$HOME/.yarn" ]] && export PATH="$HOME/.yarn/bin:$PATH"
 
 # https://wiki.archlinux.org/index.php/Color_output_in_console#less
 export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
