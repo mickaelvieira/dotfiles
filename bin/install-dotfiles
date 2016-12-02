@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e -u -o pipefail
-# set -x
+#set -x
 
 info() {
     echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
@@ -42,7 +42,7 @@ ask_confirm() {
     local answer=
     local name="$1"
 
-    read -e -p "Do you want install the ${name} configuration? [Y/n]: " answer
+    read -e -p "$(echo -e "Do you want to install \x1b[33m${name}\x1b[0m configuration? [Y/n]:") " answer
 
     [[ -z $answer ]] && answer="y"
 
