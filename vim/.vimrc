@@ -16,6 +16,8 @@ Plug 'dracula/vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'https://github.com/StanAngeloff/php.vim'
+Plug 'bling/vim-bufferline'
+Plug 'https://github.com/tpope/vim-fugitive.git'
 
 call plug#end()
 
