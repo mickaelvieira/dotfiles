@@ -36,8 +36,8 @@
 [plugins]
 [profiles]
   [[default]]
-    background_color = "#23242d"
+    background_color = "#0a0f14"
     background_darkness = 1.0
     background_image = None
-    foreground_color = "#d2d7cd"
+    foreground_color = "#eeeeee"
     scrollback_lines = 1000

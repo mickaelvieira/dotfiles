@@ -2,11 +2,13 @@
 call plug#begin('~/.vim/plugged')
 
 " Plugin
+Plug 'whatyouhide/vim-gotham'
 Plug 'scrooloose/syntastic'
 Plug 'airblade/vim-gitgutter'
 Plug 'Raimondi/delimitMate'
 Plug 'kien/ctrlp.vim'
 Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'Shougo/unite.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
@@ -22,11 +24,12 @@ syntax on
 syntax enable
 set t_Co=256
 
-color dracula
-colorscheme dracula
+" color dracula
+" colorscheme dracula
+colorscheme gotham256
 
-" Airline theme
-"let g:airline_theme = "darcula"
+let g:airline_powerline_fonts = 1
+
 
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 0
