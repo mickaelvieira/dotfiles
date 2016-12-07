@@ -1,4 +1,15 @@
 #!/bin/bash
+set -x
+get_composer_bin_path() {
+    local composer_home="$HOME/.composer"
+    local composer_bin=
+
+    if [[ -d $composer_home ]]; then
+        composer_bin="${composer_home}/vendor/bin"
+        [[ -d $composer_bin ]] || mkdir -p $composer_bin
+    fi
+    echo $composer_bin
+}
 
 get_gem_path() {
     local ruby_path=$(ruby -e 'print Gem.user_dir')
@@ -20,8 +31,11 @@ is_vagrant_machine() {
     has_vagrant_user || echo false
 }
 
+# am I in a vagrant machine?
 export IS_VAGRANT=$(is_vagrant_machine)
-export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_gem_path):$PATH"
+
+# Add relevant bin paths
+export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_gem_path):$(get_composer_bin_path):$PATH"
 
 # GO configuration
 export GOPATH="$HOME/dev/go"
