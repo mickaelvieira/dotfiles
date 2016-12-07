@@ -13,7 +13,6 @@ Plug 'Shougo/unite.vim'
 Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
 Plug 'dracula/vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'https://github.com/StanAngeloff/php.vim'
 Plug 'bling/vim-bufferline'
