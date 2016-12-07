@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 get_composer_bin_path() {
     local composer_home="$HOME/.composer"
     local composer_bin=
@@ -44,12 +44,7 @@ export GOPATH="$HOME/dev/go"
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
 
-# Install package globally
-gpip() {
-    PIP_REQUIRE_VIRTUALENV="" sudo pip "$@"
-}
-
- #Javascript configuration
+#Javascript configuration
 export NODE_ENV='development'
 
 [[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"

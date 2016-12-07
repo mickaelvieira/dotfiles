@@ -15,3 +15,8 @@ function tre() {
 	tree -aC -I '.git|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
 }
 
+# Install python packages globally
+gpip() {
+    PIP_REQUIRE_VIRTUALENV="" sudo pip "$@"
+}
+
