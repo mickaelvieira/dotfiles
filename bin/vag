@@ -4,7 +4,24 @@ set -e -u -o pipefail
 set -x
 
 get_vm_paths() {
-    echo $(vagrant global-status | awk '/virtualbox/{print $5}')
+    local output=$(vagrant global-status | awk '/virtualbox/{print $2" "$5";"}')
+
+
+#    declare -r OIFS=$IFS
+#    IFS=";"
+
+    for line in ${output[@]}; do
+        echo $line
+    done
+
+
+#    local names=($output)
+
+#    IFS=$OIFS
+
+#    echo ${names[@]}
+
+    exit 0
 }
 
 __get_vm_choices() {
@@ -26,6 +43,8 @@ eom
 
 __ask_for_vm_path() {
     local vm_paths=($(get_vm_paths))
+
+    exit
     read -p "$(__get_vm_choices ${vm_paths[@]}) " response
     local num=$((response-1))
     echo ${vm_paths[$num]}
