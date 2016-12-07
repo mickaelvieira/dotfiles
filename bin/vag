@@ -1,0 +1,61 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+set -x
+
+get_vm_paths() {
+    echo $(vagrant global-status | awk '/virtualbox/{print $5}')
+}
+
+__get_vm_choices() {
+    local num=0
+    local choices=
+    local vm_paths=($@)
+
+    for index in ${!vm_paths[@]}; do
+        num=$((index+1))
+        choices+="${num}) ${vm_paths[$index]}\n"
+    done
+
+    cat <<eom
+Which machine do you want to use?:
+$(echo -e ${choices})
+>
+eom
+}
+
+__ask_for_vm_path() {
+    local vm_paths=($(get_vm_paths))
+    read -p "$(__get_vm_choices ${vm_paths[@]}) " response
+    local num=$((response-1))
+    echo ${vm_paths[$num]}
+}
+
+__is_vagrant_vm() {
+    [[ -d $vm_path && -f "${vm_path}/Vagrantfile" ]] || exit 1
+}
+
+vgup() {
+    local vm_path=${1:-}
+
+    [[ ! -z $vm_path ]] || vm_path=$(__ask_for_vm_path)
+
+    cd $vm_path
+
+    vagrant status
+}
+
+main() {
+    local operation=${1:-}
+    local vm_path=${2:-}
+
+    [[ -z ${operation} ]] && exit 1
+    [[ ! -z $vm_path && ! -d $vm_path && ! -f "${vm_path}/Vagrantfile" ]] && exit 1
+    [[ ! -z $vm_path ]] || vm_path=$(__ask_for_vm_path)
+
+    cd $vm_path
+    vagrant $operation
+}
+
+main $@
+
