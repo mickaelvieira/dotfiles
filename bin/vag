@@ -7,6 +7,15 @@ declare -a CACHE_NAMES=()
 declare -a CACHE_PATHS=()
 declare -r SCRIPT=$(basename $0)
 
+info() {
+    echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m"
+}
+
+error() {
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m$1\x1b[0m" 1>&2
+    exit 1
+}
+
 read_help() {
     cat <<eom
 Usage: ${SCRIPT} <action> <number>
@@ -56,7 +65,7 @@ get_vm_list() {
 
     for index in ${!paths[@]}; do
         num=$((index+1))
-        list+="\x1b[32m${num}) \t(\x1b[33m${names[$index]}\x1b[32m)\x1b[0m ${paths[$index]}\n"
+        list+="\x1b[32m${num}) (\x1b[33m${names[$index]}\x1b[32m)\x1b[0m ${paths[$index]}\n"
     done
 
     echo $list
@@ -65,7 +74,7 @@ get_vm_list() {
 get_vm_choices() {
     cat <<eom
 Which machine do you want to use?:
-$(echo -e $(get_vm_list))
+$(echo -e $(get_vm_list) | column -t)
 >
 eom
 }
@@ -92,11 +101,11 @@ ask_for_vm_number() {
 
 is_vagrant_machine() {
     local path=${1:-}
-    [[ -d $path && -f "${path}/Vagrantfile" ]] && { exit 0; } || { exit 1; }
+    if [[ -d $path && -f "${path}/Vagrantfile" ]]; then return 0; else return 1; fi
 }
 
 is_number() {
-    [[ ${1:-} =~ ^[0-9]+$ ]] && { exit 0; } || { exit 1; }
+    if [[ ${1:-} =~ ^[0-9]+$ ]]; then return 0; else return 1; fi
 }
 
 main() {
@@ -108,14 +117,22 @@ main() {
     [[ -z ${operation} ]] && show_usage
 
     if [[ $operation == list ]]; then
-        echo -e $(get_vm_list)
+        (echo -e $(get_vm_list)) | column -t
     else
         [[ ! -z $position ]] || position=$(ask_for_vm_number)
 
-        [[ $(is_number $position) -eq 0 ]] && path=$(get_vm_path_by_position $position)
-        [[ $(is_number $position) -eq 0 ]] && name=$(get_vm_name_by_position $position)
+        if ! $(is_number $position); then
+            error "Please provide a valid VM number"
+        fi
 
-        [[ ! -z $path && $(is_vagrant_machine) -eq 1 ]] && exit 1
+        path=$(get_vm_path_by_position $position)
+        name=$(get_vm_name_by_position $position)
+
+        if ! $(is_vagrant_machine $path); then
+            error "$path does not have Vagrantfile"
+        fi
+
+        info "VM: ($name) $path"
 
         cd $path
         vagrant $operation $name
