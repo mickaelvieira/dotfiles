@@ -1,79 +1,125 @@
 #!/bin/bash
 
 set -e -u -o pipefail
-set -x
+#set -x
 
-get_vm_paths() {
-    local output=$(vagrant global-status | awk '/virtualbox/{print $2" "$5";"}')
+declare -a CACHE_NAMES=()
+declare -a CACHE_PATHS=()
+declare -r SCRIPT=$(basename $0)
 
-
-#    declare -r OIFS=$IFS
-#    IFS=";"
-
-    for line in ${output[@]}; do
-        echo $line
-    done
-
-
-#    local names=($output)
-
-#    IFS=$OIFS
-
-#    echo ${names[@]}
-
-    exit 0
+read_help() {
+    cat <<eom
+Usage: ${SCRIPT} <action> <number>
+Examples:
+    - vag list: list the vagrant machines
+    - vag up 1: launch the machine number 1
+    - vag status: the script will prompt user to get the machine number
+eom
 }
 
-__get_vm_choices() {
-    local num=0
-    local choices=
-    local vm_paths=($@)
+show_usage() {
+    echo -e "$(read_help)" 1>&2
+    exit 1
+}
 
-    for index in ${!vm_paths[@]}; do
+get_vm_info() {
+    local output=($(vagrant global-status | awk '/virtualbox/{print $2" "$5}'))
+
+    local names=
+    local paths=
+
+    # probably not the most bash-y way to do it but it works
+    for index in ${!output[@]}; do
+        if [[ $(($index % 2)) -eq 0 ]]; then
+            CACHE_NAMES+=("${output[$index]}")
+        else
+            CACHE_PATHS+=("${output[$index]}")
+        fi
+    done
+}
+
+get_vm_paths() {
+    [[ ${#CACHE_PATHS[@]} -ne 0 ]] || get_vm_info
+    echo ${CACHE_PATHS[@]}
+}
+
+get_vm_names() {
+    [[ ${#CACHE_NAMES[@]} -ne 0 ]] || get_vm_info
+    echo ${CACHE_NAMES[@]}
+}
+
+get_vm_list() {
+    local num=0
+    local list=
+    local paths=($(get_vm_paths))
+    local names=($(get_vm_names))
+
+    for index in ${!paths[@]}; do
         num=$((index+1))
-        choices+="${num}) ${vm_paths[$index]}\n"
+        list+="\x1b[32m${num}) \t(\x1b[33m${names[$index]}\x1b[32m)\x1b[0m ${paths[$index]}\n"
     done
 
+    echo $list
+}
+
+get_vm_choices() {
     cat <<eom
 Which machine do you want to use?:
-$(echo -e ${choices})
+$(echo -e $(get_vm_list))
 >
 eom
 }
 
-__ask_for_vm_path() {
-    local vm_paths=($(get_vm_paths))
-
-    exit
-    read -p "$(__get_vm_choices ${vm_paths[@]}) " response
-    local num=$((response-1))
-    echo ${vm_paths[$num]}
+get_vm_path_by_position() {
+    local paths=($(get_vm_paths))
+    local position=${1:-}
+    local index=$((position-1))
+    echo ${paths[$index]}
 }
 
-__is_vagrant_vm() {
-    [[ -d $vm_path && -f "${vm_path}/Vagrantfile" ]] || exit 1
+get_vm_name_by_position() {
+    local names=($(get_vm_names))
+    local position=${1:-}
+    local index=$((position-1))
+    echo ${names[$index]}
 }
 
-vgup() {
-    local vm_path=${1:-}
+ask_for_vm_number() {
+    local paths=($(get_vm_paths))
+    read -p "$(get_vm_choices) " position
+    echo $position
+}
 
-    [[ ! -z $vm_path ]] || vm_path=$(__ask_for_vm_path)
+is_vagrant_machine() {
+    local path=${1:-}
+    [[ -d $path && -f "${path}/Vagrantfile" ]] && { exit 0; } || { exit 1; }
+}
 
-    cd $vm_path
-
-    vagrant status
+is_number() {
+    [[ ${1:-} =~ ^[0-9]+$ ]] && { exit 0; } || { exit 1; }
 }
 
 main() {
     local operation=${1:-}
-    local vm_path=${2:-}
+    local position=${2:-}
+    local path=
+    local name=
 
-    [[ -z ${operation} ]] && exit 1
-    [[ ! -z $vm_path && ! -d $vm_path && ! -f "${vm_path}/Vagrantfile" ]] && exit 1
-    [[ ! -z $vm_path ]] || vm_path=$(__ask_for_vm_path)
+    [[ -z ${operation} ]] && show_usage
 
-    cd $vm_path
-    vagrant $operation
+    if [[ $operation == list ]]; then
+        echo -e $(get_vm_list)
+    else
+        [[ ! -z $position ]] || position=$(ask_for_vm_number)
+
+        [[ $(is_number $position) -eq 0 ]] && path=$(get_vm_path_by_position $position)
+        [[ $(is_number $position) -eq 0 ]] && name=$(get_vm_name_by_position $position)
+
+        [[ ! -z $path && $(is_vagrant_machine) -eq 1 ]] && exit 1
+
+        cd $path
+        vagrant $operation $name
+    fi
 }
 
 main $@
