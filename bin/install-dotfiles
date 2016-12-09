@@ -59,6 +59,7 @@ install_bash() {
         .bash_aliases
         .bash_functions
         .dircolors
+        .profile
     )
 
     for file in ${files[*]}; do

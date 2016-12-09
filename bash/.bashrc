@@ -42,3 +42,5 @@ done
 
 export DEV_DIR="$HOME/dev"
 
+# Stupid rvm MUST be here
+[[ -f ~/.profile ]] && source ~/.profile
