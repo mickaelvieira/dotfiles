@@ -17,6 +17,7 @@ Plug 'https://github.com/pangloss/vim-javascript'
 Plug 'https://github.com/StanAngeloff/php.vim'
 Plug 'bling/vim-bufferline'
 Plug 'https://github.com/tpope/vim-fugitive.git'
+Plug 'rust-lang/rust.vim'
 
 call plug#end()
 
