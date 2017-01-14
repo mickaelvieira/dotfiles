@@ -18,6 +18,7 @@ Plug 'https://github.com/StanAngeloff/php.vim'
 Plug 'bling/vim-bufferline'
 Plug 'https://github.com/tpope/vim-fugitive.git'
 Plug 'rust-lang/rust.vim'
+Plug 'racer-rust/vim-racer'
 
 call plug#end()
 
