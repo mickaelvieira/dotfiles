@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     yarn
 
 RUN gem install sass --no-document
+RUN yarn config set cache-folder /cache
 
 WORKDIR /srv
 

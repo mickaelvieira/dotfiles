@@ -8,7 +8,7 @@ $ docker build -t yarn .
 
 ```sh
 docker run -it --rm --name yarn \
-    -v /path/to/cache:/usr/local/share/.cache/yarn \
-    -v "$(pwd -P)":/src \
+    -v "$(yarn cache dir)":/cache \
+    -v "$(pwd -P)":/srv \
     yarn
 ```
