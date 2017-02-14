@@ -28,13 +28,18 @@ RUN ln -s /usr/bin/php7 /usr/bin/php
 WORKDIR /srv
 
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
-  && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
-  && php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === trim(file_get_contents('/tmp/composer-setup.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt' . PHP_EOL; exit(1); } echo PHP_EOL;" \
-  && php /tmp/composer-setup.php \
-  && rm -f /tmp/composer-setup.php \
-  && rm -f /tmp/composer-setup.sig \
-  && mv /srv/composer.phar /usr/local/bin/composer \
-  && chmod u+x /usr/local/bin/composer
+ && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \
+ && php -r "if (hash_file('SHA384', '/tmp/composer-setup.php') === trim(file_get_contents('/tmp/composer-setup.sig'))) { echo 'Installer verified'; } else { echo 'Installer corrupt' . PHP_EOL; exit(1); } echo PHP_EOL;" \
+ && php /tmp/composer-setup.php \
+ && rm -f /tmp/composer-setup.php \
+ && rm -f /tmp/composer-setup.sig \
+ && mv /srv/composer.phar /usr/local/bin/composer \
+ && chmod u+x /usr/local/bin/composer
+
+ENV COMPOSER_HOME="/composer"
+
+RUN composer --global config optimize-autoloader true
+RUN composer --global config data-dir /composer
 
 COPY script.sh /root/script.sh
 
