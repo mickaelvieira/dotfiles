@@ -1,9 +1,15 @@
-#### build
+#### Build
 
 ```
 $ wget https://raw.githubusercontent.com/mickaelvieira/dotfiles/master/docker/yarn/Dockerfile
 $ wget https://raw.githubusercontent.com/mickaelvieira/dotfiles/master/docker/yarn/script.sh
 $ docker build -t yarn .
+```
+
+#### Pull the image from `Docherhub`
+
+```
+$ docker pull mickaelvieira/yarn
 ```
 
 #### Basic usage

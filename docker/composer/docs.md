@@ -1,10 +1,17 @@
-# Build
+#### Build
 
 ```
 $ wget https://raw.githubusercontent.com/mickaelvieira/dotfiles/master/docker/composer/Dockerfile
 $ wget https://raw.githubusercontent.com/mickaelvieira/dotfiles/master/docker/composer/script.sh
 $ docker build -t composer .
 ```
+
+#### Pull the image from `Docherhub`
+
+```
+$ docker pull mickaelvieira/composer
+```
+
 #### Basic usage
 
 Using the command without any command will print out the libraries version, for instance:
