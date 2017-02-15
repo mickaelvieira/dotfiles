@@ -14,7 +14,7 @@ $ docker pull mickaelvieira/composer
 
 #### Basic usage
 
-Using the command without any command will print out the libraries version, for instance:
+Using the image without any command will print out the libraries version, for instance:
 
 ```
 $ docker run mickaelvieira/composer
@@ -66,7 +66,7 @@ Cache: /composer
 Cwd: /srv
 ```
 
-#### Map cache directory to a local cache directory
+#### Map container's cache directory to your local cache directory
 
 For instance, to map the composer cache directory in the container to your local composer cache directory.
 
@@ -74,7 +74,7 @@ For instance, to map the composer cache directory in the container to your local
 docker run -it --rm -v "$(composer --global config data-dir)":/cache mickaelvieira/composer
 ```
 
-#### Map working directory to a local working directory
+#### Map container's working directory to your local working directory (.ie where is your `package.json`)
 
 ```
 docker run -it --rm -v "$(pwd -P)":/srv mickaelvieira/composer
