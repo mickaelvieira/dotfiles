@@ -74,7 +74,7 @@ For instance, to map the composer cache directory in the container to your local
 docker run -it --rm -v "$(composer --global config data-dir)":/cache mickaelvieira/composer
 ```
 
-#### Map container's working directory to your local working directory (.ie where is your `package.json`)
+#### Map container's working directory to your local working directory (.ie where is your `composer.json`)
 
 ```
 docker run -it --rm -v "$(pwd -P)":/srv mickaelvieira/composer
