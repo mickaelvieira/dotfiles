@@ -55,6 +55,8 @@ Changed current directory to /composer
 [archive-format] tar
 [archive-dir] .
 [home] /composer
+Cache: /composer
+Cwd: /srv
 ```
 
 #### Map cache directory to a local cache directory
