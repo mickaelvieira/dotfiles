@@ -1,20 +1,18 @@
 FROM alpine:3.5
 
-RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories && \
-    echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
-    echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories
+WORKDIR /srv
 
-RUN apk add --no-cache \
+RUN echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories \
+ && echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
+ && echo -e 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories \
+ && apk add --no-cache \
     curl \
     git \
     ca-certificates \
     ruby \
-    yarn
-
-RUN gem install sass --no-document
-RUN yarn config set cache-folder /cache
-
-WORKDIR /srv
+    yarn \
+ && gem install sass --no-document \
+ && yarn config set cache-folder /cache
 
 COPY script.sh /root/script.sh
 
