@@ -2,7 +2,7 @@ FROM alpine:3.5
 
 WORKDIR /srv
 
-ENV COMPOSER_HOME="/composer"
+ENV COMPOSER_HOME="/cache"
 
 RUN apk add --no-cache \
     curl \

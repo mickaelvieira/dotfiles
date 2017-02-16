@@ -3,7 +3,7 @@
 ```
 $ wget https://raw.githubusercontent.com/mickaelvieira/dotfiles/master/docker/composer/Dockerfile
 $ wget https://raw.githubusercontent.com/mickaelvieira/dotfiles/master/docker/composer/script.sh
-$ docker build -t composer .
+$ docker build -t mickaelvieira/composer .
 ```
 
 #### Pull the image from `Docherhub`
