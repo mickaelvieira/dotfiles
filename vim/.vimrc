@@ -33,7 +33,6 @@ colorscheme gotham256
 
 let g:airline_powerline_fonts = 1
 
-
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 0
 let g:javascript_plugin_flow = 0
@@ -96,6 +95,11 @@ set sidescroll=1
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
+" Rust racer
+set hidden
+let g:racer_cmd = "~/.cargo/bin/racer"
+let g:racer_experimental_completer = 1
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
