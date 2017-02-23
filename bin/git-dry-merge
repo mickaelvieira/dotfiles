@@ -4,16 +4,16 @@ set -u -e -o pipefail
 #set -x
 
 info() {
-    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+    echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m"
 }
 
 error() {
-    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m $1" 1>&2
+    echo -e "\x1b[97m\x1b[41m\x21 $1\x1b[0m" 1>&2
     exit 1
 }
 
 warning() {
-    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
+    echo -e "\x1b[97m\x1b[45m\x21 $1\x1b[0m"
 }
 
 get_current_branch() {

@@ -4,6 +4,9 @@ get_composer_bin_path() {
     local composer_home="$HOME/.composer"
     local composer_bin=
 
+    # In case the environment variable is defined
+    [[ ! -z ${COMPOSER_HOME:-} ]] && composer_home=${COMPOSER_HOME}
+
     if [[ -d $composer_home ]]; then
         composer_bin="${composer_home}/vendor/bin"
         [[ -d $composer_bin ]] || mkdir -p $composer_bin
@@ -47,7 +50,7 @@ export GOPATH="$HOME/dev/go"
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
 
-#Javascript configuration
+# Javascript configuration
 export NODE_ENV='development'
 
 [[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
@@ -97,4 +100,3 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 # "<>" indicates you have diverged
 # "=" indicates that there is no difference
 export GIT_PS1_SHOWUPSTREAM="auto"
-

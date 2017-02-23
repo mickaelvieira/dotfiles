@@ -13,12 +13,6 @@ error() {
 }
 
 main() {
-    local bin_dir="/usr/local/bin"
-    local composer_path=
-
-    [[ ! -z ${COMPOSER_HOME:-} ]] && composer_path=${COMPOSER_HOME}
-    [[ -z $composer_path ]] && composer_path="~/.composer"
-
     declare -a packages=(
         squizlabs/php_codesniffer
         phpmd/phpmd
@@ -30,19 +24,10 @@ main() {
         error "composer is required but it is not installed. \xE2\x98\xB9"
 
     info "Installing global PHP dependencies..."
+
     composer global require "${packages[@]}"
 
-    declare -a files=(
-        phpcs
-        phpmd
-        phpunit
-        phpspec
-    )
-
-    info "Creating symlinks..."
-    for file in ${files[*]}; do
-        ln -svf "${composer_path}/vendor/bin/$file" "${bin_dir}/$file"
-    done
+    info "Composer bin directory $(composer --global config data-dir)/vendor/bin/ will be added to PATH, see ~/.bash_export"
 }
 
 main

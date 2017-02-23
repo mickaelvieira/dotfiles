@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# This script will delete locally all merged branches
-# It will ignores branches such master, dev, staging, etc...
-
 set -u -e -o pipefail
 #set -x
 
 info() {
-    echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m "
+    echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m"
 }
 
 error() {
@@ -16,7 +13,7 @@ error() {
 }
 
 warning() {
-    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
+    echo -e "\x1b[97m\x1b[45m\x21 $1\x1b[0m"
 }
 
 info "Working directory: $(pwd -P)"
@@ -46,4 +43,3 @@ else
 fi
 
 exit 0
-
