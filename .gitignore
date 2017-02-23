@@ -4,5 +4,12 @@ vim/.vim/autoload/plug.vim
 vim/.vim/.netrwhist
 vim/.vim/after/ftplugin/markdown/instant-markdown.vim
 
+atom/packages
+atom/storage
+atom/recovery
+atom/.node-gyp
+atom/.apm
+
+
 storm/*
 !storm/**/*.xml
