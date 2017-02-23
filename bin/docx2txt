@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# @see git/.gitconfig
+# @link https://git-scm.com/book/en/v2/Customizing-Git-Git-Attributes
+
 set -u -e -o pipefail
 #set -x
 
