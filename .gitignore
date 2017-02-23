@@ -10,6 +10,4 @@ atom/recovery
 atom/.node-gyp
 atom/.apm
 
-
-storm/*
-!storm/**/*.xml
+sass/.sass-lint.yml
