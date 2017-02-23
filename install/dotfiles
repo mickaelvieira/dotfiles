@@ -4,7 +4,7 @@ set -e -u -o pipefail
 #set -x
 
 info() {
-    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+    echo -e "\x1b[32m\xE2\x87\x92  $1\x1b[0m"
 }
 
 error() {
@@ -35,7 +35,7 @@ create_symlink() {
     fi
 
     info "Creating symlink ${symlink}"
-    ln -fs "${target}" "${symlink}"
+    ln -svf "${target}" "${symlink}"
 }
 
 ask_confirm() {
@@ -171,4 +171,3 @@ main() {
 }
 
 main
-

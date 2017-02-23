@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+info() {
+    echo -e "\x1b[32m\xE2\x87\x92  $1\x1b[0m"
+}
+
+error() {
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m$1\x1b[0m" 1>&2
+    exit 1
+}
+
+main() {
+    local bin_dir="/usr/local/bin"
+    local composer_path=
+
+    [[ ! -z ${COMPOSER_HOME:-} ]] && composer_path=${COMPOSER_HOME}
+    [[ -z $composer_path ]] && composer_path="~/.composer"
+
+    declare -a packages=(
+        squizlabs/php_codesniffer
+        phpmd/phpmd
+        phpspec/phpspec
+        phpunit/phpunit
+    )
+
+    command -v composer >/dev/null 2>&1 || \
+        error "composer is required but it is not installed. \xE2\x98\xB9"
+
+    info "Installing global PHP dependencies..."
+    composer global require "${packages[@]}"
+
+    declare -a files=(
+        phpcs
+        phpmd
+        phpunit
+        phpspec
+    )
+
+    info "Creating symlinks..."
+    for file in ${files[*]}; do
+        ln -svf "${composer_path}/vendor/bin/$file" "${bin_dir}/$file"
+    done
+}
+
+main

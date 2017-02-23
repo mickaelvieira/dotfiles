@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+#set -x
+
+declare -a packages=(
+  eslint
+  sass-lint
+)
+
+#npm -g install "${packages[@]}"
+yarn global add "${packages[@]}"
+
+exit 0
