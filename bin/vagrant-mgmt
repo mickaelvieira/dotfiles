@@ -32,6 +32,7 @@ show_usage() {
     echo -e "$(read_help)" 1>&2
     exit 1
 }
+
 clear_machine_list() {
   vagrant global-status --prune
 }
