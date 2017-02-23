@@ -1,3 +1,5 @@
 #!/bin/sh
 
-curl -s https://raw.githubusercontent.com/brigade/scss-lint/master/config/default.yml -o .sass-lint.yml
+curl --progress-bar --verbose \
+  https://raw.githubusercontent.com/brigade/scss-lint/master/config/default.yml \
+  -o .sass-lint.yml
