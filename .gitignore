@@ -9,5 +9,6 @@ atom/storage
 atom/recovery
 atom/.node-gyp
 atom/.apm
+atom/nohup.out
 
 sass/.sass-lint.yml

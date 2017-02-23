@@ -1,6 +1,14 @@
+atom-language-rust@0.12.0
+build@0.67.0
+busy@0.7.0
+git-plus@7.1.1
+language-rust@0.4.9
 atom-easy-jsdoc@4.10.0
 linter@1.11.23
 linter-eslint@8.1.1
 linter-sass-lint@1.7.4
 php-twig@4.0.0
+linter-rust@0.7.2
+markdown-writer@2.6.3
+racer@0.20.0
 
