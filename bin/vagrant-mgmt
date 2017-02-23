@@ -22,6 +22,7 @@ read_help() {
 Usage: ${SCRIPT} <action> <number>
 Examples:
     - vag list: list the vagrant machines
+    - vag clear: clear the vagrant machines list
     - vag up 1: launch the machine number 1
     - vag status: the script will prompt user to get the machine number
 eom
@@ -30,6 +31,9 @@ eom
 show_usage() {
     echo -e "$(read_help)" 1>&2
     exit 1
+}
+clear_machine_list() {
+  vagrant global-status --prune
 }
 
 get_vm_info() {
@@ -130,6 +134,8 @@ main() {
 
     if [[ $action == list ]]; then
         print_table
+    elif [[ $action == clear ]]; then
+        clear_machine_list
     else
         [[ ! -z $number ]] || number=$(ask_for_vm_number)
 
@@ -152,4 +158,3 @@ main() {
 }
 
 main $@
-
