@@ -21,10 +21,10 @@ read_help() {
     cat <<eom
 Usage: ${SCRIPT} <action> <number>
 Examples:
-    - vag list: list the vagrant machines
-    - vag clear: clear the vagrant machines list
-    - vag up 1: launch the machine number 1
-    - vag status: the script will prompt user to get the machine number
+    - ${SCRIPT} list: list the vagrant machines
+    - ${SCRIPT} clear: clear the vagrant machines list
+    - ${SCRIPT} up 1: launch the machine number 1
+    - ${SCRIPT} status: the script will prompt user to get the machine number
 eom
 }
 
