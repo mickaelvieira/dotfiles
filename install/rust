@@ -37,25 +37,28 @@ install_rust() {
 
 create_src_dir() {
     info "Creating source directory..."
-    mkdir -vp /usr/local/src/rust/
+    sudo mkdir -vp /usr/local/src/rust/
 }
 
 create_symlinks() {
     info "Creating symlinks..."
 
+    local plateform
     local os_type="$(uname -s)"
 
     case "$os_type" in
         Linux)
-            error "Not implemented yet"
+            plateform="stable-x86_64-unknown-linux-gnu"
             ;;
         Darwin)
-            ln -svf ~/.cargo/bin/racer /usr/local/bin/racer
-            ln -svf ~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src /usr/local/src/rust/src
+            plateform="stable-x86_64-apple-darwin"
             ;;
         *)
           error "Unrecognized OS type: $os_type"
     esac
+
+    sudo ln -svf "$HOME/.cargo/bin/racer" /usr/local/bin/racer
+    sudo ln -svf "$HOME/.rustup/toolchains/${plateform}/lib/rustlib/src/rust/src" /usr/local/src/rust/src
 }
 
 main() {
