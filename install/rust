@@ -3,9 +3,65 @@
 set -e -u -o pipefail
 # set -x
 
-mkdir -vp /usr/local/src/rust/
+info() {
+    echo -e "\x1b[32m\xE2\x87\x92  $1\x1b[0m"
+}
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    ln -svf ~/.cargo/bin/racer /usr/local/bin/racer
-    ln -svf ~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src /usr/local/src/rust/src
-fi
+error() {
+    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m$1\x1b[0m" 1>&2
+    exit 1
+}
+
+warning() {
+    echo -e "\x1b[97m\x1b[45m\x21\x1b[0m $1"
+}
+
+install_rust() {
+    # https://github.com/rust-lang-nursery/rustup.rs
+    # https://github.com/phildawes/racer
+
+    info "Installing rust..."
+    curl https://sh.rustup.rs -sSf | sh
+
+    info "Installing rust bash completion"
+    rustup completions bash > /etc/bash_completion.d/rustup.bash-completion
+
+    info "Installing racer"
+    cargo install racer
+
+    info "Download rust sourcecode"
+    rustup component add rust-src
+
+    [[ -z $RUST_SRC_PATH ]] && warning "RUST_SRC_PATH does not seem to be defined"
+}
+
+create_src_dir() {
+    info "Creating source directory..."
+    mkdir -vp /usr/local/src/rust/
+}
+
+create_symlinks() {
+    info "Creating symlinks..."
+
+    local os_type="$(uname -s)"
+
+    case "$os_type" in
+        Linux)
+            error "Not implemented yet"
+            ;;
+        Darwin)
+            ln -svf ~/.cargo/bin/racer /usr/local/bin/racer
+            ln -svf ~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src /usr/local/src/rust/src
+            ;;
+        *)
+          error "Unrecognized OS type: $os_type"
+    esac
+}
+
+main() {
+  command -v rustc >/dev/null 2>&1 || install_rust
+  create_src_dir
+  create_symlinks
+}
+
+main
