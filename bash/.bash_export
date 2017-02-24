@@ -1,8 +1,20 @@
 #!/bin/bash
 
 get_composer_bin_path() {
-    local composer_home="$HOME/.composer"
+    local os_type="$(uname -s)"
+    local composer_home=
     local composer_bin=
+
+    case "$os_type" in
+        Linux)
+            composer_home="$HOME/.config/composer"
+            ;;
+        Darwin)
+            composer_home="$HOME/.composer"
+            ;;
+        *)
+          error "Unrecognized OS type: $os_type"
+    esac
 
     # In case the environment variable is defined
     [[ ! -z ${COMPOSER_HOME:-} ]] && composer_home=${COMPOSER_HOME}
@@ -34,7 +46,9 @@ is_vagrant_machine() {
     has_vagrant_user || echo false
 }
 
-export RUST_SRC_PATH=/usr/local/src/rust/src
+# Rust cargo path
+[[ -d "/usr/local/src/rust/src" ]] && export RUST_SRC_PATH=/usr/local/src/rust/src
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # am I in a vagrant machine?
 export IS_VAGRANT=$(is_vagrant_machine)
