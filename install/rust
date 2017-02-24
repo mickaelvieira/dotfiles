@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+mkdir -vp /usr/local/src/rust/
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ln -svf ~/.cargo/bin/racer /usr/local/bin/racer
+    ln -svf ~/.rustup/toolchains/stable-x86_64-apple-darwin/lib/rustlib/src/rust/src /usr/local/src/rust/src
+fi

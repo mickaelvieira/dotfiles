@@ -34,6 +34,8 @@ is_vagrant_machine() {
     has_vagrant_user || echo false
 }
 
+export RUST_SRC_PATH=/usr/local/src/rust/src
+
 # am I in a vagrant machine?
 export IS_VAGRANT=$(is_vagrant_machine)
 
