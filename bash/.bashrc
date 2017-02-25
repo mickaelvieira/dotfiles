@@ -33,7 +33,15 @@ if [[ -r ~/git-prompt.sh ]]; then
     source ~/git-prompt.sh
 fi
 
-declare -a files=(.bash_prompt .bash_options .bash_export .bash_aliases .bash_functions .bash_projects)
+declare -a files=(
+    .bash_prompt
+    .bash_options
+    .bash_export
+    .bash_aliases
+    .bash_functions
+    .bash_projects
+)
+
 for item in ${files[*]}; do
     if [[ -f ~/$item ]]; then
         source ~/$item

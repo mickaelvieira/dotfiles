@@ -58,6 +58,7 @@ install_bash() {
         .bash_profile
         .bash_aliases
         .bash_functions
+        .bash_logout
         .dircolors
         .profile
     )
