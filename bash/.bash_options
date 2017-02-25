@@ -1,5 +1,8 @@
 #!/bin/bash
 
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
 # append to the history file, don't overwrite it
 shopt -s histappend
 
@@ -17,3 +20,5 @@ shopt -s checkwinsize
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob;
 
+# Auto "cd" when entering just a path
+shopt -s autocd

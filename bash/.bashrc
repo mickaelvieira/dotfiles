@@ -15,6 +15,10 @@ if ! shopt -oq posix; then
   fi
 fi
 
+if [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]]; then
+    . /usr/share/doc/pkgfile/command-not-found.bash
+fi
+
 # Add colors to man pages
 man() {
     env \
