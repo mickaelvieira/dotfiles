@@ -11,4 +11,5 @@ linter-sass-lint@1.7.4
 markdown-writer@2.6.3
 php-twig@4.0.0
 racer@0.20.0
+tabs-to-spaces@1.0.3
 
