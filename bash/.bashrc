@@ -15,8 +15,15 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# https://wiki.archlinux.org/index.php/Pkgfile
+# https://wiki.archlinux.org/index.php/Bash#Command_not_found
 if [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]]; then
     . /usr/share/doc/pkgfile/command-not-found.bash
+fi
+
+# MacOS
+if [[ -f /usr/local/etc/profile.d/autojump.sh ]]; then
+    . /usr/local/etc/profile.d/autojump.sh
 fi
 
 # Add colors to man pages
