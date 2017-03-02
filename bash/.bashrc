@@ -21,9 +21,11 @@ if [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]]; then
     . /usr/share/doc/pkgfile/command-not-found.bash
 fi
 
-# MacOS
+# https://wiki.archlinux.org/index.php/Bash#Autojump
 if [[ -f /usr/local/etc/profile.d/autojump.sh ]]; then
     . /usr/local/etc/profile.d/autojump.sh
+elif [[ -f /etc/profile.d/autojump.bash ]]; then
+    . /etc/profile.d/autojump.bash
 fi
 
 # Add colors to man pages
