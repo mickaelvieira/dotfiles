@@ -23,14 +23,22 @@ install_rust() {
     info "Installing rust..."
     curl https://sh.rustup.rs -sSf | sh
 
-    info "Installing rust bash completion"
+    info "Installing rust nightly..."
+    rustup toolchain install nightly
+
+    info "Installing rust bash completion.."
     rustup completions bash > /etc/bash_completion.d/rustup.bash-completion
 
-    info "Installing racer"
+    info "Download rust source code and documentation..."
+    rustup component add rust-src
+    rustup component add rust-docs
+    rustup update
+
+    info "Installing racer..."
     cargo install racer
 
-    info "Download rust sourcecode"
-    rustup component add rust-src
+    info "Installing rustfmt..."
+    cargo install rustfmt
 
     [[ -z $RUST_SRC_PATH ]] && warning "RUST_SRC_PATH does not seem to be defined"
 }
