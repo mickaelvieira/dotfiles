@@ -1,11 +1,12 @@
 module.exports = {
-    "extends": "airbnb",
-    "plugins": [
-        "react",
-        "jsx-a11y",
-        "import"
+    'extends': 'airbnb',
+    'plugins': [
+        'react',
+        'jsx-a11y',
+        'import'
     ],
-    "rules": {
+    'rules': {
+      'no-alert': 'off',
       'comma-dangle': ['error', {
         arrays: 'always-multiline',
         objects: 'always-multiline',
@@ -13,11 +14,11 @@ module.exports = {
         exports: 'always-multiline',
         functions: 'ignore',
       }],
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      'react/jsx-filename-extension': [1, { 'extensions': ['.js', '.jsx'] }],
       'react/jsx-curly-spacing': ['error', 'always', { allowMultiline: true }],
       'react/prefer-stateless-function': ['error', { ignorePureComponents: true }],
     },
-    "env": {
-        "browser": true
+    'env': {
+        'browser': true
     }
 };
