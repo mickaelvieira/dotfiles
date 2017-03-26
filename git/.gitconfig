@@ -17,6 +17,8 @@
 	cl = clone
 	br = branch
 	fo = fetch origin
+    lg = log --oneline
+    ll = log -1 HEAD
 
 [push]
 	default = current
