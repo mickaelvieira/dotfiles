@@ -4,6 +4,7 @@
   core:
     telemetryConsent: "limited"
   editor:
+    fontSize: 12
     invisibles: {}
     showIndentGuide: true
     showInvisibles: true
