@@ -50,6 +50,9 @@ is_vagrant_machine() {
 [[ -d "/usr/local/src/rust/src" ]] && export RUST_SRC_PATH=/usr/local/src/rust/src
 [[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
+# Haskell
+[[ -d "$HOME/.cabal/bin" ]] && export PATH="$HOME/.cabal/bin:$PATH"
+
 # am I in a vagrant machine?
 export IS_VAGRANT=$(is_vagrant_machine)
 
