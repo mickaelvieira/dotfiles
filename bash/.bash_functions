@@ -4,7 +4,7 @@
 
 # Create a new directory and enter it
 function mkd() {
-	mkdir -p "$@" && cd "$_";
+	mkdir -p "$@" && cd "$_" || exit;
 }
 
 # `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
@@ -19,4 +19,3 @@ function tre() {
 gpip() {
     PIP_REQUIRE_VIRTUALENV="" sudo pip "$@"
 }
-
