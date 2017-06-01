@@ -1,47 +1,48 @@
 [core]
-	excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
-	editor = vim
-	autocrlf = input
+    excludesfile = ~/.gitignore
+    attributesfile = ~/.gitattributes
+    editor = vim
+    autocrlf = input
 
 [user]
-	email = contact@mickael-vieira.com
-	name = Mickael Vieira
-	signingkey = A71A22C9
+    email = contact@mickael-vieira.com
+    name = Mickael Vieira
+    signingkey = A71A22C9
 
 [alias]
-	st = status
-	co = checkout
-	ci = commit -m
-	sc = commit -S -m
-	cl = clone
-	br = branch
-	fo = fetch origin
+    st = status
+    co = checkout
+    ci = commit -m
+    sc = commit -S -m
+    cl = clone
+    br = branch
+    fo = fetch origin
     lg = log --oneline
     ll = log -1 HEAD
+    gr = log --graph --decorate
 
 [push]
-	default = current
+    default = current
 
 [difftool]
-	prompt = false
+    prompt = false
 
 [merge]
-	# Let's use meld as a merge tool
-	tool = meld
+    # Let's use meld as a merge tool
+    tool = meld
 
 [mergetool]
-	# Do not keep .orig files after merging
-	keepBackup = false
+    # Do not keep .orig files after merging
+    keepBackup = false
 
 [help]
-	# Automatically correct
-	# and execute mistyped commands
-	# after 1s
-	autocorrect = 10
+    # Automatically correct
+    # and execute mistyped commands
+    # after 1s
+    autocorrect = 10
 
 [color]
-	ui = auto
+    ui = auto
 
 # The colors accepted are normal, black, red, green, yellow, blue, magenta, cyan and white.
 # The attributes are bold, dim, ul, blink and reverse.
@@ -68,8 +69,8 @@
 # nobranch (the color the no branch warning is shown in, defaulting to red).
 
 [diff]
-	compactionHeuristic = 1
+    compactionHeuristic = 1
 [diff "exif"]
-	textconv = exiftool
+    textconv = exiftool
 [diff "word"]
-	textconv = docx2txt
+    textconv = docx2txt
