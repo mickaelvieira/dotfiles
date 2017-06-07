@@ -57,7 +57,7 @@ declare -a files=(
 
 for item in ${files[*]}; do
     if [[ -f ~/$item ]]; then
-        source ~/$item
+        source ~/"$item"
     fi
 done
 

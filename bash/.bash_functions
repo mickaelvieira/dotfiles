@@ -4,7 +4,7 @@
 
 # Create a new directory and enter it
 function mkd() {
-	mkdir -p "$@" && cd "$_" || exit;
+    mkdir -p "$@" && cd "$_" || return;
 }
 
 # `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
@@ -12,7 +12,7 @@ function mkd() {
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
 function tre() {
-	tree -aC -I '.git|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
+    tree -aC -I '.git|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
 }
 
 # Install python packages globally

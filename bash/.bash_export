@@ -21,21 +21,21 @@ get_composer_bin_path() {
 
     if [[ -d $composer_home ]]; then
         composer_bin="${composer_home}/vendor/bin"
-        [[ -d $composer_bin ]] || mkdir -p $composer_bin
+        [[ -d $composer_bin ]] || mkdir -p "$composer_bin"
     fi
-    echo $composer_bin
+    echo "$composer_bin"
 }
 
 get_gem_path() {
     local ruby_path=$(ruby -e 'print Gem.user_dir')
     local gem_bin="${ruby_path}/bin"
-    echo $gem_bin
+    echo "$gem_bin"
 }
 
 get_dotfiles_path() {
-    local this_file=$(readlink ${BASH_SOURCE[0]})
+    local this_file=$(readlink "${BASH_SOURCE[0]}")
     local df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
-    echo $df_dir
+    echo "$df_dir"
 }
 
 has_vagrant_user() {
