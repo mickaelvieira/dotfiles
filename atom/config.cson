@@ -15,9 +15,10 @@
   "linter-eslint": {}
   "linter-shellcheck":
     enableNotice: true
-    userParameters: "-e SC1090,SC2155"
+    userParameters: "-x -e SC1090,SC2155"
   "linter-ui-default":
     panelHeight: 377
+    showPanel: true
   racer: {}
   welcome:
     showOnStartup: false
