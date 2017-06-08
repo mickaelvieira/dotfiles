@@ -17,7 +17,7 @@ warning() {
 }
 
 get_current_branch() {
-    echo $(git branch | grep "^*" | awk '{print $2}')
+    git branch | grep "^\*" | awk '{print $2}'
 }
 
 info "Working directory: \x1b[93m$(pwd -P)\x1b[0m"
@@ -30,7 +30,7 @@ main() {
 
     info "Merging \x1b[93m${branch}\x1b[0m into \x1b[93m${cwb}\x1b[0m"
 
-    local output=$(git merge --no-commit --no-ff $branch)
+    local output=$(git merge --no-commit --no-ff "$branch")
 
     echo
     info "Merge result"

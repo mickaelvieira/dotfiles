@@ -2,7 +2,7 @@
 
 set -u -e -o pipefail
 
-declare -r SCRIPT=$(basename $0)
+declare -r SCRIPT=$(basename "$0")
 declare -r WORKING_DIR=$(pwd -P)
 declare -r DEFAULT_JS_DIR="js"
 declare -r DEFAULT_SPECS_DIR="test"
@@ -37,49 +37,51 @@ show_usage() {
 split_path() {
     local IFS='/'
     local parts=("$1")
-    echo $parts
+    echo "${parts[@]}"
 }
 
 get_relative_sut_path() {
     local filepath="$1"
-    local relpath=$(dirname ${filepath/$WORKING_DIR/})
-    local parts=($(split_path $relpath))
+    local relpath=$(dirname "${filepath/$WORKING_DIR/}")
+    local parts=($(split_path "$relpath"))
 
     local sut_rel_path=""
-    for part in ${parts[@]}; do
+    for part in "${parts[@]}"; do
         sut_rel_path+="../"
     done
     sut_rel_path+=${file/${WORKING_DIR}\/}
 
-    echo ${sut_rel_path%.*s}
+    echo "${sut_rel_path%.*s}"
 }
 
 gen_tree() {
-    local directories=$(find $JS_DIR -type d)
+    local directories=$(find "$JS_DIR" -type d)
     local path=
-    for directory in ${directories[@]}; do
+    for directory in "${directories[@]}"; do
         path=${directory/$JS_DIR/$SPECS_DIR}
         if [[ ! -d $path ]]; then
             info "Creating directory: ${path}"
-            mkdir -p $path
+            mkdir -p "$path"
         fi
     done
 }
 
 gen_specs() {
-    local files=$(find $JS_DIR -type f -name '*.js' ! -name 'bundle.js' ! -name 'index.js')
+    local files=$(find "$JS_DIR" -type f -name '*.js' ! -name 'bundle.js' ! -name 'index.js')
     local filepath=
     local relpath=
 
-    for file in ${files[@]}; do
+    for file in "${files[@]}"; do
         filepath=${file/$JS_DIR/$SPECS_DIR}
-        relpath=$(get_relative_sut_path $filepath)
+        relpath=$(get_relative_sut_path "$filepath")
         if [[ ! -f $filepath ]]; then
             info "Generating spec: ${filepath}"
-            touch $filepath
-            echo -e "import sinon from 'sinon';" >> $filepath
-            echo -e "import should from 'should';" >> $filepath
-            echo -e "import sut from '${relpath}';" >> $filepath
+            touch "$filepath"
+            {
+              echo -e "import sinon from 'sinon';"
+              echo -e "import should from 'should';"
+              echo -e "import sut from '${relpath}';"
+            } >> "$filepath"
         fi
     done
 }
@@ -92,15 +94,17 @@ gen_spec() {
     fi
 
     local filepath=${file/$JS_DIR/$SPECS_DIR}
-    local relpath=$(get_relative_sut_path $filepath)
+    local relpath=$(get_relative_sut_path "$filepath")
 
     if [[ ! -f $filepath ]]; then
         info "Generating spec: ${filepath}"
-        mkdir -p  $(dirname $filepath)
-        touch $filepath
-        echo -e "import sinon from 'sinon';" >> $filepath
-        echo -e "import should from 'should';" >> $filepath
-        echo -e "import sut from '${relpath}';" >> $filepath
+        mkdir -p  "$(dirname "$filepath")"
+        touch "$filepath"
+        {
+          echo -e "import sinon from 'sinon';"
+          echo -e "import should from 'should';"
+          echo -e "import sut from '${relpath}';"
+        } >> "$filepath"
     else
         error "'${filepath}' already exist"
     fi
@@ -138,9 +142,9 @@ main() {
     info "Specs: ${SPECS_DIR}"
 
     if [[ ! -z $file ]]; then
-        gen_spec $file
+        gen_spec "$file"
     else
-        read -p "Do you want to generate all the specs? (y/N): " choice
+        read -rp "Do you want to generate all the specs? (y/N): " choice
 
         [[ -z $choice ]] && choice="n"
 
@@ -152,4 +156,3 @@ main() {
 }
 
 main "$@"
-

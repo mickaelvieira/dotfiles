@@ -21,7 +21,7 @@ remove_composer_signature() {
 }
 
 read_composer_signature() {
-    echo $(cat $COMPOSER_SIGNATURE)
+    cat $COMPOSER_SIGNATURE
 }
 
 remove_composer_installer() {
@@ -31,7 +31,7 @@ remove_composer_installer() {
 is_installer_checksum_valid() {
     local checksum=$(read_composer_signature)
     local script="if (hash_file(\"SHA384\", \"${COMPOSER_SETUP}\") === \"${checksum}\") { echo \"y\"; } else { echo \"n\"; }"
-    echo $(php -r "${script}")
+    php -r "${script}"
 }
 
 main() {

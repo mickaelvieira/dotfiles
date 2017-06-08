@@ -19,8 +19,8 @@ warning() {
 usage() {
     help="\n"
     help+="Usage:\n"
-    help+=" $(basename $0) [extension] [directory]\n"
-    echo -e ${help}
+    help+=" $(basename "$0") [extension] [directory]\n"
+    echo -e "${help}"
     exit 1
 }
 
@@ -44,16 +44,16 @@ else
 
     info "The following files will be added:"
 
-    for file in ${files[@]}; do
+    for file in "${files[@]}"; do
         echo -e "\t- ${file}"
     done
 
-    read -e -p "Do you want to proceed? [Y/n]: " answer
+    read -erp "Do you want to proceed? [Y/n]: " answer
 
     if [[ ${answer} == "n" ]]; then
         info "Skipped!"
     else
-        for file in ${files[@]}; do
+        for file in "${files[@]}"; do
             info "Adding file: ${file}"
             git add "${file}"
         done

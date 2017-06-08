@@ -42,7 +42,7 @@ ask_confirm() {
     local answer=
     local name="$1"
 
-    read -e -p "$(echo -e "Do you want to install \x1b[33m${name}\x1b[0m configuration? [Y/n]:") " answer
+    read -epr "$(echo -e "Do you want to install \x1b[33m${name}\x1b[0m configuration? [Y/n]:") " answer
 
     [[ -z $answer ]] && answer="y"
 
@@ -154,7 +154,7 @@ main() {
     fi
 
     local choice=
-    read -p "$(get_choices) " choice
+    read -pr "$(get_choices) " choice
 
     [[ -z $choice ]] && choice=1
 
