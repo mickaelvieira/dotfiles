@@ -23,6 +23,10 @@ warning() {
     printf "\x1b[97m\x1b[45m\x21\x1b[0m \x1b[35m%s\x1b[0m\n" "$1"
 }
 
+prompt() {
+    printf "\x1b[93m%s: \x1b[0m" "$1"
+}
+
 is_install() {
     command -v "$1" > /dev/null 2>&1 || error "'$1' (command not found)"
 }
@@ -78,12 +82,12 @@ generate_ssl_certificate() {
 main() {
     is_install openssl
 
-    local msg=$(echo -e "\x1b[93mPlease a enter the certificate's name? ($default_cert_name): \x1b[0m")
-    read -erp "$msg" cert_name
+    read -erp "$(prompt "Please a enter the certificate's name? ($default_cert_name)")" cert_name
 
     [[ -z "$cert_name" ]] && cert_name=$default_cert_name
 
     local path="/tmp/$cert_name"
+    local archive="$cert_name.tgz"
 
     create_destination "$path"
 
@@ -102,6 +106,15 @@ main() {
 
     printf "\x1b[32mThe certificate was generated in \x1b[93m%s\x1b[0m\n" "$path"
     printf "\x1b[93m%s\x1b[0m\n" "$(ls -1 "$path")"
+
+    read -erp "$(prompt "Do you want to create an archive? (Y/n)")" do_archive
+
+    [[ -z "$do_archive" ]] && do_archive="y"
+
+    if [[ "$do_archive" == "y" ]]; then
+        tar czvf "$archive" -C /tmp "$cert_name"
+        printf "\x1b[32mArchive is ready \x1b[93m%s\x1b[0m\n" "$(pwd)/$archive"
+    fi
 
     exit 0
 }
