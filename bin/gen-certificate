@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -u -e -o pipefail
+set -u -e
 # set -x
 
 readonly script_name=$(basename "$0")
