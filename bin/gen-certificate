@@ -1,17 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
-set -u -e
+set -u -e -o pipefail
 # set -x
 
-readonly script_name=$(basename "$0")
-readonly root_dir="$(CDPATH="" cd -- "$(dirname -- "$0")/../" && pwd -P)"
+declare -r ssl_certs_state="New York"
+declare -r ssl_certs_country="US"
+declare -r ssl_certs_locality="New York"
+declare -r ssl_certs_organization="Your company"
 
-readonly ssl_certs_state="New York"
-readonly ssl_certs_country="US"
-readonly ssl_certs_locality="New York"
-readonly ssl_certs_organization="Your company"
-
-readonly default_cert_name="cert-$(date +%Y-%m-%d)"
+declare -r default_cert_name="cert-$(date +%Y-%m-%d)"
 
 info() {
     printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
@@ -30,30 +27,29 @@ is_install() {
     command -v "$1" > /dev/null 2>&1 || error "'$1' (command not found)"
 }
 
-create_destination() (
-    readonly path="$1";
-    mkdir -vp "$1" || return
-)
-
-gen_fields() {
-  printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
-    "$ssl_certs_country" \
-    "$ssl_certs_state" \
-    "$ssl_certs_locality" \
-    "$ssl_certs_organization" \
-    "$1"
+create_destination() {
+    local path="$1";
+    mkdir -vp "$path" || return
 }
 
-generate_rsa_key() (
-    readonly path="$1";
-    openssl genrsa \
-        -out "${path}" 2048
-)
+gen_fields() {
+    printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
+        "$ssl_certs_country" \
+        "$ssl_certs_state" \
+        "$ssl_certs_locality" \
+        "$ssl_certs_organization" \
+        "$1"
+}
 
-generate_csr() (
-    readonly cert_name="$1"
-    readonly key_path="$2"
-    readonly csr_path="$3"
+generate_rsa_key() {
+    local key_path="$1";
+    openssl genrsa -out "${key_path}" 2048
+}
+
+generate_csr() {
+    local cert_name="$1"
+    local key_path="$2"
+    local csr_path="$3"
 
     [ -f "$key_path" ] || error "Private Key not found"
 
@@ -61,12 +57,12 @@ generate_csr() (
         -subj "$(gen_fields "$cert_name")" \
         -key "$key_path" \
         -out "$csr_path"
-)
+}
 
-generate_ssl_certificate() (
-    readonly key_path="$1"
-    readonly csr_path="$2"
-    readonly cert_path="$3"
+generate_ssl_certificate() {
+    local key_path="$1"
+    local csr_path="$2"
+    local cert_path="$3"
 
     [ -f "$key_path" ] || error "Private Key not found"
     [ -f "$csr_path" ] || error "Certificate Signing Request not found"
@@ -77,23 +73,23 @@ generate_ssl_certificate() (
         -key "$key_path" \
         -out "$cert_path" \
         -extensions v3_ca
-)
+}
 
 main() {
     is_install openssl
 
-    printf "\x1b[93mPlease a enter the certificate's name? (%s): \x1b[0m" "$default_cert_name"
-    read -r cert_name
+    local msg=$(echo -e "\x1b[93mPlease a enter the certificate's name? ($default_cert_name): \x1b[0m")
+    read -erp "$msg" cert_name
 
-    [ -z "$cert_name" ] && cert_name=$default_cert_name
+    [[ -z "$cert_name" ]] && cert_name=$default_cert_name
 
-    path="/tmp/$cert_name"
+    local path="/tmp/$cert_name"
 
     create_destination "$path"
 
-    key_path="$path/$cert_name.key"
-    cert_path="$path/$cert_name.pem"
-    csr_path="$path/$cert_name.csr"
+    local key_path="$path/$cert_name.key"
+    local cert_path="$path/$cert_name.pem"
+    local csr_path="$path/$cert_name.csr"
 
     info "Generating private key"
     generate_rsa_key "$key_path"
@@ -110,4 +106,4 @@ main() {
     exit 0
 }
 
-main "$0"
+main
