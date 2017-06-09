@@ -7,20 +7,11 @@ readonly script_name=$(basename "$0")
 readonly root_dir="$(CDPATH="" cd -- "$(dirname -- "$0")/../" && pwd -P)"
 
 readonly ssl_certs_state="New York"
-readonly ssl_certs_locality="New York"
 readonly ssl_certs_country="US"
+readonly ssl_certs_locality="New York"
 readonly ssl_certs_organization="Your company"
 
 readonly default_cert_name="cert-$(date +%Y-%m-%d)"
-
-gen_fields() {
-  printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
-    "${ssl_certs_country}" \
-    "${ssl_certs_state}" \
-    "${ssl_certs_locality}" \
-    "${ssl_certs_organization}" \
-    "${cert_name}"
-}
 
 info() {
     printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
@@ -44,6 +35,15 @@ create_destination() (
     mkdir -vp "$1" || return
 )
 
+gen_fields() {
+  printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
+    "$ssl_certs_country" \
+    "$ssl_certs_state" \
+    "$ssl_certs_locality" \
+    "$ssl_certs_organization" \
+    "$1"
+}
+
 generate_rsa_key() (
     readonly path="$1";
     openssl genrsa \
@@ -51,13 +51,14 @@ generate_rsa_key() (
 )
 
 generate_csr() (
-    readonly key_path="$1"
-    readonly csr_path="$2"
+    readonly cert_name="$1"
+    readonly key_path="$2"
+    readonly csr_path="$3"
 
     [ -f "$key_path" ] || error "Private Key not found"
 
     openssl req -new -sha256 \
-        -subj "$(gen_fields)" \
+        -subj "$(gen_fields "$cert_name")" \
         -key "$key_path" \
         -out "$csr_path"
 )
@@ -98,7 +99,7 @@ main() {
     generate_rsa_key "$key_path"
 
     info "Generating Certificate Signing Request"
-    generate_csr "$key_path" "$csr_path"
+    generate_csr "$cert_name" "$key_path" "$csr_path"
 
     info "Generating SSL certificate"
     generate_ssl_certificate "$key_path" "$csr_path" "$cert_path"
