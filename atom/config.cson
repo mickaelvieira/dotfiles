@@ -15,7 +15,7 @@
   "linter-eslint": {}
   "linter-shellcheck":
     enableNotice: true
-    userParameters: "-x -e SC1090,SC1091,SC2155"
+    userParameters: "-x -e SC1090,SC1091,SC2155,SC2030,SC2031"
   "linter-ui-default":
     panelHeight: 377
     showPanel: true
