@@ -55,7 +55,7 @@ generate_csr() {
     local key_path="$2"
     local csr_path="$3"
 
-    [ -f "$key_path" ] || error "Private Key not found"
+    [[ -f "$key_path" ]] || error "Private Key not found"
 
     openssl req -new -sha256 \
         -subj "$(gen_fields "$cert_name")" \
@@ -68,8 +68,8 @@ generate_ssl_certificate() {
     local csr_path="$2"
     local cert_path="$3"
 
-    [ -f "$key_path" ] || error "Private Key not found"
-    [ -f "$csr_path" ] || error "Certificate Signing Request not found"
+    [[ -f "$key_path" ]] || error "Private Key not found"
+    [[ -f "$csr_path" ]] || error "Certificate Signing Request not found"
 
     openssl req -nodes -x509 \
         -days 365 \
