@@ -1,0 +1,112 @@
+#!/bin/sh
+
+set -u -e -o pipefail
+# set -x
+
+readonly script_name=$(basename "$0")
+readonly root_dir="$(CDPATH="" cd -- "$(dirname -- "$0")/../" && pwd -P)"
+
+readonly ssl_certs_state="New York"
+readonly ssl_certs_locality="New York"
+readonly ssl_certs_country="US"
+readonly ssl_certs_organization="Your company"
+
+readonly default_cert_name="cert-$(date +%Y-%m-%d)"
+
+gen_fields() {
+  printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
+    "${ssl_certs_country}" \
+    "${ssl_certs_state}" \
+    "${ssl_certs_locality}" \
+    "${ssl_certs_organization}" \
+    "${cert_name}"
+}
+
+info() {
+    printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
+}
+
+error() {
+    printf "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m%s\x1b[0m\n" "$1" 1>&2
+    exit 1
+}
+
+warning() {
+    printf "\x1b[97m\x1b[45m\x21\x1b[0m \x1b[35m%s\x1b[0m\n" "$1"
+}
+
+is_install() {
+    command -v "$1" > /dev/null 2>&1 || error "'$1' (command not found)"
+}
+
+create_destination() (
+    readonly path="$1";
+    mkdir -vp "$1" || return
+)
+
+generate_rsa_key() (
+    readonly path="$1";
+    openssl genrsa \
+        -out "${path}" 2048
+)
+
+generate_csr() (
+    readonly key_path="$1"
+    readonly csr_path="$2"
+
+    [ -f "$key_path" ] || error "Private Key not found"
+
+    openssl req -new -sha256 \
+        -subj "$(gen_fields)" \
+        -key "$key_path" \
+        -out "$csr_path"
+)
+
+generate_ssl_certificate() (
+    readonly key_path="$1"
+    readonly csr_path="$2"
+    readonly cert_path="$3"
+
+    [ -f "$key_path" ] || error "Private Key not found"
+    [ -f "$csr_path" ] || error "Certificate Signing Request not found"
+
+    openssl req -nodes -x509 \
+        -days 365 \
+        -in "$csr_path" \
+        -key "$key_path" \
+        -out "$cert_path" \
+        -extensions v3_ca
+)
+
+main() {
+    is_install openssl
+
+    printf "\x1b[93mPlease a enter the certificate's name? (%s): \x1b[0m" "$default_cert_name"
+    read -r cert_name
+
+    [ -z "$cert_name" ] && cert_name=$default_cert_name
+
+    path="/tmp/$cert_name"
+
+    create_destination "$path"
+
+    key_path="$path/$cert_name.key"
+    cert_path="$path/$cert_name.pem"
+    csr_path="$path/$cert_name.csr"
+
+    info "Generating private key"
+    generate_rsa_key "$key_path"
+
+    info "Generating Certificate Signing Request"
+    generate_csr "$key_path" "$csr_path"
+
+    info "Generating SSL certificate"
+    generate_ssl_certificate "$key_path" "$csr_path" "$cert_path"
+
+    printf "\x1b[32mThe certificate was generated in \x1b[93m%s\x1b[0m\n" "$path"
+    printf "\x1b[93m%s\x1b[0m\n" "$(ls -1 "$path")"
+
+    exit 0
+}
+
+main "$0"
