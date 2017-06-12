@@ -109,8 +109,6 @@ if [[ -x /usr/local/bin/atom ]]; then
     export EDITOR=/usr/local/bin/atom
 elif [[ -x /usr/bin/atom ]]; then
     export EDITOR=/usr/bin/atom
-elif [[ -x /usr/bin/vim ]]; then
-    export EDITOR=/usr/bin/vim
 else
     export EDITOR=/usr/bin/vim
 fi
