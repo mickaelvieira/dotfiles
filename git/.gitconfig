@@ -12,8 +12,8 @@
 [alias]
     st = status
     co = checkout
-    ci = commit -m
-    sc = commit -S -m
+    ci = commit
+    sc = commit -S
     cl = clone
     br = branch
     fo = fetch origin
