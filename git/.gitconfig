@@ -5,7 +5,7 @@
     autocrlf = input
 
 [user]
-    email = contact@mickael-vieira.com
+    email = mickaelv@eu.square-enix.com
     name = Mickael Vieira
     signingkey = A71A22C9
 
@@ -74,3 +74,5 @@
     textconv = exiftool
 [diff "word"]
     textconv = docx2txt
+[commit]
+    template = ~/.gitmessage

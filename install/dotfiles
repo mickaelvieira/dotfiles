@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e -u -o pipefail
-#set -x
+# set -x
 
 info() {
     echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m"
@@ -80,6 +80,7 @@ install_git() {
     local files=(
         .gitconfig
         .gitignore
+        .gitmessage
         .gitattributes
     )
 
@@ -154,7 +155,7 @@ main() {
     fi
 
     local choice=
-    read -pr "$(get_choices) " choice
+    read -r -ep "$(get_choices) " choice
 
     [[ -z $choice ]] && choice=1
 
