@@ -1,11 +1,8 @@
 #!/bin/bash
-
 set -e -u -o pipefail
 # set -x
 
-declare -r WD="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-declare -r CARGO_FILE="$WD/Cargo.toml"
-declare -r CARGO_LOCK="$WD/Cargo.lock"
+declare -r WD="$(pwd -P)"
 
 info() {
     printf "\x1b[32m\xE2\x87\x92 %s\x1b[0m\n" "$1"
@@ -17,28 +14,68 @@ error() {
 }
 
 get_version() {
-    grep -E '^version' "$WD/Cargo.toml" | grep -Eo '([\.0-9]+)'
+    local cargo_version="$(get_version_from_cargo)"
+    local tags_version="$(get_version_from_git_tags)"
+    local composer_version="$(get_version_from_composer)"
+    local npm_version="$(get_version_from_npm)"
+
+    [[ -n "$tags_version" ]] && echo "$tags_version"
+    [[ -n "$cargo_version" ]] && echo "$cargo_version"
+    [[ -n "$composer_version" ]] && echo "$composer_version"
+    [[ -n "$npm_version" ]] && echo "$npm_version"
+    echo ""
+}
+
+get_version_from_cargo() {
+    local version
+    if [[ -f "$WD/Cargo.toml" ]]; then
+        version=$(grep -E "^version" "$WD/Cargo.toml" | grep -Eo "([\.0-9]+)")
+        if ! is_semser "$version"; then
+            version=
+        fi
+    fi
+    echo "$version"
+}
+
+get_version_from_composer() {
+    local version
+    if [[ -f "$WD/composer.json" ]]; then
+        version=$(grep -E "version" "$WD/composer.json" | grep -Eo "([\.0-9]+)")
+        if ! is_semser "$version"; then
+            version=
+        fi
+    fi
+    echo "$version"
+}
+
+get_version_from_npm() {
+    local version
+    if [[ -f "$WD/package.json" ]]; then
+        version=$(grep -E "version" "$WD/package.json" | grep -Eo "([\.0-9]+)")
+        if ! is_semser "$version"; then
+            version=
+        fi
+    fi
+    echo "$version"
+}
+
+get_version_from_git_tags() {
+    local version
+    if [[ -d "$WD/.git" ]]; then
+        local tags=($(git for-each-ref --format='%(*committerdate:raw)%(committerdate:raw) %(refname) %(*objectname) %(objectname)' refs/tags | sort -n | awk '{ print $3; }'))
+        if [[ ${#tags[@]} -ne 0 ]]; then
+            tag="${tags[*]: -1}"
+            version=$(echo "${tag/refs\/tags\//}" | grep -Eo "([\.0-9]+)")
+            if ! is_semser "$version"; then
+                version=
+            fi
+        fi
+    fi
+    echo "$version"
 }
 
 get_branch() {
     git branch | grep -E "^\*" | awk '{print $2}'
-}
-
-update_version() {
-    local version="$1"
-    local os_type="$(uname -s)"
-
-    case "$os_type" in
-        Linux)
-            sed -E "s/^version = \"([\.0-9]+)\"$/version = \"$version\"/" -i "$CARGO_FILE"
-            ;;
-        Darwin)
-            sed -i .bak -E "s/^version = \"([\.0-9]+)\"$/version = \"$version\"/" "$CARGO_FILE"
-            rm -vf "$CARGO_FILE.bak"
-            ;;
-        *)
-            error "Unrecognized OS type: $os_type"
-    esac
 }
 
 get_next_branch_message() {
@@ -58,7 +95,13 @@ EOM
 
 split_version() {
     local numbers=(${1//./ })
-    echo "${numbers[@]}"
+    echo "${numbers[@]:-}"
+}
+
+is_semser() {
+    local numbers=($(split_version "$1"))
+    [[ ${#numbers[@]} -ne 3 ]] && return 1
+    return 0
 }
 
 get_next_major_version() {
@@ -77,17 +120,21 @@ get_next_patch_version() {
 }
 
 ask_for_version_number() {
-    read -erp "Which version do you want to create: " number
+    read -erp "Which version do you want to create?: " number
     echo "$number"
 }
 
 create_next_release_branch() {
     local version=$1
-    local major=$(get_next_major_version "$version")
-    local minor=$(get_next_minor_version "$version")
-    local patch=$(get_next_patch_version "$version")
 
-    read -erp "$(echo -e "$(get_next_branch_message "$major" "$minor" "$patch")") " next_branch
+    if [[ -n "$version" ]]; then
+        local major=$(get_next_major_version "$version")
+        local minor=$(get_next_minor_version "$version")
+        local patch=$(get_next_patch_version "$version")
+        read -erp "$(echo -e "$(get_next_branch_message "$major" "$minor" "$patch")") " next_branch
+    else
+        next_branch=4
+    fi
 
     local branch_name=
     case $next_branch in
@@ -105,11 +152,6 @@ create_next_release_branch() {
 
         if [[ "$confirm" == y ]]; then
             git checkout -b "$branch_name"
-            update_version "$branch_name"
-            cargo update
-            git add "$CARGO_FILE"
-            git add "$CARGO_LOCK"
-            git commit -m "Update application's version and dependencies"
             git push
         fi
     else
@@ -119,11 +161,11 @@ create_next_release_branch() {
 
 main() {
     local branch="$(get_branch)"
-    local version="$(get_version)"
 
+    [[ ! -d "$WD/.git" ]] && error "Not a git repository"
     [[ "$branch" != master ]] && git checkout master
 
-    create_next_release_branch "$version"
+    create_next_release_branch "$(get_version)"
 }
 
 main
