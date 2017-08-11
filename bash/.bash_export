@@ -64,6 +64,7 @@ export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_composer_bin_path):$PATH"
 
 # GO configuration
 export GOPATH="$HOME/dev/go"
+export PATH="$GOPATH/bin:$PATH"
 
 # Python configuration
 export PIP_REQUIRE_VIRTUALENV=true
