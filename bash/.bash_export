@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# set -x
 get_composer_bin_path() {
     local os_type="$(uname -s)"
     local composer_home=
@@ -67,7 +67,7 @@ export GOPATH="$HOME/dev/go"
 export PATH="$GOPATH/bin:$PATH"
 
 # Python configuration
-export PIP_REQUIRE_VIRTUALENV=true
+# export PIP_REQUIRE_VIRTUALENV=true
 export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
 
 # Javascript configuration
@@ -76,9 +76,9 @@ export NODE_ENV="development"
 # Docker configuration
 export DOCKER_ID_USER="mickaelvieira"
 
-[[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
+# [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
+# [[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 [[ -d "$HOME/.yarn" ]] && export PATH="$HOME/.yarn/bin:$PATH"
 
