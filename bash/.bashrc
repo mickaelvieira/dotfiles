@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# http://tldp.org/LDP/abs/html/sample-bashrc.html
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -27,19 +29,6 @@ if [[ -f /usr/local/etc/profile.d/autojump.sh ]]; then
 elif [[ -f /etc/profile.d/autojump.bash ]]; then
     . /etc/profile.d/autojump.bash
 fi
-
-# Add colors to man pages
-man() {
-    env \
-    LESS_TERMCAP_mb=$'\x1b[01;31m' \
-    LESS_TERMCAP_md=$'\x1b[01;31m' \
-    LESS_TERMCAP_me=$'\x1b[0m' \
-    LESS_TERMCAP_se=$'\x1b[0m' \
-    LESS_TERMCAP_so=$'\x1b[01;44;33m' \
-    LESS_TERMCAP_ue=$'\x1b[0m' \
-    LESS_TERMCAP_us=$'\x1b[01;32m' \
-    man "$@"
-}
 
 # Add git information to the prompt
 if [[ -r ~/git-prompt.sh ]]; then
