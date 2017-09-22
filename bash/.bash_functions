@@ -12,7 +12,7 @@ function mkd() {
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
 function tre() {
-    tree -aC -I '.git|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
+    tree -aC -I '.git|.idea|.sass-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
 }
 
 # Install python packages globally
