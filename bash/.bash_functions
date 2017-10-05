@@ -1,17 +1,12 @@
 #!/bin/bash
 
-#`mkd` and `tre` were stolen from: https://github.com/mathiasbynens/dotfiles/blob/master/.functions
-
 # Create a new directory and enter it
 function mkd() {
-    mkdir -p "$@" && cd "$_" || return;
+    mkdir -p "$@" && cd "$_" || exit 1;
 }
 
-# `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
-# the `.git` directory, listing directories first. The output gets piped into
-# `less` with options to preserve color and line numbers, unless the output is
-# small enough for one screen.
-function tre() {
+# A tree on vitamin
+function pine() {
     tree -aC -I '.git|.idea|.sass-cache|.babel-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
 }
 
