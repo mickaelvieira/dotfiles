@@ -12,7 +12,7 @@ function mkd() {
 # `less` with options to preserve color and line numbers, unless the output is
 # small enough for one screen.
 function tre() {
-    tree -aC -I '.git|.idea|.sass-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
+    tree -aC -I '.git|.idea|.sass-cache|.babel-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
 }
 
 # Install python packages globally
@@ -70,7 +70,7 @@ function extract() {
 
 # Creates an archive (*.tar.gz) from given directory.
 function maketar() {
-    tar cvzf "${1%%/}.tar.gz" "${1%%/}/";
+    tar cvzf "${1%%/}.tgz" "${1%%/}/";
 }
 
 # Create a ZIP archive of a file or folder.
@@ -90,4 +90,11 @@ function ii() {
     # echo -e "\n\x1b[31mLocal IP Address:\x1b[0m" ; my_ip
     # echo -e "\n\x1b[31mOpen connections:\x1b[0m "; netstat -pan --inet;
     echo
+}
+
+# Move to the symlink's target
+function bereal() {
+    local real=$(pwd -P)
+    cd "$real" || exit 1
+    printf "\x1b[31m%s\x1b[0m\n" "$real"
 }
