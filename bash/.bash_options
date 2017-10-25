@@ -2,6 +2,12 @@
 
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
+bind '"\t":menu-complete'
+
+# sudo autocompletion
+if [ "$PS1" ]; then
+    complete -cf sudo
+fi
 
 # append to the history file, don't overwrite it
 shopt -s histappend
