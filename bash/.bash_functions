@@ -10,6 +10,10 @@ function pine() {
     tree -aC -I '.git|.idea|.sass-cache|.babel-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
 }
 
+taille() {
+    du -sh "$@"
+}
+
 # Install python packages globally
 gpip() {
     PIP_REQUIRE_VIRTUALENV="" sudo pip "$@"
