@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+info() {
+    echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m"
+}
+
+main() {
+    local command=${1:-"--help"}
+
+    if [[ $command = full ]]; then
+        info "Running full scan..."
+        clamscan --recursive --infected --exclude-dir='^/sys|^/dev' --remove /
+    elif [[ $command = quick ]]; then
+        info "Running quick scan..."
+        clamscan --recursive --infected --remove /home
+    else
+        error "'${command}' is not a valid command!"
+    fi
+}
+
+main "$@"
