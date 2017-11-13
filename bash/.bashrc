@@ -8,6 +8,8 @@ case $- in
       *) return;;
 esac
 
+umask 077
+
 # enable programmable completion features
 if ! shopt -oq posix; then
   if [[ -f /usr/share/bash-completion/bash_completion ]]; then
