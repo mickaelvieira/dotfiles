@@ -1,12 +1,115 @@
 #!/bin/bash
 
-set -o nounset
-set -o errexit
-set -o pipefail
-#set -x
+set -e -u -o pipefail
+# set -x
 
-sudo pacman -Syu
-sudo pacman -Sc
+declare -r user=$(whoami)
+declare -r builds_dir="/home/${user}/builds"
 
-exit 0
+info() {
+    echo -e "\\x1b[1;94m::\\x1b[39m $1\\x1b[0m"
+}
 
+msg() {
+    echo -e "\\x1b[1;93m===>\\x1b[39m $1\\x1b[0m"
+}
+
+error() {
+    echo -e "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
+    exit 1
+}
+
+warning() {
+    echo -e "\\x1b[1;95m===>\\x1b[39m $1\\x1b[0m" 1>&2
+}
+
+update_repository() {
+    local path="${1}"
+    local dirname=$(basename "$path")
+
+    msg "Updating \\x1b[33m${dirname}\\x1b[39m..."
+
+    cd "$path" || error "Could enter directory '$path'"
+
+    if [[ -d .git ]]; then
+        git remote update
+
+        local local_id=$(git rev-parse master)
+        local remote_id=$(git rev-parse origin/master)
+
+        if [ "$local_id" != "$remote_id" ]; then
+            msg "Pulling latest changes..."
+            git pull
+
+            msg "Building package..."
+            makepkg --syncdeps --install --rmdeps --clean
+        else
+            msg "\\x1b[33m${dirname}\\x1b[39m is up-to-date"
+        fi
+    else
+        warning "\\x1b[33m${dirname}\\x1b[39m is not a git repository. Skipping."
+    fi
+}
+
+update_aur_packages() {
+    info "Updating AUR packages..."
+    msg "Working directory \\x1b[33m${builds_dir}\\x1b[39m"
+
+    local repositories=$(find "$builds_dir" -maxdepth 1 -type d ! -path "$builds_dir")
+
+    for repository in ${repositories[*]}; do
+        update_repository "$repository"
+    done
+}
+
+update_arch_packages() {
+    info "Updating Arch packages..."
+    sudo pacman -Syu
+}
+
+check_orphans() {
+    info "Looking up orphan packages..."
+
+    local orphans=$(sudo pacman -Qtdq)
+
+    if [[ ! -z $orphans ]]; then
+        printf "The following orphan packages have been found: "
+        echo -e "$orphans"
+        printf "Do you want to remove them? [y/N]: "
+        read -r remove_pkgs
+
+        if [[ "$remove_pkgs" = y ]]; then
+            sudo pacman -Rns "$(pacman -Qtdq)"
+        fi
+    else
+        msg "No orphans found"
+    fi
+}
+
+clean_cache() {
+    local keep=2
+
+    info "Looking up packages that can be removed..."
+    sudo paccache -dk "$keep"
+
+    printf "Do you want to clean the cache (keeping %s last version)? [y/N]: " $keep
+    read -r clean_cache
+
+    if [[ "$clean_cache" = y ]]; then
+        sudo paccache -rk "$keep"
+    fi
+}
+
+main() {
+    if [[ $EUID -eq 0 ]]; then
+        error "This script must NOT be run as root"
+        exit 1
+    fi
+
+    update_arch_packages
+    update_aur_packages
+    # check_orphans
+    clean_cache
+}
+
+main
