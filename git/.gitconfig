@@ -18,7 +18,8 @@
     br = branch
     fo = fetch origin
     lg = log --oneline
-    ll = log -1 HEAD
+    ld = log --patch --word-diff
+    ll = log -1 HEAD --patch --word-diff
     gr = log --graph --decorate
 
 [push]
