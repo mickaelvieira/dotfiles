@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+info() {
+    printf "\\x1b[1;94m::\\x1b[39m %s\\x1b[0m\\n" "$1"
+}
+
+msg() {
+    printf "\\x1b[1;93m===>\\x1b[39m %s\\x1b[0m\\n" "$1"
+}
+
+error() {
+    printf "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
+    exit 1
+}
+
+warning() {
+    printf "\\x1b[1;95m===>\\x1b[39m %s\\x1b[0m\\n" "$1" 1>&2
+}
+
+main() {
+    printf "Do you want to update the mirror list? [Y/n]: "
+    read -r update_mirrors
+
+    [[ -z "$update_mirrors" ]] && update_mirrors=y
+
+    if [[ "$update_mirrors" = y ]]; then
+        info "Updating mirror list"
+
+        local new_file_path=/etc/pacman.d/mirrorlist
+        local old_file_path=/etc/pacman.d/mirrorlist.pacold
+
+        msg "Moving current mirror list to \\x1b[33m${old_file_path}\\x1b[39m..."
+        sudo mv "$new_file_path" "$old_file_path"
+
+        msg "Downloading custom mirror list..."
+        sudo curl -v "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4" -o "$new_file_path"
+
+        msg "Uncommenting servers..."
+        sudo sed -i 's/^#Server/Server/' "$new_file_path"
+
+        msg "Changing file's owner and permissions..."
+        sudo chown root.root "$new_file_path"
+        sudo chmod 0644 "$new_file_path"
+    fi
+}
+
+main
