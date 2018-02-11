@@ -41,6 +41,7 @@ update_repository() {
             msg "Pulling latest changes..."
             git pull
 
+            # @TODO add a step to verify the files
             msg "Building package..."
             makepkg --syncdeps --install --rmdeps --clean
         else
@@ -67,32 +68,36 @@ update_arch_packages() {
     sudo pacman -Syu
 }
 
+# @TODO I need to test this function
 check_orphans() {
     info "Looking up orphan packages..."
 
-    local orphans=$(sudo pacman -Qtdq)
+    local orphans=()
 
-    if [[ ! -z $orphans ]]; then
+    IFS=" " read -r -a orphans <<< "$(sudo pacman -Qtdq)"
+
+    if [[ ${#orphans[@]} -eq 0 ]]; then
+        msg "No orphans found"
+    else
         printf "The following orphan packages have been found: "
-        echo -e "$orphans"
+        echo -e "${orphans[@]}"
+
         printf "Do you want to remove them? [y/N]: "
         read -r remove_pkgs
 
         if [[ "$remove_pkgs" = y ]]; then
-            sudo pacman -Rns "$(pacman -Qtdq)"
+            sudo pacman -Rns "${orphans[@]}"
         fi
-    else
-        msg "No orphans found"
     fi
 }
 
 clean_cache() {
     local keep=2
 
-    info "Looking up packages that can be removed..."
+    info "Looking up unnecessary packages in cache..."
     sudo paccache -dk "$keep"
 
-    printf "Do you want to clean the cache (keeping %s last version)? [y/N]: " $keep
+    printf "Do you want to clean up the cache (keeping %s last version(s))? [y/N]: " $keep
     read -r clean_cache
 
     if [[ "$clean_cache" = y ]]; then
@@ -108,7 +113,7 @@ main() {
 
     update_arch_packages
     update_aur_packages
-    # check_orphans
+    check_orphans
     clean_cache
 }
 
