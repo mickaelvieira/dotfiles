@@ -29,8 +29,8 @@ remove_composer_installer() {
 }
 
 is_installer_checksum_valid() {
-    local checksum=$(read_composer_signature)
-    local script="if (hash_file(\"SHA384\", \"${COMPOSER_SETUP}\") === \"${checksum}\") { echo \"y\"; } else { echo \"n\"; }"
+    local -r checksum=$(read_composer_signature)
+    local -r script="if (hash_file(\"SHA384\", \"${COMPOSER_SETUP}\") === \"${checksum}\") { echo \"y\"; } else { echo \"n\"; }"
     php -r "${script}"
 }
 

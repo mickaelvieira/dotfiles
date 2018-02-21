@@ -91,9 +91,14 @@ function ii() {
     echo
 }
 
+# Show what is in the PATH
+function ppath() {
+    echo -e ${PATH//:/\\n}
+}
+
 # Move to the symlink's target
 function bereal() {
-    local real=$(pwd -P)
+    local -r real=$(pwd -P)
     cd "$real" || exit 1
     printf "\x1b[31m%s\x1b[0m\n" "$real"
 }

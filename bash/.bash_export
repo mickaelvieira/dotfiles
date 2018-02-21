@@ -1,7 +1,7 @@
 #!/bin/bash
 # set -x
 get_composer_bin_path() {
-    local os_type="$(uname -s)"
+    local -r os_type="$(uname -s)"
     local composer_home=
     local composer_bin=
 
@@ -27,14 +27,14 @@ get_composer_bin_path() {
 }
 
 get_gem_path() {
-    local ruby_path=$(ruby -e 'print Gem.user_dir')
-    local gem_bin="${ruby_path}/bin"
+    local -r ruby_path=$(ruby -e 'print Gem.user_dir')
+    local -r gem_bin="${ruby_path}/bin"
     echo "$gem_bin"
 }
 
 get_dotfiles_path() {
-    local this_file=$(readlink "${BASH_SOURCE[0]}")
-    local df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
+    local -r this_file=$(readlink "${BASH_SOURCE[0]}")
+    local -r df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
     echo "$df_dir"
 }
 
@@ -58,6 +58,10 @@ export IS_VAGRANT=$(is_vagrant_machine)
 
 # Add relevant bin paths
 export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_composer_bin_path):$PATH"
+
+if [[ $(uname -s) = Darwin ]]; then
+    export CLICOLOR=1
+fi
 
 # Ruby Gems path but don't mess up with rvm
 [[ -d "$HOME/.rvm/bin" ]] || export PATH="$(get_gem_path):$PATH"

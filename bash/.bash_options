@@ -26,5 +26,7 @@ shopt -s checkwinsize
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob;
 
-# Auto "cd" when entering just a path
-shopt -s autocd
+if [[ $(uname -s) = Linux ]]; then
+    # Auto "cd" when entering just a path
+    shopt -s autocd
+fi

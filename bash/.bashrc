@@ -8,7 +8,9 @@ case $- in
       *) return;;
 esac
 
-umask 077
+if [[ $(uname -s) = Linux ]]; then
+  umask 077
+fi
 
 # enable programmable completion features
 if ! shopt -oq posix; then
