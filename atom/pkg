@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+set -x
+
+function export_packages() {
+  apm list --installed --bare > package-list.txt
+}
+
+function import_packages() {
+    apm install --packages-file package-list.txt
+
+    printf "Do you want to update the packages? [Y/n]: "
+    read -r update_packages
+
+    [[ -z "$update_packages" ]] && update_packages=y
+
+    if [[ "$update_packages" = y ]]; then
+        apm update
+    fi
+}
+
+main() {
+    local -r command="${1:-}"
+
+    if [[ $command == "export" ]]; then
+        export_packages
+    elif [[ $command == "import" ]]; then
+        import_packages
+    else
+        echo "Invalid command"
+    fi
+}
+
+main "$@"
