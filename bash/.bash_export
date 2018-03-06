@@ -1,5 +1,4 @@
 #!/bin/bash
-# set -x
 get_composer_bin_path() {
     local -r os_type="$(uname -s)"
     local composer_home=

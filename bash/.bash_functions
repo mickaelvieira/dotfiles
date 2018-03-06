@@ -79,11 +79,11 @@ function makezip() {
 
 # Get current host related info.
 function ii() {
-    echo -e "\nYou are logged on \x1b[31m${HOST}"
-    echo -e "\n\x1b[31mAdditionnal information:\x1b[0m " ; uname -a
-    echo -e "\n\x1b[31mUsers logged on:\x1b[0m " ; w -h | cut -d " " -f1 | sort | uniq
-    echo -e "\n\x1b[31mCurrent date:\x1b[0m " ; date
-    echo -e "\n\x1b[31mMachine stats:\x1b[0m " ; uptime
+    echo -e "\\nYou are logged on \\x1b[31m${HOST}"
+    echo -e "\\n\\x1b[31mAdditionnal information:\\x1b[0m " ; uname -a
+    echo -e "\\n\\x1b[31mUsers logged on:\\x1b[0m " ; w -h | cut -d " " -f1 | sort | uniq
+    echo -e "\\n\\x1b[31mCurrent date:\\x1b[0m " ; date
+    echo -e "\\n\\x1b[31mMachine stats:\\x1b[0m " ; uptime
     # echo -e "\n\x1b[31mMemory stats:\x1b[0m " ; free
     # echo -e "\n\x1b[31mDiskspace:\x1b[0m " ; mydf / "${HOME:-}"
     # echo -e "\n\x1b[31mLocal IP Address:\x1b[0m" ; my_ip
@@ -100,5 +100,5 @@ function ppath() {
 function bereal() {
     local -r real=$(pwd -P)
     cd "$real" || exit 1
-    printf "\x1b[31m%s\x1b[0m\n" "$real"
+    printf "\\x1b[31m%s\\x1b[0m\\n" "$real"
 }
