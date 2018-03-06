@@ -30,7 +30,6 @@ alias dev='cd ~/dev'
 alias doc='cd ~/Documents'
 alias dl='cd ~/Downloads'
 alias h='history | less -RSFXin'
-alias storm='~/PhpStorm/bin/phpstorm.sh'
 alias wth='curl -4 http://wttr.in/London'
 alias shellcheck='shellcheck -x -e SC1090,SC1091,SC2155'
 
@@ -38,6 +37,9 @@ alias jb='jobs -l'
 alias ..='cd ..'
 alias bk='cd -'
 
-alias path='echo -e ${PATH//:/\\n}'
+if [[ $(uname -s) = Linux ]]; then
+    alias storm='~/PhpStorm/bin/phpstorm.sh'
+fi
+
 # alias du='du -kh'
 # alias df='df -kTh'

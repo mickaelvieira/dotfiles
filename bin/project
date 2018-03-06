@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+# See .bash_projects
+
+start() {
+    PATH="node_modules/.bin:$PATH"
+
+    cd "${PROJECT_DIR}"
+
+    tmux new-session -s "${PROJECT_NAME}" -d
+    tmux ls
+
+    tmux new-window -c "$(pwd -P)" -n "server" "yarn && yarn run start"
+    tmux new-window -c "$(pwd -P)" -n "tests" "yarn run test"
+    tmux list-windows
+    tmux select-window -t "tests"
+    tmux attach-session -t "${PROJECT_NAME}"
+}
+
+stop() {
+    tmux kill-session -t "${PROJECT_NAME}"
+}
+
+main() {
+    local action=${1:-}
+
+    case "$action" in
+        start)
+            start
+            ;;
+        stop)
+            stop
+            ;;
+        *)
+          printf "Invalid action: %s\\n" "$action"
+    esac
+}
+
+main "$@"
