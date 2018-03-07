@@ -17,6 +17,7 @@ warning() {
 }
 
 declare -r HOME_DIR=${HOME:-}
+declare -r CONFIG_DIR="${HOME_DIR}/.config/dotfiles"
 declare -r DF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 
 create_symlink() {
@@ -51,7 +52,6 @@ ask_confirm() {
 
 install_bash() {
     local files=(
-        .bashrc
         .bash_prompt
         .bash_options
         .bash_export
@@ -59,12 +59,14 @@ install_bash() {
         .bash_aliases
         .bash_functions
         .bash_logout
-        .dircolors
-        .profile
     )
 
+    create_symlink "${DF_DIR}/bash/.bashrc" "${HOME_DIR}/.bashrc"
+    create_symlink "${DF_DIR}/bash/profile" "${HOME_DIR}/profile"
+    create_symlink "${DF_DIR}/bash/.dircolors" "${HOME_DIR}/.dircolors"
+
     for file in ${files[*]}; do
-        create_symlink "${DF_DIR}/bash/$file" "${HOME_DIR}/$file"
+        create_symlink "${DF_DIR}/bash/$file" "${CONFIG_DIR}/bash/$file"
     done
 
     source ~/.bashrc
@@ -78,14 +80,15 @@ install_git() {
     fi
 
     local files=(
-        .gitconfig
         .gitignore
         .gitmessage
         .gitattributes
     )
 
+    create_symlink "${DF_DIR}/git/.gitconfig" "${HOME_DIR}/.gitconfig"
+
     for file in ${files[*]}; do
-        create_symlink "${DF_DIR}/git/$file" "${HOME_DIR}/$file"
+        create_symlink "${DF_DIR}/git/$file" "${CONFIG_DIR}/git/$file"
     done
 }
 
@@ -148,11 +151,17 @@ Which configuration do you want to install? (All):
 eom
 }
 
+create_directories() {
+    mkdir -p "${CONFIG_DIR}"/{git,bash}
+}
+
 main() {
     if [[ -z $HOME_DIR ]]; then
         error "HOME directory cannot be an empty string"
         exit 1
     fi
+
+    create_directories
 
     local choice=
     read -r -ep "$(get_choices) " choice

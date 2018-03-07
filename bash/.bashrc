@@ -39,6 +39,8 @@ if [[ -r ~/git-prompt.sh ]]; then
     source ~/git-prompt.sh
 fi
 
+declare -r CONFIG_DIR=~/dotfiles/bash
+
 declare -a files=(
     .bash_prompt
     .bash_options
@@ -50,7 +52,7 @@ declare -a files=(
 
 for item in ${files[*]}; do
     if [[ -f ~/$item ]]; then
-        source ~/"$item"
+        source "${CONFIG_DIR}/$item"
     fi
 done
 

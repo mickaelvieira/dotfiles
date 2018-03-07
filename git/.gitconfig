@@ -1,6 +1,6 @@
 [core]
-    excludesfile = ~/.gitignore
-    attributesfile = ~/.gitattributes
+    excludesfile = ~/config/dotfiles/.gitignore
+    attributesfile = ~/config/dotfiles/.gitattributes
     editor = vim
     autocrlf = input
 
@@ -76,7 +76,7 @@
 [diff "word"]
     textconv = docx2txt
 [commit]
-    template = ~/.gitmessage
+    template = ~/config/dotfiles/.gitmessage
 [filter "lfs"]
     process = git-lfs filter-process
     required = true
