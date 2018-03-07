@@ -39,7 +39,7 @@ if [[ -r ~/git-prompt.sh ]]; then
     source ~/git-prompt.sh
 fi
 
-declare -r CONFIG_DIR=~/dotfiles/bash
+declare -r CONFIG_DIR=~/.config/dotfiles/bash
 
 declare -a files=(
     .bash_prompt
@@ -51,11 +51,11 @@ declare -a files=(
 )
 
 for item in ${files[*]}; do
-    if [[ -f ~/$item ]]; then
+    if [[ -f "${CONFIG_DIR}/$item" ]]; then
         source "${CONFIG_DIR}/$item"
     fi
 done
 
 export DEV_DIR="$HOME/dev"
 
-[[ -f ~/.profile ]] && source ~/.profile
+[[ -f "${CONFIG_DIR}/.profile" ]] && source "${CONFIG_DIR}/.profile"

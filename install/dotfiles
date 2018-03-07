@@ -62,7 +62,7 @@ install_bash() {
     )
 
     create_symlink "${DF_DIR}/bash/.bashrc" "${HOME_DIR}/.bashrc"
-    create_symlink "${DF_DIR}/bash/profile" "${HOME_DIR}/profile"
+    create_symlink "${DF_DIR}/bash/.profile" "${HOME_DIR}/.profile"
     create_symlink "${DF_DIR}/bash/.dircolors" "${HOME_DIR}/.dircolors"
 
     for file in ${files[*]}; do
