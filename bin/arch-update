@@ -4,6 +4,7 @@ set -e -u -o pipefail
 # set -x
 
 declare -r user=$(whoami)
+declare -r script=$(basename "$0")
 declare -r builds_dir="/home/${user}/builds"
 
 info() {
@@ -21,6 +22,22 @@ error() {
 
 warning() {
     echo -e "\\x1b[1;95m===>\\x1b[39m $1\\x1b[0m" 1>&2
+}
+
+
+read_help() {
+    cat <<eom
+Usage: ${script} <option>
+Options:
+    --help: Print this help
+    --aur-only: Update AUR packages only
+    --arch-only: Update Archlinux packages only
+eom
+}
+
+show_usage() {
+    echo -e "$(read_help)" 1>&2
+    exit 1
 }
 
 update_repository() {
@@ -68,7 +85,6 @@ update_arch_packages() {
     sudo pacman -Syu
 }
 
-# @TODO I need to test this function
 check_orphans() {
     info "Looking up orphan packages..."
 
@@ -111,10 +127,22 @@ main() {
         exit 1
     fi
 
-    update_arch_packages
-    update_aur_packages
-    check_orphans
-    clean_cache
+    local -r option="${1:-}"
+
+    if [[ "$option" != --help ]]; then
+      if [[ "$option" != --aur-only ]]; then
+        update_arch_packages
+      fi
+
+      if [[ "$option" != --arch-only ]]; then
+        update_aur_packages
+      fi
+
+      check_orphans
+      clean_cache
+    else
+      show_usage
+    fi
 }
 
-main
+main "$@"
