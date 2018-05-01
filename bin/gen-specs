@@ -8,11 +8,11 @@ declare -r DEFAULT_JS_DIR="js"
 declare -r DEFAULT_SPECS_DIR="test"
 
 info() {
-    echo -e "\x1b[97m\xE2\x87\x92 \x1b[0m $1"
+    echo -e "\\x1b[97m\\xE2\\x87\\x92 \\x1b[0m $1"
 }
 
 error() {
-    echo -e "\x1b[97m\x1b[41m\x21\x1b[0m \x1b[31m$1\x1b[0m" 1>&2
+    echo -e "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
     exit 1
 }
 
@@ -43,9 +43,11 @@ split_path() {
 get_relative_sut_path() {
     local filepath="$1"
     local relpath=$(dirname "${filepath/$WORKING_DIR/}")
-    local parts=($(split_path "$relpath"))
+    local parts=()
+    IFS=" " read -r -a parts <<< "$(split_path "$relpath")"
 
     local sut_rel_path=""
+    # shellcheck disable=SC2034
     for part in "${parts[@]}"; do
         sut_rel_path+="../"
     done

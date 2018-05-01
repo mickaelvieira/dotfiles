@@ -4,21 +4,22 @@ set -u -e -o pipefail
 #set -x
 
 info() {
-    echo -e "\x1b[32m\xE2\x87\x92 $1\x1b[0m"
+    echo -e "\\x1b[32m\\xE2\\x87\\x92 $1\\x1b[0m"
 }
 
 error() {
-    echo -e "\x1b[97m\x1b[41m\x21 $1\x1b[0m" 1>&2
+    echo -e "\\x1b[97m\\x1b[41m\\x21 $1\\x1b[0m" 1>&2
     exit 1
 }
 
 warning() {
-    echo -e "\x1b[97m\x1b[45m\x21 $1\x1b[0m"
+    echo -e "\\x1b[97m\\x1b[45m\\x21 $1\\x1b[0m"
 }
 
 info "Working directory: $(pwd -P)"
 
-declare -r branches=($(git branch --merged | grep -v "\*" | grep -v master | grep -v dev | grep -v stage | grep -v staging))
+declare -a branches=()
+IFS=" " read -r -a branches <<< "$(git branch --merged | grep -v "\\*" | grep -v master | grep -v dev | grep -v stage | grep -v staging)"
 
 if [[ ${#branches[@]} -eq 0 ]];
 then
@@ -27,14 +28,14 @@ else
     info "The following branches will be deleted locally:"
 
     for branch in "${branches[@]}"; do
-        echo -e "\t- ${branch}"
+        echo -e "\\t- ${branch}"
     done
 
     read -erp "Do you want to proceed? [y/N]: " answer
 
     if [[ $answer == y ]]; then
         for branch in "${branches[@]}"; do
-            warning "\xE2\x98\xA0  ${branch}"
+            warning "\\xE2\\x98\\xA0  ${branch}"
             git branch -d "${branch}"
         done
     else
