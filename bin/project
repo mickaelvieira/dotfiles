@@ -12,15 +12,16 @@ start() {
     tmux new-session -s "${PROJECT_NAME}" -d
     tmux ls
 
-    tmux new-window -c "$(pwd -P)" -n "server" "yarn && yarn run start"
-    tmux new-window -c "$(pwd -P)" -n "tests" "yarn run test"
+    tmux new-window -c "$(pwd -P)" -n "server" "npm install && npm run setup && GRAPH_QL=local npm run start"
+    tmux new-window -c "$(pwd -P)/graphql" -n "graphql" "npm install && npm run start"
     tmux list-windows
-    tmux select-window -t "tests"
+    tmux select-window -t "server"
     tmux attach-session -t "${PROJECT_NAME}"
 }
 
 stop() {
     tmux kill-session -t "${PROJECT_NAME}"
+    kill "$(pgrep -f '[e]ngineproxy.*')"
 }
 
 main() {

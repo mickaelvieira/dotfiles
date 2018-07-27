@@ -20,7 +20,8 @@
     lg = log --oneline
     ld = log --patch --word-diff
     ll = log -1 HEAD --patch --word-diff
-    gr = log --graph --decorate
+    gr = log --graph --decorate --all
+    drymerge = "!sh git-dry-merge"
 
 [push]
     default = current
