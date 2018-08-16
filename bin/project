@@ -4,10 +4,16 @@ set -e -u -o pipefail
 # set -x
 # See .bash_projects
 
+# export ENVIRONMENT_NAME="${NODE_ENV}"
+# export CI_ENVIRONMENT_NAME="${NODE_ENV}"
+#
+# declare GRAPH_QL=
+
+# [[ "${ENVIRONMENT_NAME}" = "development" ]] && GRAPH_QL="local"
+cd "${PROJECT_DIR}" || exit "Cannot cd '${PROJECT_DIR}'"
+
 start() {
     PATH="node_modules/.bin:$PATH"
-
-    cd "${PROJECT_DIR}"
 
     tmux new-session -s "${PROJECT_NAME}" -d
     tmux ls
@@ -15,13 +21,26 @@ start() {
     tmux new-window -c "$(pwd -P)" -n "server" "npm install && npm run setup && GRAPH_QL=local npm run start"
     tmux new-window -c "$(pwd -P)/graphql" -n "graphql" "npm install && npm run start"
     tmux list-windows
+
+    info
+
+    echo "Attaching to tmux session in 2s..."
+    sleep 2
     tmux select-window -t "server"
     tmux attach-session -t "${PROJECT_NAME}"
 }
 
 stop() {
     tmux kill-session -t "${PROJECT_NAME}"
-    kill "$(pgrep -f '[e]ngineproxy.*')"
+    kill -9 "$(pgrep -f '[e]ngineproxy.*')"
+}
+
+info() {
+    echo -e "\\x1b[1;39mPROJECT_NAME: \\x1b[93m${PROJECT_NAME}\\e[0m"
+    echo -e "\\x1b[1;39mPROJECT_DIR: \\x1b[93m${PROJECT_DIR}\\e[0m"
+    echo -e "\\x1b[1;39mNODE ENV: \\x1b[93m${NODE_ENV}\\e[0m"
+    # echo -e "\\x1b[1;39mGRAPH_QL: \\x1b[33m${GRAPH_QL}\\e[0m"
+    # echo -e "\\x1b[1;39mENVIRONMENT_NAME: \\x1b[93m${ENVIRONMENT_NAME}\\e[0m"
 }
 
 main() {
@@ -33,6 +52,9 @@ main() {
             ;;
         stop)
             stop
+            ;;
+        info)
+            info
             ;;
         *)
           printf "Invalid action: %s\\n" "$action"
