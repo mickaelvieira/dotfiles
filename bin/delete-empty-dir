@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+info() {
+    echo -e "\\x1b[32m\\xE2\\x87\\x92 $1\\x1b[0m"
+}
+
+error() {
+    echo -e "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
+    exit 1
+}
+
+main() {
+    local path=${1:-}
+
+    cd "$path" || error "Could enter directory '$path'"
+
+    find . -type d -empty ! -path '*.git*' -exec rm -r "{}" \;
+}
+
+main "$@"
+
+
