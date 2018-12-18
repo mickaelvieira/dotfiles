@@ -7,4 +7,5 @@ MICKAEL.md
 __pycache__
 venv/
 .DS_Store
+.vscode
 

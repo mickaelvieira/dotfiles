@@ -16,6 +16,7 @@
     sc = commit -S
     cl = clone
     br = branch
+    mt = mergetool
     fo = fetch origin
     lg = log --oneline
     ld = log --patch --word-diff
@@ -25,6 +26,9 @@
 
 [push]
     default = current
+
+[diff]
+    tool = meld
 
 [difftool]
     prompt = false
