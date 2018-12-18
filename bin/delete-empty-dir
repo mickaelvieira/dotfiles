@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e -u -o pipefail
-# set -x
+set -x
 
 info() {
     echo -e "\\x1b[32m\\xE2\\x87\\x92 $1\\x1b[0m"
@@ -17,7 +17,7 @@ main() {
 
     cd "$path" || error "Could enter directory '$path'"
 
-    find . -type d -empty ! -path '*.git*' -exec rm -r "{}" \;
+    find . -type d -empty ! -path '*.git*' -exec rm -vr "{}" \;
 }
 
 main "$@"
