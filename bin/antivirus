@@ -20,7 +20,7 @@ main() {
         clamscan --recursive --infected --exclude-dir='^/sys|^/dev' --remove /
     elif [[ $command = quick ]]; then
         info "Running quick scan..."
-        clamscan --recursive --infected --remove /home
+        sudo clamscan --recursive --infected --remove /home
     elif [[ $command = update ]]; then
         info "Updating databases..."
         sudo freshclam
