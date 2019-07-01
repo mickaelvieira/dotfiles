@@ -5,7 +5,7 @@
     autocrlf = input
 
 [user]
-    email = contact@mickael-vieira.com
+	email = mickael@mickaelvieira.com
     name = Mickael Vieira
     signingkey = A71A22C9
 
