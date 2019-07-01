@@ -6,34 +6,21 @@
   [[default]]
     [[[child0]]]
       fullscreen = False
+      last_active_term = 732a8457-355a-4e4b-85af-396994a8cfcf
       last_active_window = True
       maximised = True
       order = 0
       parent = ""
-      position = 0:55
-      profile = None
-      size = 3200, 1671
+      position = 0:0
+      size = 1600, 836
       title = mickael@meta:~/Development/dotfiles
       type = Window
-    [[[child1]]]
-      active_page = 1
-      labels = None, None
-      last_active_term = a980c3c1-d0d1-4b8f-bdb9-6cd514d79497, 65f948b2-75d3-40a4-8658-bc1d7325a683
+    [[[terminal1]]]
       order = 0
       parent = child0
-      type = Notebook
-    [[[terminal2]]]
-      order = 0
-      parent = child1
-      profile = Mickael
-      type = Terminal
-      uuid = a980c3c1-d0d1-4b8f-bdb9-6cd514d79497
-    [[[terminal3]]]
-      order = 1
-      parent = child1
       profile = default
       type = Terminal
-      uuid = 65f948b2-75d3-40a4-8658-bc1d7325a683
+      uuid = 732a8457-355a-4e4b-85af-396994a8cfcf
 [plugins]
 [profiles]
   [[default]]
@@ -41,8 +28,5 @@
     background_darkness = 1.0
     cursor_color = "#D4D8CD"
     foreground_color = "#d4d8cd"
-    rewrap_on_resize = False
     scrollback_lines = 1000
     show_titlebar = False
-  [[Mickael]]
-    cursor_color = "#aaaaaa"
