@@ -10,29 +10,32 @@ set -e -u -o pipefail
 # declare GRAPH_QL=
 
 # [[ "${ENVIRONMENT_NAME}" = "development" ]] && GRAPH_QL="local"
-cd "${PROJECT_DIR}" || exit "Cannot cd '${PROJECT_DIR}'"
+cd "${PROJECT_DIR}" || exit 1
 
 start() {
     PATH="node_modules/.bin:$PATH"
 
+    make build
+    make test
     tmux new-session -s "${PROJECT_NAME}" -d
     tmux ls
 
-    tmux new-window -c "$(pwd -P)" -n "server" "npm install && npm run setup && GRAPH_QL=local npm run start"
-    tmux new-window -c "$(pwd -P)/graphql" -n "graphql" "npm install && npm run start"
+    tmux new-window -c "$(pwd -P)" -n "Server" "make run"
+    tmux new-window -c "$(pwd -P)" -n "UI" "make watch-ui"
+    tmux new-window -c "$(pwd -P)" -n "Test" "make watch-test-ui"
     tmux list-windows
 
     info
 
     echo "Attaching to tmux session in 2s..."
     sleep 2
-    tmux select-window -t "server"
+    tmux select-window -t "UI"
     tmux attach-session -t "${PROJECT_NAME}"
 }
 
 stop() {
     tmux kill-session -t "${PROJECT_NAME}"
-    kill -9 "$(pgrep -f '[e]ngineproxy.*')"
+    # kill -9 "$(pgrep -f '[e]ngineproxy.*')"
 }
 
 info() {
@@ -41,6 +44,10 @@ info() {
     echo -e "\\x1b[1;39mNODE ENV: \\x1b[93m${NODE_ENV}\\e[0m"
     # echo -e "\\x1b[1;39mGRAPH_QL: \\x1b[33m${GRAPH_QL}\\e[0m"
     # echo -e "\\x1b[1;39mENVIRONMENT_NAME: \\x1b[93m${ENVIRONMENT_NAME}\\e[0m"
+}
+
+mobile() {
+    emulator -avd test
 }
 
 main() {
@@ -55,6 +62,9 @@ main() {
             ;;
         info)
             info
+            ;;
+        mobile)
+            mobile
             ;;
         *)
           printf "Invalid action: %s\\n" "$action"
