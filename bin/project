@@ -15,7 +15,7 @@ cd "${PROJECT_DIR}" || exit 1
 start() {
     PATH="node_modules/.bin:$PATH"
 
-    make build
+    make
     make test
     tmux new-session -s "${PROJECT_NAME}" -d
     tmux ls
