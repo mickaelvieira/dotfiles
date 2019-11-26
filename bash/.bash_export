@@ -119,13 +119,7 @@ export HISTFILESIZE=20000
 export GREP_COLORS='ms=01;31:mc=01;31:sl=:cx=:fn=35:ln=32:bn=32:se=36'
 
 # Default text editor
-if [[ -x /usr/local/bin/atom ]]; then
-    export EDITOR=/usr/local/bin/atom
-elif [[ -x /usr/bin/atom ]]; then
-    export EDITOR=/usr/bin/atom
-else
-    export EDITOR=/usr/bin/vim
-fi
+export EDITOR=/usr/bin/vim
 
 # unstaged (*) and staged (+) changes will be shown next to the branch name
 export GIT_PS1_SHOWDIRTYSTATE=1
