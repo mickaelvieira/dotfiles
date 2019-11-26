@@ -39,6 +39,17 @@ if [[ -r ~/git-prompt.sh ]]; then
     source ~/git-prompt.sh
 fi
 
+# Google Cloud Platform
+# The next line updates PATH for the Google Cloud SDK.
+if [[ -f ~/dev/google-cloud-sdk/path.bash.inc ]]; then
+  source ~/dev/google-cloud-sdk/path.bash.inc
+fi
+
+# The next line enables shell command completion for gcloud.
+if [[ -f ~/dev/google-cloud-sdk/completion.bash.inc ]]; then
+  source ~/dev/google-cloud-sdk/completion.bash.inc
+fi
+
 declare -a files=(
     .bash_prompt
     .bash_options
