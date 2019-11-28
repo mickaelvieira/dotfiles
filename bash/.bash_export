@@ -76,6 +76,9 @@ export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
 # Javascript configuration
 export NODE_ENV="development"
 
+# gohugo configuration
+export HUGO_ENV="development"
+
 # Docker configuration
 export DOCKER_ID_USER="mickaelvieira"
 
