@@ -39,9 +39,9 @@ if [[ -s ~/builds/autojump-git/pkg/autojump-git/etc/profile.d/autojump.sh ]]; th
 fi
 
 # Add git information to the prompt
-if [[ -r ~/git-prompt.sh ]]; then
-    source ~/git-prompt.sh
-fi
+# if [[ -r ~/git-prompt.sh ]]; then
+#     source ~/git-prompt.sh
+# fi
 
 # Google Cloud Platform
 # The next line updates PATH for the Google Cloud SDK.
@@ -72,3 +72,5 @@ done
 export DEV_DIR="$HOME/dev"
 
 [[ -f ~/.profile ]] && source ~/.profile
+
+source /home/mickael/.config/broot/launcher/bash/br
