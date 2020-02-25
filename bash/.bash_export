@@ -91,6 +91,9 @@ export JAVA_HOME="/usr/lib/jvm/default"
 export ANDROID_HOME="$HOME/dev/Android/Sdk"
 export PATH="${PATH}:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin"
 
+# Symfony CLI
+[[ -d "$HOME/.symfony/bin" ]] && export PATH="$HOME/.symfony/bin:$PATH"
+
 # JS package managers
 [[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
