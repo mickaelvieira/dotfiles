@@ -44,6 +44,17 @@ main() {
         msg "Changing file's owner and permissions..."
         sudo chown root.root "$new_file_path"
         sudo chmod 0644 "$new_file_path"
+
+        printf "Do you want to update the mirror list? [y/N]: "
+        read -r delete_old_list
+
+        [[ -z "$delete_old_list" ]] && delete_old_list=n
+
+        if [[ "$delete_old_list" = y && -f "${old_file_path}" ]]; then
+          sudo rm "${old_file_path}"
+        else
+          info "Previous mirror list was not deleted."
+        fi
     fi
 }
 
