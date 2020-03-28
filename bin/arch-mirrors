@@ -45,15 +45,15 @@ main() {
         sudo chown root.root "$new_file_path"
         sudo chmod 0644 "$new_file_path"
 
-        printf "Do you want to update the mirror list? [y/N]: "
-        read -r delete_old_list
+        printf "Do you want to delete the previous mirror list? [y/N]: "
+        read -r delete_prev_list
 
-        [[ -z "$delete_old_list" ]] && delete_old_list=n
+        [[ -z "$delete_prev_list" ]] && delete_prev_list=n
 
-        if [[ "$delete_old_list" = y && -f "${old_file_path}" ]]; then
+        if [[ "$delete_prev_list" = y && -f "${old_file_path}" ]]; then
           sudo rm "${old_file_path}"
         else
-          info "Previous mirror list was not deleted."
+          info "The previous mirror list was not deleted."
         fi
     fi
 }
