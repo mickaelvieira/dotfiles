@@ -40,7 +40,7 @@ show_usage() {
     exit 1
 }
 
-update_repository() {
+update_aur_package() {
     local path="${1}"
     local dirname=$(basename "$path")
 
@@ -76,12 +76,22 @@ update_aur_packages() {
     local repositories=$(find "$builds_dir" -maxdepth 1 -type d ! -path "$builds_dir")
 
     for repository in ${repositories[*]}; do
-        update_repository "$repository"
+        update_aur_package "$repository"
     done
 }
 
 update_arch_packages() {
     info "Updating Arch packages..."
+
+    printf "Shall we check the Archlinux news? [Y/n]: "
+    read -r check_news
+
+    [[ -z "$check_news" ]] && check_news=y
+
+    if [[ "$check_news" = y ]]; then
+        xdg-open https://www.archlinux.org
+    fi
+
     sudo pacman -Syu
 }
 

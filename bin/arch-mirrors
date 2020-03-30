@@ -36,7 +36,7 @@ main() {
         sudo mv "$new_file_path" "$old_file_path"
 
         msg "Downloading custom mirror list..."
-        sudo curl -v "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4" -o "$new_file_path"
+        sudo curl -v "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4&ip_version=6" -o "$new_file_path"
 
         msg "Uncommenting servers..."
         sudo sed -i 's/^#Server/Server/' "$new_file_path"
@@ -47,8 +47,6 @@ main() {
 
         printf "Do you want to delete the previous mirror list? [y/N]: "
         read -r delete_prev_list
-
-        [[ -z "$delete_prev_list" ]] && delete_prev_list=n
 
         if [[ "$delete_prev_list" = y && -f "${old_file_path}" ]]; then
           sudo rm "${old_file_path}"
