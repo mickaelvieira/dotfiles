@@ -24,7 +24,6 @@ warning() {
     echo -e "\\x1b[1;95m===>\\x1b[39m $1\\x1b[0m" 1>&2
 }
 
-
 read_help() {
     cat <<eom
 Usage: ${script} <option>
@@ -100,7 +99,7 @@ check_orphans() {
 
     local orphans=()
 
-    IFS=" " read -r -a orphans <<< "$(sudo pacman -Qtdq)"
+    IFS=" " read -r -a orphans <<<"$(sudo pacman -Qtdq)"
 
     if [[ ${#orphans[@]} -eq 0 ]]; then
         msg "No orphans found"
@@ -140,18 +139,18 @@ main() {
     local -r option="${1:-}"
 
     if [[ "$option" != --help ]]; then
-      if [[ "$option" != --aur-only ]]; then
-        update_arch_packages
-      fi
+        if [[ "$option" != --aur-only ]]; then
+            update_arch_packages
+        fi
 
-      if [[ "$option" != --arch-only ]]; then
-        update_aur_packages
-      fi
+        if [[ "$option" != --arch-only ]]; then
+            update_aur_packages
+            check_orphans
+        fi
 
-      check_orphans
-      clean_cache
+        clean_cache
     else
-      show_usage
+        show_usage
     fi
 }
 

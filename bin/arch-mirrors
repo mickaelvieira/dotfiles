@@ -49,9 +49,9 @@ main() {
         read -r delete_prev_list
 
         if [[ "$delete_prev_list" = y && -f "${old_file_path}" ]]; then
-          sudo rm "${old_file_path}"
+            sudo rm "${old_file_path}"
         else
-          info "The previous mirror list was not deleted."
+            info "The previous mirror list was not deleted."
         fi
     fi
 }
