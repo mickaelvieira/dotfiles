@@ -1,0 +1,85 @@
+#!/bin/bash
+
+set -e -u -o pipefail
+# set -x
+
+declare -r user=$(whoami)
+declare -r script=$(basename "$0")
+declare -r AUR_PKG="/home/${user}/aur-pkg"
+
+msg() {
+    echo -e "\\x1b[1;33m==>\\x1b[39m $1\\x1b[0m"
+}
+
+error() {
+    echo -e "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
+    exit 1
+}
+
+read_help() {
+    cat <<eom
+Usage: ${script} <option> <repository-url>
+Options:
+    --help: Print this help
+eom
+}
+
+get_confirmation_message() {
+    local name=$1
+    local url=$2
+
+    cat <<EOM
+You are about to install the following package:
+- Name: \\x1b[33m${name}\\x1b[0m
+- URL: \\x1b[33m${url}\\x1b[0m
+Do you want to proceed [y/N]:
+EOM
+}
+
+show_usage() {
+    echo -e "$(read_help)" 1>&2
+    exit 1
+}
+
+install_aur_package() {
+    local url="${1}"
+    local name=$(basename "${url//.git/}")
+
+    cd "$AUR_PKG" || error "Cannot enter directory '$AUR_PKG'"
+
+    msg "Working directory \\x1b[33m$(pwd)\\x1b[39m"
+
+    local message=$(get_confirmation_message "$name" "$url")
+
+    read -erp "$(echo -e "$message")" answer
+
+    if [[ "$answer" == y ]]; then
+
+      git clone "${url}"
+
+      cd "./${name}" || error "Cannot enter directory '${name}'"
+
+      ls -lha
+
+      makepkg --syncdeps --install --rmdeps --clean
+    else
+      msg "The package \\x1b[33m${name}\\x1b[39m was not installed"
+    fi
+}
+
+main() {
+    if [[ $EUID -eq 0 ]]; then
+        error "This script must NOT be run as root"
+    fi
+
+    local -r url="${1:-}"
+
+    if [[ "$url" == "--help" ]]; then
+        show_usage
+    else
+        [[ -z "${url}" ]] && error "URL '${url} cannot be empty."
+        install_aur_package "${url}"
+    fi
+}
+
+main "$@"
