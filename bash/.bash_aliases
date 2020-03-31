@@ -16,6 +16,8 @@ then
     alias fgrep='fgrep --color=auto'
 fi
 
+alias open='xdg-open'
+
 alias ll='ls -la'
 alias la='ls -hla'
 alias lt='ls -tla'
