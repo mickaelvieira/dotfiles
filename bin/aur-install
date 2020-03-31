@@ -3,9 +3,7 @@
 set -e -u -o pipefail
 # set -x
 
-declare -r user=$(whoami)
 declare -r script=$(basename "$0")
-declare -r AUR_PKG="/home/${user}/aur-pkg"
 
 msg() {
     echo -e "\\x1b[1;33m==>\\x1b[39m $1\\x1b[0m"
