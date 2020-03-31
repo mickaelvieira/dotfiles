@@ -18,9 +18,9 @@ error() {
 
 read_help() {
     cat <<eom
-Usage: ${script} <option> <repository-url>
-Options:
-    --help: Print this help
+This script will clone the reposition into ${AUR_PKG} and install the AUR package
+
+Usage: ${script} <repository-url>
 eom
 }
 
@@ -43,27 +43,23 @@ show_usage() {
 
 install_aur_package() {
     local url="${1}"
-    local name=$(basename "${url//.git/}")
+    local name=$(basename "$url" .git)
+    local message=$(get_confirmation_message "$name" "$url")
 
     cd "$AUR_PKG" || error "Cannot enter directory '$AUR_PKG'"
 
     msg "Working directory \\x1b[33m$(pwd)\\x1b[39m"
 
-    local message=$(get_confirmation_message "$name" "$url")
-
     read -erp "$(echo -e "$message")" answer
 
     if [[ "$answer" == y ]]; then
+        git clone "${url}"
 
-      git clone "${url}"
+        cd "./${name}" || error "Cannot enter directory '${name}'"
 
-      cd "./${name}" || error "Cannot enter directory '${name}'"
-
-      ls -lha
-
-      makepkg --syncdeps --install --rmdeps --clean
+        makepkg --syncdeps --install --rmdeps --clean
     else
-      msg "The package \\x1b[33m${name}\\x1b[39m was not installed"
+        msg "The package \\x1b[33m${name}\\x1b[39m was not installed"
     fi
 }
 
@@ -74,11 +70,10 @@ main() {
 
     local -r url="${1:-}"
 
-    if [[ "$url" == "--help" ]]; then
-        show_usage
-    else
-        [[ -z "${url}" ]] && error "URL '${url} cannot be empty."
+    if [[ "$url" == http* ]]; then
         install_aur_package "${url}"
+    else
+        show_usage
     fi
 }
 
