@@ -28,8 +28,13 @@ warning() {
 
 read_help() {
     cat <<eom
+${script}
+
+A simple utility to upgrade Archlinux & AUR packages.
+
 Usage: ${script} <option>
-Options:
+
+  Options:
     --help: Print this help
     --aur-only: Update AUR packages only
     --arch-only: Update Archlinux packages only

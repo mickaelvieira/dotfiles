@@ -16,9 +16,17 @@ error() {
 
 read_help() {
     cat <<eom
-This script will clone the reposition into ${AUR_PKG} and install the AUR package
+${script}
+
+A simple utility to install AUR packages.
 
 Usage: ${script} <repository-url>
+
+The script will the environment variable \$AUR_PKG
+to determine the directory where to clone the repository.
+
+Running the script will clone the reposition
+and install the corresponding package.
 eom
 }
 
