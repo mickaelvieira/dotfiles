@@ -102,6 +102,13 @@ update_arch_packages() {
     fi
 
     sudo pacman -Syu
+
+    printf "Do you need to run pacdiff? [y/N]: "
+    read -r run_pacdiff
+
+    if [[ "$run_pacdiff" = y ]]; then
+        sudo pacdiff
+    fi
 }
 
 check_orphans() {
