@@ -52,7 +52,7 @@ update_aur_package() {
 
     msg "Updating \\x1b[33m${dirname}\\x1b[39m..."
 
-    cd "$path" || error "Could enter directory '$path'"
+    cd "$path" || error "Could not enter directory '$path'"
 
     if [[ -d .git ]]; then
         git remote update
