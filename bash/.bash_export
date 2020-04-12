@@ -125,6 +125,9 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE=10000
 export HISTFILESIZE=20000
 
+# adds datetime to history's entries
+export HISTTIMEFORMAT="%d/%m/%y %T "
+
 # Change grep matches color
 # https://www.gnu.org/software/grep/manual/html_node/Environment-Variables.html
 #export GREP_OPTIONS='--color=always'
