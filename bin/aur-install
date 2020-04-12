@@ -58,7 +58,7 @@ install_aur_package() {
 
     read -erp "$(echo -e "$message")" answer
 
-    if [[ "$answer" == y ]]; then
+    if [[ "$answer" = y ]]; then
         git clone "${url}"
 
         cd "./${name}" || error "Cannot enter directory '${name}'"
