@@ -80,6 +80,8 @@
     textconv = exiftool
 [diff "word"]
     textconv = docx2txt
+[diff "wasm"]
+    textconv = wasm2wat --enable-all --generate-names
 [commit]
     template = ~/.gitmessage
 [filter "lfs"]
