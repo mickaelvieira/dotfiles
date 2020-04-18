@@ -42,22 +42,23 @@ main() {
 
     [[ -z "$target_name" ]] && error "Target directory cannot be empty!"
 
+    local -r key_name="id_rsa"
     local -r target_dir="$HOME/.ssh/$target_name"
 
     printf "The following files are about to be generated:\\n"
-    printf "%s/id_rsa\\n" "$target_dir"
-    printf "%s/id_rsa.pub\\n" "$target_dir"
+    printf "%s/%s\\n" "$target_dir" "$key_name"
+    printf "%s/%s.pub\\n" "$target_dir" "$key_name"
 
     read -erp "$(prompt "Do you want to proceed [Y/n]")" confirm
 
-    if [[ ${confirm} == "n" ]]; then
+    if [[ ${confirm} = n ]]; then
         info "Skipped!"
     else
         info "Creating target directory ${target_dir}..."
         [[ ! -d "$target_dir" ]] && create_destination "$target_dir"
 
         info "Generating ssh key..."
-        ssh-keygen -t rsa -b 4096 -C "$user_email" -N "" -f "$target_dir/id_rsa"
+        ssh-keygen -t rsa -b 4096 -C "$user_email" -N "" -f "$target_dir/$key_name"
     fi
 
     exit 0
