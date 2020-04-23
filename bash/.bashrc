@@ -55,11 +55,11 @@ if [[ -f ~/dev/google-cloud-sdk/completion.bash.inc ]]; then
 fi
 
 declare -a files=(
-    .bash_prompt
     .bash_options
     .bash_export
     .bash_aliases
     .bash_functions
+    .bash_prompt
     .bash_projects
 )
 

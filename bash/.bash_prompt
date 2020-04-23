@@ -1,6 +1,6 @@
 #!/bin/bash
 
-eval "$(starship init bash)"
+eval "$($(which starship) init bash)"
 
 # if [[ $EUID -eq 0 ]]; then
 #     export PS1='\[\033[00;31m\]\u@\h: \w$(__git_ps1)\n# \[\033[0m\]'
