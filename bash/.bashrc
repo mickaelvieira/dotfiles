@@ -34,10 +34,6 @@ elif [[ -f /etc/profile.d/autojump.bash ]]; then
     . /etc/profile.d/autojump.bash
 fi
 
-if [[ -s ~/builds/autojump-git/pkg/autojump-git/etc/profile.d/autojump.sh ]]; then
-  . ~/builds/autojump-git/pkg/autojump-git/etc/profile.d/autojump.sh
-fi
-
 # Add git information to the prompt
 # if [[ -r ~/git-prompt.sh ]]; then
 #     source ~/git-prompt.sh
