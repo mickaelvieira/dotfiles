@@ -58,6 +58,11 @@ export AUR_PKG="$HOME/aur-pkg"
 # Haskell
 [[ -d "$HOME/.cabal/bin" ]] && export PATH="$HOME/.cabal/bin:$PATH"
 
+if [[ -d "$HOME/.deno" ]]; then
+    export DENO_INSTALL="$HOME/.deno"
+    export PATH="$DENO_INSTALL/bin:$PATH"
+fi
+
 # am I in a vagrant machine?
 export IS_VAGRANT=$(is_vagrant_machine)
 
