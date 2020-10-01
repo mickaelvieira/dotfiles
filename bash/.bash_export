@@ -94,6 +94,7 @@ export HUGO_ENVIRONMENT="development"
 
 # Docker configuration
 export DOCKER_BUILDKIT=1
+export DOCKER_CONTENT_TRUST=1
 export DOCKER_ID_USER="mickaelvieira"
 
 # Java & Android
