@@ -175,6 +175,15 @@ main() {
         fi
 
         clean_cache
+
+        printf "Shall we reboot Archlinux? [y/N]: "
+        read -r should_reboot
+
+        [[ -z "$should_reboot" ]] && should_reboot=n
+
+        if [[ "$should_reboot" = y ]]; then
+            reboot
+        fi
     else
         show_usage
     fi
