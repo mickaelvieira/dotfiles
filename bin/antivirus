@@ -17,15 +17,12 @@ main() {
 
     if [[ $command = full ]]; then
         info "Running full scan..."
-        clamscan --recursive --infected --exclude-dir='^/sys|^/dev' --remove /
+        clamscan --recursive --infected --bell --exclude-dir='^/sys|^/dev' --remove /
     elif [[ $command = quick ]]; then
         info "Running quick scan..."
-        sudo clamscan --recursive --infected --remove /home
-    elif [[ $command = update ]]; then
-        info "Updating databases..."
-        sudo freshclam
+        sudo clamscan --recursive --infected --bell --remove /home
     else
-        error "'${command}' is not a valid command!"
+        error "Invalid command '${command}'! Command must equal to 'full' or quick!"
     fi
 }
 
