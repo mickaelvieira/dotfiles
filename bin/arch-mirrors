@@ -36,7 +36,7 @@ main() {
         sudo mv "$new_file_path" "$old_file_path"
 
         msg "Downloading custom mirror list..."
-        sudo curl -v "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4&ip_version=6&use_mirror_status=on" -o "$new_file_path"
+        sudo curl -vL "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4&ip_version=6&use_mirror_status=on" -o "$new_file_path"
 
         msg "Uncommenting servers..."
         sudo sed -i 's/^#Server/Server/' "$new_file_path"
