@@ -20,6 +20,7 @@ alias open='xdg-open'
 
 alias ll='ls -la'
 alias la='ls -hla'
+alias ld='ls -hdla'
 alias lt='ls -tla'
 alias lx='ls -lXB'         #  Sort by extension.
 alias lk='ls -lSr'         #  Sort by size, biggest last.
@@ -46,3 +47,4 @@ fi
 alias du='du -sh'
 alias df='df -kTh'
 alias docker='sudo docker'
+alias firewall='sudo iptables -nvL --line-numbers'
