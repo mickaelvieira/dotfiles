@@ -52,9 +52,7 @@ export AUR_PKG="$HOME/.local/share/aur-pkg"
 [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
 
 # Rust cargo path
-[[ -d "/usr/local/src/rust/src" ]] && export RUST_SRC_PATH=/usr/local/src/rust/src
-[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
-
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
 
 # Lucet Env
 # WASM env
@@ -80,7 +78,7 @@ if [[ $(uname -s) = Darwin ]]; then
 fi
 
 # Ruby Gems path but don't mess up with rvm
-[[ -d "$HOME/.rvm/bin" ]] || export PATH="$(get_gem_path):$PATH"
+# [[ -d "$HOME/.rvm/bin" ]] || export PATH="$(get_gem_path):$PATH"
 
 # GO configuration
 export GOPATH="$HOME/dev/go"
