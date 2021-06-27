@@ -46,7 +46,7 @@ is_vagrant_machine() {
 }
 
 # AUR packages
-export AUR_PKG="$HOME/.local/share/aur-pkg"
+export AUR_PKG="$HOME/.local/share/aur"
 
 # XDG Base Directory binaries
 [[ -d "$HOME/.local/bin" ]] && export PATH="$HOME/.local/bin:$PATH"
