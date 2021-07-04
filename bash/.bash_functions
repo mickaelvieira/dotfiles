@@ -1,13 +1,17 @@
 #!/bin/bash
 
 # Create a new directory and enter it
-function mkd() {
+mkd() {
     mkdir -p "$@" && cd "$_" || exit 1;
 }
 
 # A tree on vitamin
-function pine() {
-    tree -aC -I '.git|.idea|.sass-cache|.babel-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
+pine() {
+    tree -aC -I '.git|.idea|.vscode|.sass-cache|.babel-cache|node_modules|bower_components|vendor' --dirsfirst "$@" | less -FRNX;
+}
+
+cleanup () {
+    find . -type d -name "node_modules" -prune -exec rm -r {} \;
 }
 
 taille() {
@@ -33,7 +37,7 @@ man() {
 }
 
 # Swap 2 filenames around, if they exist (from Uzi's bashrc).
-function swap() {
+swap() {
     local TMPFILE=tmp.$$
 
     [[ $# -ne 2 ]] && echo "swap: 2 arguments needed" && return 1
@@ -46,7 +50,7 @@ function swap() {
 }
 
 # Handy Extract Program
-function extract() {
+extract() {
     if [[ -f "$1" ]] ; then
         case $1 in
             *.tar.bz2)   tar xvjf "$1"     ;;
@@ -68,17 +72,17 @@ function extract() {
 }
 
 # Creates an archive (*.tar.gz) from given directory.
-function maketar() {
+maketar() {
     tar cvzf "${1%%/}.tgz" "${1%%/}/";
 }
 
 # Create a ZIP archive of a file or folder.
-function makezip() {
+makezip() {
     zip -r "${1%%/}.zip" "$1" ;
 }
 
 # Get current host related info.
-function ii() {
+ii() {
     echo -e "\\nYou are logged on \\x1b[31m${HOST}"
     echo -e "\\n\\x1b[31mAdditionnal information:\\x1b[0m " ; uname -a
     echo -e "\\n\\x1b[31mUsers logged on:\\x1b[0m " ; w -h | cut -d " " -f1 | sort | uniq
@@ -92,12 +96,12 @@ function ii() {
 }
 
 # Show what is in the PATH
-function ppath() {
+ppath() {
     echo -e ${PATH//:/\\n}
 }
 
 # Move to the symlink's target
-function bereal() {
+bereal() {
     local -r real=$(pwd -P)
     cd "$real" || exit 1
     printf "\\x1b[31m%s\\x1b[0m\\n" "$real"

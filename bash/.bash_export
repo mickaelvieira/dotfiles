@@ -66,12 +66,14 @@ if [[ -d "$HOME/.deno" ]]; then
     export PATH="$DENO_INSTALL/bin:$PATH"
 fi
 
+export RUSTY_V8_MIRROR=$HOME/.cache/rusty_v8
+
 # am I in a vagrant machine?
 export IS_VAGRANT=$(is_vagrant_machine)
 
 # Add relevant bin paths
 # export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$(get_composer_bin_path):$PATH"
-export PATH="$HOME/bin:$(get_dotfiles_path)/bin:$PATH"
+export PATH="$(get_dotfiles_path)/bin:$PATH"
 
 if [[ $(uname -s) = Darwin ]]; then
     export CLICOLOR=1
@@ -102,10 +104,8 @@ export DOCKER_BUILDKIT=1
 export DOCKER_CONTENT_TRUST=1
 export DOCKER_ID_USER="mickaelvieira"
 
-# Java & Android
-export JAVA_HOME="/usr/lib/jvm/default"
-export ANDROID_HOME="$HOME/dev/Android/Sdk"
-export PATH="${PATH}:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin"
+# Java
+[[ -d /usr/lib/jvm/default ]] && export JAVA_HOME="/usr/lib/jvm/default"
 
 # Symfony CLI
 [[ -d "$HOME/.symfony/bin" ]] && export PATH="$HOME/.symfony/bin:$PATH"
@@ -113,7 +113,7 @@ export PATH="${PATH}:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator:${A
 # JS package managers
 [[ -d "$HOME/.nvm" ]] && export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"
 
 [[ -d "$HOME/.yarn" ]] && export PATH="$HOME/.yarn/bin:$PATH"
 [[ -d "$HOME/.config/yarn/global/node_modules/.bin" ]] && export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
