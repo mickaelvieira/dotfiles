@@ -16,6 +16,11 @@ then
     alias fgrep='fgrep --color=auto'
 fi
 
+if [[ -x /usr/bin/bat ]];
+then
+    alias cat='bat'
+fi
+
 alias open='xdg-open'
 
 alias ll='ls -la'
