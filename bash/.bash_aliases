@@ -21,6 +21,11 @@ then
     alias cat='bat'
 fi
 
+if [[ -x /usr/bin/bandwhich ]];
+then
+    alias bandwhich='sudo bandwhich'
+fi
+
 alias open='xdg-open'
 
 alias ll='ls -la'
