@@ -17,6 +17,7 @@
     cl = clone
     br = branch
     mt = mergetool
+    wt = worktree
     fo = fetch origin
     lg = log --oneline
     ld = log --patch --word-diff
