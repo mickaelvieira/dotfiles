@@ -46,6 +46,8 @@ alias h='history | less -RSFXin'
 alias wth='curl -4 http://wttr.in/Lyon'
 alias shellcheck='shellcheck -x -e SC1090,SC1091,SC2155'
 
+alias cdh='cd $(git rev-parse --show-toplevel 2>/dev/null || echo ~)'
+
 alias jb='jobs -l'
 alias ..='cd ..'
 alias bk='cd -'
