@@ -59,4 +59,6 @@ fi
 alias du='du -sh'
 alias df='df -kTh'
 alias docker='sudo docker'
+alias buildah='sudo buildah'
+alias podman='sudo podman'
 alias firewall='sudo iptables -nvL --line-numbers'
