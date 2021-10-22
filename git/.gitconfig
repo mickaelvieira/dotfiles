@@ -38,6 +38,10 @@
     # Let's use meld as a merge tool
     tool = meld
 
+[fetch]
+    # Prune also tags when doing git fetch --prune
+    pruneTags = true
+
 [mergetool]
     # Do not keep .orig files after merging
     keepBackup = false
@@ -94,4 +98,4 @@
     rebase = false
     # ff = only
 [init]
-	defaultBranch = main
+    defaultBranch = main
