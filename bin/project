@@ -13,62 +13,63 @@ set -e -u -o pipefail
 cd "${PROJECT_DIR}" || exit 1
 
 start() {
-    PATH="node_modules/.bin:$PATH"
+  PATH="node_modules/.bin:$PATH"
 
-    make
-    make test
-    tmux new-session -s "${PROJECT_NAME}" -d
-    tmux ls
+  make
+  make test
+  tmux new-session -s "${PROJECT_NAME}" -d
+  tmux ls
 
-    tmux new-window -c "$(pwd -P)" -n "Server" "make run"
-    tmux new-window -c "$(pwd -P)" -n "UI" "make watch-ui"
-    tmux new-window -c "$(pwd -P)" -n "Test" "make watch-test-ui"
-    tmux list-windows
+  tmux new-window -c "$(pwd -P)" -n "Server" "make run"
+  tmux new-window -c "$(pwd -P)" -n "UI" "make watch-ui"
+  tmux new-window -c "$(pwd -P)" -n "Test" "make watch-test-ui"
+  tmux list-windows
 
-    info
+  info
 
-    echo "Attaching to tmux session in 2s..."
-    sleep 2
-    tmux select-window -t "UI"
-    tmux attach-session -t "${PROJECT_NAME}"
+  echo "Attaching to tmux session in 2s..."
+  sleep 2
+  tmux select-window -t "UI"
+  tmux attach-session -t "${PROJECT_NAME}"
 }
 
 stop() {
-    tmux kill-session -t "${PROJECT_NAME}"
-    # kill -9 "$(pgrep -f '[e]ngineproxy.*')"
+  tmux kill-session -t "${PROJECT_NAME}"
+  # kill -9 "$(pgrep -f '[e]ngineproxy.*')"
 }
 
 info() {
-    echo -e "\\x1b[1;39mPROJECT_NAME: \\x1b[93m${PROJECT_NAME}\\e[0m"
-    echo -e "\\x1b[1;39mPROJECT_DIR: \\x1b[93m${PROJECT_DIR}\\e[0m"
-    echo -e "\\x1b[1;39mNODE ENV: \\x1b[93m${NODE_ENV}\\e[0m"
-    # echo -e "\\x1b[1;39mGRAPH_QL: \\x1b[33m${GRAPH_QL}\\e[0m"
-    # echo -e "\\x1b[1;39mENVIRONMENT_NAME: \\x1b[93m${ENVIRONMENT_NAME}\\e[0m"
+  echo -e "\\x1b[1;39mPROJECT_NAME: \\x1b[93m${PROJECT_NAME}\\e[0m"
+  echo -e "\\x1b[1;39mPROJECT_DIR: \\x1b[93m${PROJECT_DIR}\\e[0m"
+  echo -e "\\x1b[1;39mNODE ENV: \\x1b[93m${NODE_ENV}\\e[0m"
+  # echo -e "\\x1b[1;39mGRAPH_QL: \\x1b[33m${GRAPH_QL}\\e[0m"
+  # echo -e "\\x1b[1;39mENVIRONMENT_NAME: \\x1b[93m${ENVIRONMENT_NAME}\\e[0m"
 }
 
 mobile() {
-    emulator -avd test
+  emulator -avd test
 }
 
 main() {
-    local action=${1:-}
+  local action=${1:-}
 
-    case "$action" in
-        start)
-            start
-            ;;
-        stop)
-            stop
-            ;;
-        info)
-            info
-            ;;
-        mobile)
-            mobile
-            ;;
-        *)
-          printf "Invalid action: %s\\n" "$action"
-    esac
+  case "$action" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  info)
+    info
+    ;;
+  mobile)
+    mobile
+    ;;
+  *)
+    printf "Invalid action: %s\\n" "$action"
+    ;;
+  esac
 }
 
 main "$@"

@@ -4,13 +4,13 @@
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+*i*) ;;
+*) return ;;
 esac
 
-if [[ $(uname -s) = Linux ]]; then
-  umask 077
-fi
+# if [[ $(uname -s) = Linux ]]; then
+#   umask 077
+# fi
 
 # enable programmable completion features
 if ! shopt -oq posix; then
@@ -24,19 +24,19 @@ fi
 # https://wiki.archlinux.org/index.php/Pkgfile
 # https://wiki.archlinux.org/index.php/Bash#Command_not_found
 if [[ -f /usr/share/doc/pkgfile/command-not-found.bash ]]; then
-    . /usr/share/doc/pkgfile/command-not-found.bash
+  . /usr/share/doc/pkgfile/command-not-found.bash
 fi
 
 # https://wiki.archlinux.org/index.php/Bash#Autojump
 if [[ -f /usr/local/etc/profile.d/autojump.sh ]]; then
-    . /usr/local/etc/profile.d/autojump.sh
+  . /usr/local/etc/profile.d/autojump.sh
 elif [[ -f /etc/profile.d/autojump.bash ]]; then
-    . /etc/profile.d/autojump.bash
+  . /etc/profile.d/autojump.bash
 fi
 
 # Add git information to the prompt
 if [[ -r ~/git-prompt.sh ]]; then
-    source ~/git-prompt.sh
+  source ~/git-prompt.sh
 fi
 
 # Google Cloud Platform
@@ -51,18 +51,18 @@ if [[ -f ~/dev/google-cloud-sdk/completion.bash.inc ]]; then
 fi
 
 declare -a files=(
-    .bash_options
-    .bash_export
-    .bash_aliases
-    .bash_functions
-    .bash_prompt
-    .bash_projects
+  .bash_options
+  .bash_export
+  .bash_aliases
+  .bash_functions
+  .bash_prompt
+  .bash_projects
 )
 
 for item in ${files[*]}; do
-    if [[ -f ~/$item ]]; then
-        source ~/"$item"
-    fi
+  if [[ -f ~/$item ]]; then
+    source ~/"$item"
+  fi
 done
 
 export DEV_DIR="$HOME/dev"

@@ -4,56 +4,56 @@ set -e -u -o pipefail
 # set -x
 
 info() {
-    printf "\\x1b[1;94m::\\x1b[39m %s\\x1b[0m\\n" "$1"
+  printf "\\x1b[1;94m::\\x1b[39m %s\\x1b[0m\\n" "$1"
 }
 
 msg() {
-    printf "\\x1b[1;93m===>\\x1b[39m %s\\x1b[0m\\n" "$1"
+  printf "\\x1b[1;93m===>\\x1b[39m %s\\x1b[0m\\n" "$1"
 }
 
 error() {
-    printf "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
-    exit 1
+  printf "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
+  exit 1
 }
 
 warning() {
-    printf "\\x1b[1;95m===>\\x1b[39m %s\\x1b[0m\\n" "$1" 1>&2
+  printf "\\x1b[1;95m===>\\x1b[39m %s\\x1b[0m\\n" "$1" 1>&2
 }
 
 main() {
-    printf "Do you want to update the mirror list? [Y/n]: "
-    read -r update_mirrors
+  printf "Do you want to update the mirror list? [Y/n]: "
+  read -r update_mirrors
 
-    [[ -z "$update_mirrors" ]] && update_mirrors=y
+  [[ -z "$update_mirrors" ]] && update_mirrors=y
 
-    if [[ "$update_mirrors" = y ]]; then
-        info "Updating mirror list"
+  if [[ "$update_mirrors" = y ]]; then
+    info "Updating mirror list"
 
-        local new_file_path=/etc/pacman.d/mirrorlist
-        local old_file_path=/etc/pacman.d/mirrorlist.pacold
+    local new_file_path=/etc/pacman.d/mirrorlist
+    local old_file_path=/etc/pacman.d/mirrorlist.pacold
 
-        msg "Moving current mirror list to \\x1b[33m${old_file_path}\\x1b[39m..."
-        sudo mv "$new_file_path" "$old_file_path"
+    msg "Moving current mirror list to \\x1b[33m${old_file_path}\\x1b[39m..."
+    sudo mv "$new_file_path" "$old_file_path"
 
-        msg "Downloading custom mirror list..."
-        sudo curl -vL "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4&ip_version=6&use_mirror_status=on" -o "$new_file_path"
+    msg "Downloading custom mirror list..."
+    sudo curl -vL "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&protocol=https&ip_version=4&ip_version=6&use_mirror_status=on" -o "$new_file_path"
 
-        msg "Uncommenting servers..."
-        sudo sed -i 's/^#Server/Server/' "$new_file_path"
+    msg "Uncommenting servers..."
+    sudo sed -i 's/^#Server/Server/' "$new_file_path"
 
-        msg "Changing file's owner and permissions..."
-        sudo chown root.root "$new_file_path"
-        sudo chmod 0644 "$new_file_path"
+    msg "Changing file's owner and permissions..."
+    sudo chown root.root "$new_file_path"
+    sudo chmod 0644 "$new_file_path"
 
-        printf "Do you want to delete the previous mirror list? [y/N]: "
-        read -r delete_prev_list
+    printf "Do you want to delete the previous mirror list? [y/N]: "
+    read -r delete_prev_list
 
-        if [[ "$delete_prev_list" = y && -f "${old_file_path}" ]]; then
-            sudo rm "${old_file_path}"
-        else
-            info "The previous mirror list was not deleted."
-        fi
+    if [[ "$delete_prev_list" = y && -f "${old_file_path}" ]]; then
+      sudo rm "${old_file_path}"
+    else
+      info "The previous mirror list was not deleted."
     fi
+  fi
 }
 
 main

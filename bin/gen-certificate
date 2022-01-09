@@ -11,116 +11,116 @@ declare -r ssl_certs_organization="Mickael Vieira"
 declare -r default_cert_name="cert-$(date +%Y-%m-%d)"
 
 info() {
-    printf "\\x1b[32m\\xE2\\x87\\x92 %s\\x1b[0m\\n" "$1"
+  printf "\\x1b[32m\\xE2\\x87\\x92 %s\\x1b[0m\\n" "$1"
 }
 
 error() {
-    printf "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
-    exit 1
+  printf "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
+  exit 1
 }
 
 warning() {
-    printf "\\x1b[97m\\x1b[45m\\x21\\x1b[0m \\x1b[35m%s\\x1b[0m\\n" "$1"
+  printf "\\x1b[97m\\x1b[45m\\x21\\x1b[0m \\x1b[35m%s\\x1b[0m\\n" "$1"
 }
 
 prompt() {
-    printf "\\x1b[93m%s: \\x1b[0m" "$1"
+  printf "\\x1b[93m%s: \\x1b[0m" "$1"
 }
 
 is_install() {
-    command -v "$1" > /dev/null 2>&1 || error "'$1' (command not found)"
+  command -v "$1" >/dev/null 2>&1 || error "'$1' (command not found)"
 }
 
 create_destination() {
-    local path="$1";
-    mkdir -vp "$path" || return
+  local path="$1"
+  mkdir -vp "$path" || return
 }
 
 gen_fields() {
-    printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
-        "$ssl_certs_country" \
-        "$ssl_certs_state" \
-        "$ssl_certs_locality" \
-        "$ssl_certs_organization" \
-        "$1"
+  printf "/C=%s/ST=%s/L=%s/O=%s/CN=%s" \
+    "$ssl_certs_country" \
+    "$ssl_certs_state" \
+    "$ssl_certs_locality" \
+    "$ssl_certs_organization" \
+    "$1"
 }
 
 generate_rsa_key() {
-    local key_path="$1";
-    openssl genrsa -out "${key_path}" 2048
+  local key_path="$1"
+  openssl genrsa -out "${key_path}" 2048
 }
 
 generate_csr() {
-    local cert_name="$1"
-    local key_path="$2"
-    local csr_path="$3"
+  local cert_name="$1"
+  local key_path="$2"
+  local csr_path="$3"
 
-    [[ -f "$key_path" ]] || error "Private Key not found"
+  [[ -f "$key_path" ]] || error "Private Key not found"
 
-    openssl req -new -sha256 \
-        -subj "$(gen_fields "$cert_name")" \
-        -key "$key_path" \
-        -out "$csr_path"
+  openssl req -new -sha256 \
+    -subj "$(gen_fields "$cert_name")" \
+    -key "$key_path" \
+    -out "$csr_path"
 }
 
 generate_ssl_certificate() {
-    local key_path="$1"
-    local csr_path="$2"
-    local cert_path="$3"
+  local key_path="$1"
+  local csr_path="$2"
+  local cert_path="$3"
 
-    [[ -f "$key_path" ]] || error "Private Key not found"
-    [[ -f "$csr_path" ]] || error "Certificate Signing Request not found"
+  [[ -f "$key_path" ]] || error "Private Key not found"
+  [[ -f "$csr_path" ]] || error "Certificate Signing Request not found"
 
-    openssl req -nodes -x509 \
-        -days 365 \
-        -in "$csr_path" \
-        -key "$key_path" \
-        -out "$cert_path" \
-        -extensions v3_ca
+  openssl req -nodes -x509 \
+    -days 365 \
+    -in "$csr_path" \
+    -key "$key_path" \
+    -out "$cert_path" \
+    -extensions v3_ca
 }
 
 main() {
-    is_install openssl
+  is_install openssl
 
-    read -erp "$(prompt "Enter the certificate's name? ($default_cert_name)")" cert_name
+  read -erp "$(prompt "Enter the certificate's name? ($default_cert_name)")" cert_name
 
-    [[ -z "$cert_name" ]] && cert_name=$default_cert_name
+  [[ -z "$cert_name" ]] && cert_name=$default_cert_name
 
-    local path="/tmp/$cert_name"
-    local archive="$cert_name.tgz"
+  local path="/tmp/$cert_name"
+  local archive="$cert_name.tgz"
 
-    create_destination "$path"
+  create_destination "$path"
 
-    local key_path="$path/privkey.pem"
-    local csr_path="$path/csr.pem"
-    local cert_path="$path/fullchain.pem"
+  local key_path="$path/privkey.pem"
+  local csr_path="$path/csr.pem"
+  local cert_path="$path/fullchain.pem"
 
-    info "Generating private key"
-    generate_rsa_key "$key_path"
+  info "Generating private key"
+  generate_rsa_key "$key_path"
 
-    info "Generating Certificate Signing Request"
-    generate_csr "$cert_name" "$key_path" "$csr_path"
+  info "Generating Certificate Signing Request"
+  generate_csr "$cert_name" "$key_path" "$csr_path"
 
-    info "Generating SSL certificate"
-    generate_ssl_certificate "$key_path" "$csr_path" "$cert_path"
+  info "Generating SSL certificate"
+  generate_ssl_certificate "$key_path" "$csr_path" "$cert_path"
 
-    printf "\\x1b[32mThe certificate was generated in \\x1b[93m%s\\x1b[0m\\n" "$path"
-    printf "\\x1b[93m%s\\x1b[0m\\n" "$(ls -1 "$path")"
+  printf "\\x1b[32mThe certificate was generated in \\x1b[93m%s\\x1b[0m\\n" "$path"
+  printf "\\x1b[93m%s\\x1b[0m\\n" "$(ls -1 "$path")"
 
-    read -erp "$(prompt "Do you want to create an archive? (Y/n)")" do_archive
+  read -erp "$(prompt "Do you want to create an archive? (Y/n)")" do_archive
 
-    [[ -z "$do_archive" ]] && do_archive="y"
+  [[ -z "$do_archive" ]] && do_archive="y"
 
-    if [[ "$do_archive" == "y" ]]; then
-        tar czvf "$archive" -C /tmp "$cert_name"
-        rm -rf "${path}"
-        printf "\\x1b[32mArchive is ready \\x1b[93m%s\\x1b[0m\\n" "$(pwd)/$archive"
-    else
-        mv "$path" .
-        printf "\\x1b[32mFiles are ready in \\x1b[93m%s\\x1b[0m\\n" "$(pwd)/$cert_name"
-    fi
+  if [[ "$do_archive" == "y" ]]; then
+    tar czvf "$archive" -C /tmp "$cert_name"
+    rm -rf "${path}"
+    printf "\\x1b[32mArchive is ready \\x1b[93m%s\\x1b[0m\\n" "$(pwd)/$archive"
+  else
+    mv "$path" .
+    printf "\\x1b[32mFiles are ready in \\x1b[93m%s\\x1b[0m\\n" "$(pwd)/$cert_name"
+  fi
 
-    exit 0
+  exit 0
 }
 
 main

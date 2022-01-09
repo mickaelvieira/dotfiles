@@ -1,48 +1,49 @@
 #!/bin/bash
 get_composer_bin_path() {
-    local -r os_type="$(uname -s)"
-    local composer_home=
-    local composer_bin=
+  local -r os_type="$(uname -s)"
+  local composer_home=
+  local composer_bin=
 
-    case "$os_type" in
-        Linux)
-            composer_home="$HOME/.config/composer"
-            ;;
-        Darwin)
-            composer_home="$HOME/.composer"
-            ;;
-        *)
-          error "Unrecognized OS type: $os_type"
-    esac
+  case "$os_type" in
+  Linux)
+    composer_home="$HOME/.config/composer"
+    ;;
+  Darwin)
+    composer_home="$HOME/.composer"
+    ;;
+  *)
+    error "Unrecognized OS type: $os_type"
+    ;;
+  esac
 
-    # In case the environment variable is defined
-    [[ ! -z ${COMPOSER_HOME:-} ]] && composer_home=${COMPOSER_HOME}
+  # In case the environment variable is defined
+  [[ ! -z ${COMPOSER_HOME:-} ]] && composer_home=${COMPOSER_HOME}
 
-    if [[ -d $composer_home ]]; then
-        composer_bin="${composer_home}/vendor/bin"
-        [[ -d $composer_bin ]] || mkdir -p "$composer_bin"
-    fi
-    echo "$composer_bin"
+  if [[ -d $composer_home ]]; then
+    composer_bin="${composer_home}/vendor/bin"
+    [[ -d $composer_bin ]] || mkdir -p "$composer_bin"
+  fi
+  echo "$composer_bin"
 }
 
 get_gem_path() {
-    local -r ruby_path=$(ruby -e 'print Gem.user_dir')
-    local -r gem_bin="${ruby_path}/bin"
-    echo "$gem_bin"
+  local -r ruby_path=$(ruby -e 'print Gem.user_dir')
+  local -r gem_bin="${ruby_path}/bin"
+  echo "$gem_bin"
 }
 
 get_dotfiles_path() {
-    local -r this_file=$(readlink "${BASH_SOURCE[0]}")
-    local -r df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
-    echo "$df_dir"
+  local -r this_file=$(readlink "${BASH_SOURCE[0]}")
+  local -r df_dir=$(cd "$(dirname "${this_file}")/.." && pwd)
+  echo "$df_dir"
 }
 
 has_vagrant_user() {
-    grep -q '^vagrant:' /etc/passwd && echo true
+  grep -q '^vagrant:' /etc/passwd && echo true
 }
 
 is_vagrant_machine() {
-    has_vagrant_user || echo false
+  has_vagrant_user || echo false
 }
 
 # AUR packages
@@ -62,8 +63,8 @@ export AUR_PKG="$HOME/.local/share/aur"
 [[ -d "$HOME/.cabal/bin" ]] && export PATH="$HOME/.cabal/bin:$PATH"
 
 if [[ -d "$HOME/.deno" ]]; then
-    export DENO_INSTALL="$HOME/.deno"
-    export PATH="$DENO_INSTALL/bin:$PATH"
+  export DENO_INSTALL="$HOME/.deno"
+  export PATH="$DENO_INSTALL/bin:$PATH"
 fi
 
 export RUSTY_V8_MIRROR=$HOME/.cache/rusty_v8
@@ -76,7 +77,7 @@ export IS_VAGRANT=$(is_vagrant_machine)
 export PATH="$(get_dotfiles_path)/bin:$PATH"
 
 if [[ $(uname -s) = Darwin ]]; then
-    export CLICOLOR=1
+  export CLICOLOR=1
 fi
 
 # Ruby Gems path but don't mess up with rvm
@@ -117,6 +118,11 @@ export DOCKER_ID_USER="mickaelvieira"
 
 [[ -d "$HOME/.yarn" ]] && export PATH="$HOME/.yarn/bin:$PATH"
 [[ -d "$HOME/.config/yarn/global/node_modules/.bin" ]] && export PATH="$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+if [[ -d "$HOME/.volta" ]]; then
+  export VOLTA_HOME="$HOME/.volta"
+  export PATH="$VOLTA_HOME/bin:$PATH"
+fi
 
 # https://wiki.archlinux.org/index.php/Color_output_in_console#less
 export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"

@@ -6,38 +6,38 @@ set -e -u -o pipefail
 declare -r script=$(basename "$0")
 
 info() {
-    echo -e "\\x1b[1;38;5;57m::\\x1b[39m $1\\x1b[0m"
+  echo -e "\\x1b[1;38;5;57m::\\x1b[39m $1\\x1b[0m"
 }
 
 msg() {
-    echo -e "\\x1b[1;33m==>\\x1b[39m $1\\x1b[0m"
+  echo -e "\\x1b[1;33m==>\\x1b[39m $1\\x1b[0m"
 }
 
 sub_msg() {
-    echo -e "  \\x1b[1;38;5;57m->\\x1b[39m $1\\x1b[0m"
+  echo -e "  \\x1b[1;38;5;57m->\\x1b[39m $1\\x1b[0m"
 }
 
 error() {
-    echo -e "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
-    exit 1
+  echo -e "\\x1b[1;97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
+  exit 1
 }
 
 warning() {
-    echo -e "\\x1b[1;95m===>\\x1b[39m $1\\x1b[0m" 1>&2
+  echo -e "\\x1b[1;95m===>\\x1b[39m $1\\x1b[0m" 1>&2
 }
 
 play_sound() {
-    local noise=/usr/share/sounds/freedesktop/stereo/complete.oga
+  local noise=/usr/share/sounds/freedesktop/stereo/complete.oga
 
-    if [[ -f "${noise}" ]]; then
-        vlc --play-and-exit "${noise}"
-    else
-        warning "Sound notification file '${noise}' does not exist."
-    fi
+  if [[ -f "${noise}" ]]; then
+    vlc --play-and-exit "${noise}"
+  else
+    warning "Sound notification file '${noise}' does not exist."
+  fi
 }
 
 read_help() {
-    cat <<eom
+  cat <<eom
 ${script}
 
 A simple utility to upgrade Archlinux & AUR packages.
@@ -52,141 +52,141 @@ eom
 }
 
 show_usage() {
-    echo -e "$(read_help)" 1>&2
-    exit 1
+  echo -e "$(read_help)" 1>&2
+  exit 1
 }
 
 update_aur_package() {
-    local path="${1}"
-    local dirname=$(basename "$path")
+  local path="${1}"
+  local dirname=$(basename "$path")
 
-    msg "Updating \\x1b[33m${dirname}\\x1b[39m..."
+  msg "Updating \\x1b[33m${dirname}\\x1b[39m..."
 
-    cd "$path" || error "Could not enter directory '$path'"
+  cd "$path" || error "Could not enter directory '$path'"
 
-    if [[ -d .git ]]; then
-        git remote update
+  if [[ -d .git ]]; then
+    git remote update
 
-        local local_id=$(git rev-parse master)
-        local remote_id=$(git rev-parse origin/master)
+    local local_id=$(git rev-parse master)
+    local remote_id=$(git rev-parse origin/master)
 
-        if [[ "$local_id" != "$remote_id" ]]; then
-            sub_msg "Pulling latest changes..."
-            git pull
+    if [[ "$local_id" != "$remote_id" ]]; then
+      sub_msg "Pulling latest changes..."
+      git pull
 
-            # @TODO add a step to verify the files
-            sub_msg "Building package..."
-            makepkg --syncdeps --install --rmdeps --clean
-        else
-            sub_msg "\\x1b[33m${dirname}\\x1b[39m is up-to-date"
-        fi
+      # @TODO add a step to verify the files
+      sub_msg "Building package..."
+      makepkg --syncdeps --install --rmdeps --clean
     else
-        warning "\\x1b[33m${dirname}\\x1b[39m is not a git repository. Skipping."
+      sub_msg "\\x1b[33m${dirname}\\x1b[39m is up-to-date"
     fi
+  else
+    warning "\\x1b[33m${dirname}\\x1b[39m is not a git repository. Skipping."
+  fi
 }
 
 update_aur_packages() {
-    info "Updating AUR packages..."
+  info "Updating AUR packages..."
 
-    [[ ! -d "${AUR_PKG}" ]] && error "AUR directory '${AUR_PKG}' does not exist"
+  [[ ! -d "${AUR_PKG}" ]] && error "AUR directory '${AUR_PKG}' does not exist"
 
-    msg "Scanning directory \\x1b[33m${AUR_PKG}\\x1b[39m"
+  msg "Scanning directory \\x1b[33m${AUR_PKG}\\x1b[39m"
 
-    local repositories=$(find "$AUR_PKG" -maxdepth 1 -type d ! -path "$AUR_PKG")
+  local repositories=$(find "$AUR_PKG" -maxdepth 1 -type d ! -path "$AUR_PKG")
 
-    for repository in ${repositories[*]}; do
-        update_aur_package "$repository"
-    done
+  for repository in ${repositories[*]}; do
+    update_aur_package "$repository"
+  done
 }
 
 update_arch_packages() {
-    info "Updating Arch packages..."
+  info "Updating Arch packages..."
 
-    printf "Shall we check the Archlinux news? [Y/n]: "
-    read -r check_news
+  printf "Shall we check the Archlinux news? [Y/n]: "
+  read -r check_news
 
-    [[ -z "$check_news" ]] && check_news=y
+  [[ -z "$check_news" ]] && check_news=y
 
-    if [[ "$check_news" = y ]]; then
-        xdg-open https://www.archlinux.org
-    fi
+  if [[ "$check_news" = y ]]; then
+    xdg-open https://www.archlinux.org
+  fi
 
-    sudo pacman -Syu
+  sudo pacman -Syu
 
-    printf "Do you need to run pacdiff? [y/N]: "
-    read -r run_pacdiff
+  printf "Do you need to run pacdiff? [y/N]: "
+  read -r run_pacdiff
 
-    if [[ "$run_pacdiff" = y ]]; then
-        sudo pacdiff
-    fi
+  if [[ "$run_pacdiff" = y ]]; then
+    sudo pacdiff
+  fi
 }
 
 check_orphans() {
-    info "Looking up orphans..."
+  info "Looking up orphans..."
 
-    local orphans=()
+  local orphans=()
 
-    IFS=" " read -r -a orphans <<<"$(sudo pacman -Qtdq)"
+  IFS=" " read -r -a orphans <<<"$(sudo pacman -Qtdq)"
 
-    if [[ ${#orphans[@]} -eq 0 ]]; then
-        msg "No orphans found"
-    else
-        printf "The following orphaned packages have been found: "
-        echo -e "${orphans[@]}"
+  if [[ ${#orphans[@]} -eq 0 ]]; then
+    msg "No orphans found"
+  else
+    printf "The following orphaned packages have been found: "
+    echo -e "${orphans[@]}"
 
-        printf "Do you want to remove them? [y/N]: "
-        read -r remove_pkgs
+    printf "Do you want to remove them? [y/N]: "
+    read -r remove_pkgs
 
-        if [[ "$remove_pkgs" = y ]]; then
-            sudo pacman -Rns "${orphans[@]}"
-        fi
+    if [[ "$remove_pkgs" = y ]]; then
+      sudo pacman -Rns "${orphans[@]}"
     fi
+  fi
 }
 
 clean_cache() {
-    local keep=2
+  local keep=2
 
-    info "Looking up unnecessary packages in cache..."
-    sudo paccache -dk "$keep"
+  info "Looking up unnecessary packages in cache..."
+  sudo paccache -dk "$keep"
 
-    printf "Do you want to clean up the cache (keeping %s last version(s))? [y/N]: " $keep
-    read -r clean_cache
+  printf "Do you want to clean up the cache (keeping %s last version(s))? [y/N]: " $keep
+  read -r clean_cache
 
-    if [[ "$clean_cache" = y ]]; then
-        sudo paccache -rk "$keep"
-    fi
+  if [[ "$clean_cache" = y ]]; then
+    sudo paccache -rk "$keep"
+  fi
 }
 
 main() {
-    if [[ $EUID -eq 0 ]]; then
-        error "This script must NOT be run as root"
+  if [[ $EUID -eq 0 ]]; then
+    error "This script must NOT be run as root"
+  fi
+
+  local -r option="${1:-}"
+
+  if [[ "$option" != --help ]]; then
+    if [[ "$option" != --aur-only ]]; then
+      update_arch_packages
     fi
 
-    local -r option="${1:-}"
-
-    if [[ "$option" != --help ]]; then
-        if [[ "$option" != --aur-only ]]; then
-            update_arch_packages
-        fi
-
-        if [[ "$option" != --arch-only ]]; then
-            update_aur_packages
-            check_orphans
-        fi
-
-        clean_cache
-
-        printf "Shall we reboot Archlinux? [y/N]: "
-        read -r should_reboot
-
-        [[ -z "$should_reboot" ]] && should_reboot=n
-
-        if [[ "$should_reboot" = y ]]; then
-            reboot
-        fi
-    else
-        show_usage
+    if [[ "$option" != --arch-only ]]; then
+      update_aur_packages
+      check_orphans
     fi
+
+    clean_cache
+
+    printf "Shall we reboot Archlinux? [y/N]: "
+    read -r should_reboot
+
+    [[ -z "$should_reboot" ]] && should_reboot=n
+
+    if [[ "$should_reboot" = y ]]; then
+      reboot
+    fi
+  else
+    show_usage
+  fi
 }
 
 main "$@"

@@ -6,62 +6,62 @@ set -u -e -o pipefail
 declare -r default_user_email="contact@mickael-vieira.com"
 
 info() {
-    printf "\\x1b[32m\\xE2\\x87\\x92 %s\\x1b[0m\\n" "$1"
+  printf "\\x1b[32m\\xE2\\x87\\x92 %s\\x1b[0m\\n" "$1"
 }
 
 error() {
-    printf "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
-    exit 1
+  printf "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m%s\\x1b[0m\\n" "$1" 1>&2
+  exit 1
 }
 
 warning() {
-    printf "\\x1b[97m\\x1b[45m\\x21\\x1b[0m \\x1b[35m%s\\x1b[0m\\n" "$1"
+  printf "\\x1b[97m\\x1b[45m\\x21\\x1b[0m \\x1b[35m%s\\x1b[0m\\n" "$1"
 }
 
 prompt() {
-    printf "\\x1b[93m%s: \\x1b[0m" "$1"
+  printf "\\x1b[93m%s: \\x1b[0m" "$1"
 }
 
 is_install() {
-    command -v "$1" > /dev/null 2>&1 || error "'$1' (command not found)"
+  command -v "$1" >/dev/null 2>&1 || error "'$1' (command not found)"
 }
 
 create_destination() {
-    local path="$1";
-    mkdir -vp "$path" || return
+  local path="$1"
+  mkdir -vp "$path" || return
 }
 
 main() {
-    is_install ssh-keygen
+  is_install ssh-keygen
 
-    read -erp "$(prompt "Enter the user's email ($default_user_email)")" user_email
+  read -erp "$(prompt "Enter the user's email ($default_user_email)")" user_email
 
-    [[ -z "$user_email" ]] && user_email=$default_user_email
+  [[ -z "$user_email" ]] && user_email=$default_user_email
 
-    read -erp "$(prompt "Enter the directory's name")" target_name
+  read -erp "$(prompt "Enter the directory's name")" target_name
 
-    [[ -z "$target_name" ]] && error "Target directory cannot be empty!"
+  [[ -z "$target_name" ]] && error "Target directory cannot be empty!"
 
-    local -r key_name="id_rsa"
-    local -r target_dir="$HOME/.ssh/$target_name"
+  local -r key_name="id_rsa"
+  local -r target_dir="$HOME/.ssh/$target_name"
 
-    printf "The following files are about to be generated:\\n"
-    printf "%s/%s\\n" "$target_dir" "$key_name"
-    printf "%s/%s.pub\\n" "$target_dir" "$key_name"
+  printf "The following files are about to be generated:\\n"
+  printf "%s/%s\\n" "$target_dir" "$key_name"
+  printf "%s/%s.pub\\n" "$target_dir" "$key_name"
 
-    read -erp "$(prompt "Do you want to proceed [Y/n]")" confirm
+  read -erp "$(prompt "Do you want to proceed [Y/n]")" confirm
 
-    if [[ ${confirm} = n ]]; then
-        info "Skipped!"
-    else
-        info "Creating target directory ${target_dir}..."
-        [[ ! -d "$target_dir" ]] && create_destination "$target_dir"
+  if [[ ${confirm} = n ]]; then
+    info "Skipped!"
+  else
+    info "Creating target directory ${target_dir}..."
+    [[ ! -d "$target_dir" ]] && create_destination "$target_dir"
 
-        info "Generating ssh key..."
-        ssh-keygen -t rsa -b 4096 -C "$user_email" -N "" -f "$target_dir/$key_name"
-    fi
+    info "Generating ssh key..."
+    ssh-keygen -t rsa -b 4096 -C "$user_email" -N "" -f "$target_dir/$key_name"
+  fi
 
-    exit 0
+  exit 0
 }
 
 main
