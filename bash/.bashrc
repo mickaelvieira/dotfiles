@@ -50,6 +50,14 @@ if [[ -f ~/dev/google-cloud-sdk/completion.bash.inc ]]; then
   source ~/dev/google-cloud-sdk/completion.bash.inc
 fi
 
+if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
+  source /usr/share/fzf/key-bindings.bash
+fi
+
+if [[ -f /usr/share/fzf/completion.bash ]]; then
+  source /usr/share/fzf/completion.bash
+fi
+
 declare -a files=(
   .bash_options
   .bash_export
