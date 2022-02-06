@@ -1,0 +1,87 @@
+#!/bin/bash
+# shellcheck disable=SC2155
+
+set -e -u -o pipefail
+# set -x
+
+declare -r HOME_DIR=${HOME:-}
+declare -r DEV_DIR="$HOME_DIR/dev"
+declare -r ROOT_DIR="$DEV_DIR/dotfiles"
+
+highlight() {
+  echo -e "\\x1b[33m$1\\x1b[0m"
+}
+
+info() {
+  echo -e "\\x1b[1;33m==>\\x1b[39m $1\\x1b[0m"
+}
+
+fatal() {
+  echo -e "\\x1b[97m\\x1b[41m\\x21\\x1b[0m \\x1b[31m$1\\x1b[0m" 1>&2
+  exit 1
+}
+
+warn() {
+  echo -e "\\x1b[1;95m==>\\x1b[39m $1\\x1b[0m" 1>&2
+}
+
+is_installed() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+get_install_command() {
+  local cmd=""
+
+  if is_installed apt; then
+    cmd="apt install"
+  elif is_installed pacman; then
+    cmd="pacman -S"
+  elif is_installed apt-get; then
+    cmd="apt-get install"
+  elif is_installed brew; then
+    cmd="brew install"
+  fi
+
+  echo "$cmd"
+}
+
+main() {
+  info "installing dotfiles repository in $(highlight "$ROOT_DIR")"
+
+  [[ -z $HOME_DIR ]] && fatal "HOME directory cannot be an empty string"
+
+  if ! is_installed git; then
+    info "installing $(highlight git)"
+
+    local cmd="$(get_install_command)"
+
+    [[ -z $cmd ]] && fatal "cannot get install command"
+
+    sudo sh -c "$cmd git"
+  else
+    info "git is already installed"
+  fi
+
+  if [[ ! -d $DEV_DIR ]]; then
+    info "creating directory $(highlight "$DEV_DIR")"
+    mkdir "$DEV_DIR"
+  fi
+
+  cd "$DEV_DIR" || fatal "cannot cd into $DEV_DIR"
+
+  if [[ ! -d $ROOT_DIR ]]; then
+    info "cloning repository"
+    git clone https://github.com/mickaelvieira/dotfiles dotfiles
+  fi
+
+  cd "$ROOT_DIR" || fatal "cannot cd into $ROOT_DIR"
+
+  info "updating repository"
+
+  git checkout master
+  git pull origin master
+
+  ./bin/dotfiles install
+}
+
+main
