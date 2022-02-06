@@ -14,9 +14,9 @@ Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
 Plug 'dracula/vim'
 Plug 'https://github.com/pangloss/vim-javascript'
-Plug 'https://github.com/StanAngeloff/php.vim'
+@REM Plug 'https://github.com/StanAngeloff/php.vim'
 Plug 'bling/vim-bufferline'
-Plug 'https://github.com/tpope/vim-fugitive.git'
+@REM Plug 'https://github.com/tpope/vim-fugitive.git'
 Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
 
@@ -117,4 +117,3 @@ let g:syntastic_php_phpcs_args='--standard=PSR2 -n'
 let g:syntastic_php_phpmd_post_args='cleancode,codesize,design,unusedcode'
 
 let g:syntastic_python_checkers=['python', 'flake8']
-
