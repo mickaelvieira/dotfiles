@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Passing aliases to the root account
+# and extends the default timeout
+# https://wiki.archlinux.org/title/Sudo#Passing_aliases
+alias sudo='sudo -v; sudo '
+
 if [[ -x /usr/bin/dircolors ]]; then
   if test -r "$HOME/.dircolors"; then
     eval "$(dircolors -b "$HOME/.dircolors")"
