@@ -17,7 +17,7 @@ get_composer_bin_path() {
   esac
 
   # In case the environment variable is defined
-  [[ ! -z ${COMPOSER_HOME:-} ]] && composer_home=${COMPOSER_HOME}
+  [[ -n ${COMPOSER_HOME:-} ]] && composer_home=${COMPOSER_HOME}
 
   if [[ -d $composer_home ]]; then
     composer_bin="${composer_home}/vendor/bin"

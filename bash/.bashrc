@@ -73,6 +73,4 @@ for item in ${files[*]}; do
   fi
 done
 
-export DEV_DIR="$HOME/dev"
-
 [[ -f ~/.profile ]] && source ~/.profile
