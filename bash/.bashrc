@@ -35,8 +35,8 @@ elif [[ -f /etc/profile.d/autojump.bash ]]; then
 fi
 
 # Add git information to the prompt
-if [[ -r ~/git-prompt.sh ]]; then
-  source ~/git-prompt.sh
+if [[ -f "$(git --exec-path)/git-sh-prompt" ]]; then
+  source "$(git --exec-path)/git-sh-prompt"
 fi
 
 # Google Cloud Platform

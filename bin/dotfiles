@@ -121,12 +121,6 @@ install_bash() {
 }
 
 install_git() {
-  if [[ ! -f "$HOME_DIR/git-prompt.sh" ]]; then
-    info "Fetching git-prompt.sh"
-    curl -s https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh \
-      -o "$HOME_DIR/git-prompt.sh"
-  fi
-
   local files=(
     .gitconfig
     .gitignore
