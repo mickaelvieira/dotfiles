@@ -9,6 +9,9 @@
     name = Mickael Vieira
     signingkey = A71A22C9
 
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+
 [alias]
     st = status
     co = checkout
