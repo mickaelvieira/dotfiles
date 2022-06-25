@@ -37,6 +37,9 @@ fi
 # Add git information to the prompt
 if [[ -f "$(git --exec-path)/git-sh-prompt" ]]; then
   source "$(git --exec-path)/git-sh-prompt"
+elif [[ -f /usr/share/git/completion/git-prompt.sh ]]; then
+  # https://wiki.archlinux.org/title/git#Git_prompt
+  source /usr/share/git/completion/git-prompt.sh
 fi
 
 # Google Cloud Platform
