@@ -54,6 +54,7 @@ export AUR_PKG="$HOME/.local/share/aur"
 
 # Rust cargo path
 [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+export CARGO_NET_GIT_FETCH_WITH_CLI=true
 
 # Lucet Env
 # WASM env
