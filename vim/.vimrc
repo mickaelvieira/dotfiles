@@ -10,7 +10,7 @@ Plug 'kien/ctrlp.vim'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'Shougo/unite.vim'
-Plug 'suan/vim-instant-markdown'
+@REM Plug 'suan/vim-instant-markdown'
 Plug 'altercation/vim-colors-solarized'
 Plug 'dracula/vim'
 Plug 'https://github.com/pangloss/vim-javascript'
@@ -19,6 +19,7 @@ Plug 'bling/vim-bufferline'
 @REM Plug 'https://github.com/tpope/vim-fugitive.git'
 Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
+Plug 'whatyouhide/vim-gotham'
 
 call plug#end()
 
