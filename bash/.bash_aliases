@@ -20,12 +20,16 @@ if [[ -x /usr/bin/dircolors ]]; then
   alias fgrep='fgrep --color=auto'
 fi
 
-if [[ -x /usr/bin/bat ]]; then
+if [[ -x /usr/bin/bat || -x "$HOME/.cargo/bin/bat" ]]; then
   alias cat='bat'
 fi
 
 if [[ -x /usr/bin/bandwhich ]]; then
   alias bandwhich='sudo bandwhich'
+fi
+
+if [[ -x /bin/direnv ]]; then
+  eval "$(direnv hook bash)"
 fi
 
 alias open='xdg-open'
