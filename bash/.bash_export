@@ -87,12 +87,12 @@ fi
 # GO configuration
 export GOPATH="$HOME/dev/go"
 export GOPROXY=https://proxy.golang.org
-export PATH="$GOPATH/bin:$PATH"
 
+[[ -d $GOPATH/bin ]] && export PATH="$GOPATH/bin:$PATH"
 [[ -d /usr/local/go/bin ]] && export PATH=$PATH:/usr/local/go/bin
 
 # Python configuration
-export PIP_REQUIRE_VIRTUALENV=true
+# export PIP_REQUIRE_VIRTUALENV=true
 export PIP_DOWNLOAD_CACHE="$HOME/.pip/cache"
 
 # Javascript configuration
@@ -103,7 +103,7 @@ export HUGO_ENVIRONMENT="development"
 
 # Docker configuration
 export DOCKER_BUILDKIT=1
-export DOCKER_CONTENT_TRUST=1
+# export DOCKER_CONTENT_TRUST=1
 export DOCKER_ID_USER="mickaelvieira"
 export DOCKER_CONFIG="$HOME/.docker"
 
@@ -124,6 +124,11 @@ export DOCKER_CONFIG="$HOME/.docker"
 if [[ -d "$HOME/.volta" ]]; then
   export VOLTA_HOME="$HOME/.volta"
   export PATH="$VOLTA_HOME/bin:$PATH"
+fi
+
+if [[ -d "$HOME/.wasmtime" ]]; then
+  export WASMTIME_HOME="$HOME/.wasmtime"
+  export PATH="$WASMTIME_HOME/bin:$PATH"
 fi
 
 # https://wiki.archlinux.org/index.php/Color_output_in_console#less
