@@ -24,6 +24,10 @@ if [[ -x /usr/bin/bat || -x "$HOME/.cargo/bin/bat" ]]; then
   alias cat='bat'
 fi
 
+if [[ -x /usr/bin/batcat ]]; then
+  alias cat='batcat'
+fi
+
 if [[ -x /usr/bin/bandwhich ]]; then
   alias bandwhich='sudo bandwhich'
 fi
