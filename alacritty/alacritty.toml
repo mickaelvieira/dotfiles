@@ -1,0 +1,9 @@
+live_config_reload = true
+working_directory = "/home/mickael/dev"
+
+[window]
+startup_mode = "Maximized"
+
+[font]
+size = 14.0
+normal = { family = "JetBrains Mono", style = "Regular" }
