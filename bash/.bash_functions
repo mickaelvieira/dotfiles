@@ -22,6 +22,11 @@ man() {
     man "$@"
 }
 
+# Serve static files with Python3 built-in HTTP server
+serve() {
+  python3 -m http.server
+}
+
 extract() {
   if [[ -f "$1" ]]; then
     case $1 in
