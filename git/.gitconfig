@@ -32,6 +32,9 @@
 [diff]
     tool = meld
 
+[branch]
+    sort = -committerdate
+
 [difftool]
     prompt = false
 
