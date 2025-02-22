@@ -4,6 +4,7 @@
 # and extends the default timeout
 # https://wiki.archlinux.org/title/Sudo#Passing_aliases
 alias sudo='sudo -v; sudo '
+# alias docker='sudo docker'
 
 if [[ -x /usr/bin/dircolors ]]; then
   if test -r "$HOME/.dircolors"; then
@@ -22,6 +23,10 @@ fi
 
 if [[ -x /usr/bin/bat || -x "$HOME/.cargo/bin/bat" ]]; then
   alias cat='bat'
+fi
+
+if [[ -x /usr/bin/exa ]]; then
+  alias ls='exa'
 fi
 
 if [[ -x /usr/bin/batcat ]]; then
