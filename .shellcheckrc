@@ -1,0 +1,4 @@
+# https://www.shellcheck.net/wiki/SC2155
+disable=SC2155
+# https://github.com/koalaman/shellcheck/wiki/Directive#external-sources
+external-sources=true
