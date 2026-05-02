@@ -56,6 +56,18 @@ export AUR_PKG="$HOME/.local/share/aur"
 [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
 export CARGO_NET_GIT_FETCH_WITH_CLI=true
 
+if [[ -d "$HOME/.local/share/pnpm" ]]; then
+  export PATH="$HOME/.local/share/pnpm:$PATH"
+fi
+
+if [[ -d "$HOME/.wasmtime/bin" ]]; then
+  export PATH="$HOME/.wasmtime/bin:$PATH"
+fi
+
+if [[ -d "$HOME/.rye" ]]; then
+  export PATH="$HOME/.rye/bin:$PATH"
+fi
+
 # Lucet Env
 # WASM env
 [[ -f /opt/lucet/bin/setenv.sh ]] && . /opt/lucet/bin/setenv.sh
