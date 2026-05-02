@@ -1,0 +1,134 @@
+#!/bin/bash
+#
+# Sync Claude Code skills from external Git repositories and manage symlinks
+# under ~/.claude/skills.
+
+set -e -u -o pipefail
+
+declare -r HOME_DIR="${HOME:-}"
+declare -r SKILLS_DIR="${HOME_DIR}/dev/claude-skills"
+declare -r CLAUDE_SKILLS_DIR="${HOME_DIR}/.claude/skills"
+
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/logging.sh"
+
+# Upstream repositories to sync. The vendor segment of each URL is used as
+# the prefix of the local clone directory (lowercased).
+declare -ra REPOSITORIES=(
+  "https://github.com/mattpocock/skills.git"
+  "https://github.com/Jeffallan/claude-skills.git"
+)
+
+#######################################
+# Extract the vendor (GitHub owner) from a repository URL.
+# Arguments:
+#   url: the repository URL, with or without a .git suffix
+# Outputs:
+#   The vendor segment, lowercased, on STDOUT.
+#######################################
+dotfiles::claude_skills::extract_vendor() {
+  local url="$1"
+  url="${url%.git}"
+  local owner
+  owner="$(basename "$(dirname "${url}")")"
+  echo "${owner,,}"
+}
+
+#######################################
+# Clone the repository if it does not exist locally, otherwise fast-forward
+# the existing checkout.
+# Arguments:
+#   url: the Git repository URL
+#   dest: the local destination directory
+#######################################
+dotfiles::claude_skills::sync_repository() {
+  local -r url="$1"
+  local -r dest="$2"
+
+  if [[ -d "${dest}/.git" ]]; then
+    dotfiles::log::info "updating $(dotfiles::log::highlight "${dest}")"
+    git -C "${dest}" pull --ff-only
+  else
+    dotfiles::log::info "cloning $(dotfiles::log::highlight "${url}")"
+    git clone "${url}" "${dest}"
+  fi
+}
+
+#######################################
+# Ask the user whether the symlink for a given skill should be created.
+# Arguments:
+#   name: the skill name shown in the prompt
+# Returns:
+#   0 if the user answered yes, 1 otherwise.
+#######################################
+dotfiles::claude_skills::ask_confirm() {
+  local -r name="$1"
+  local answer=
+
+  read -rp "Create symlink for skill $(dotfiles::log::highlight "${name}")? [y/N]: " answer
+  answer="${answer:-n}"
+
+  [[ "${answer}" =~ ^[Yy]([Ee][Ss])?$ ]]
+}
+
+#######################################
+# Create or remove the symlink for a skill based on the user's answer.
+# Globals:
+#   CLAUDE_SKILLS_DIR
+# Arguments:
+#   target: absolute path of the skill directory to link to
+#   name: the skill name and symlink basename
+#######################################
+dotfiles::claude_skills::manage_symlink() {
+  local -r target="$1"
+  local -r name="$2"
+  local -r symlink="${CLAUDE_SKILLS_DIR}/${name}"
+
+  if dotfiles::claude_skills::ask_confirm "${name}"; then
+    if [[ -e "${symlink}" && ! -L "${symlink}" ]]; then
+      dotfiles::log::warn "$(dotfiles::log::highlight "${symlink}") exists and is not a symlink; skipping"
+      return 0
+    fi
+
+    if [[ -L "${symlink}" ]]; then
+      dotfiles::log::info "symlink $(dotfiles::log::highlight "${symlink}") already exists"
+      return 0
+    fi
+
+    dotfiles::log::info "creating symlink $(dotfiles::log::highlight "${symlink}")"
+    ln -s "${target}" "${symlink}"
+  else
+    if [[ -L "${symlink}" ]]; then
+      dotfiles::log::info "removing symlink $(dotfiles::log::highlight "${symlink}")"
+      rm "${symlink}"
+    fi
+  fi
+}
+
+dotfiles::claude_skills::main() {
+  [[ -z "${HOME_DIR}" ]] && dotfiles::log::fatal "HOME directory cannot be an empty string"
+
+  dotfiles::lib::is_installed git
+
+  mkdir -p "${SKILLS_DIR}" "${CLAUDE_SKILLS_DIR}"
+
+  local url vendor vendor_dir skill_md skill_dir skill_name
+  for url in "${REPOSITORIES[@]}"; do
+    vendor="$(dotfiles::claude_skills::extract_vendor "${url}")"
+    vendor_dir="${SKILLS_DIR}/${vendor}-skills"
+
+    dotfiles::claude_skills::sync_repository "${url}" "${vendor_dir}"
+
+    # Feed `find` on FD 3 so the loop body keeps stdin attached to the
+    # terminal — otherwise the interactive `read` in ask_confirm would
+    # silently consume the find output instead of prompting the user.
+    while IFS= read -r -d '' -u 3 skill_md; do
+      skill_dir="$(dirname "${skill_md}")"
+      skill_name="$(basename "${skill_dir}")"
+      dotfiles::claude_skills::manage_symlink "${skill_dir}" "${skill_name}"
+    done 3< <(find "${vendor_dir}" \
+      -type d \( -name .git -o -name deprecated \) -prune \
+      -o -type f -name SKILL.md -print0 | sort -z)
+  done
+}
+
+dotfiles::claude_skills::main "$@"
