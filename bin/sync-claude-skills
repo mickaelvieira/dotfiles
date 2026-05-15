@@ -16,6 +16,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/../lib/logging.sh"
 declare -ra REPOSITORIES=(
   "https://github.com/mattpocock/skills.git"
   "https://github.com/Jeffallan/claude-skills.git"
+  "https://github.com/anthropics/skills.git"
 )
 
 #######################################
@@ -34,8 +35,24 @@ dotfiles::claude_skills::extract_vendor() {
 }
 
 #######################################
+# Resolve the local checkout directory for a repository URL.
+# Globals:
+#   SKILLS_DIR
+# Arguments:
+#   url: the Git repository URL
+# Outputs:
+#   The absolute path of the local checkout on STDOUT.
+#######################################
+dotfiles::claude_skills::vendor_dir() {
+  local -r url="$1"
+  local vendor
+  vendor="$(dotfiles::claude_skills::extract_vendor "${url}")"
+  echo "${SKILLS_DIR}/${vendor}-skills"
+}
+
+#######################################
 # Clone the repository if it does not exist locally, otherwise fast-forward
-# the existing checkout.
+# the existing checkout to its default branch.
 # Arguments:
 #   url: the Git repository URL
 #   dest: the local destination directory
@@ -104,19 +121,38 @@ dotfiles::claude_skills::manage_symlink() {
   fi
 }
 
-dotfiles::claude_skills::main() {
-  [[ -z "${HOME_DIR}" ]] && dotfiles::log::fatal "HOME directory cannot be an empty string"
+#######################################
+# Clone or fast-forward every configured repository.
+# Globals:
+#   REPOSITORIES, SKILLS_DIR
+#######################################
+dotfiles::claude_skills::cmd_update() {
+  mkdir -p "${SKILLS_DIR}"
 
-  dotfiles::lib::is_installed git
-
-  mkdir -p "${SKILLS_DIR}" "${CLAUDE_SKILLS_DIR}"
-
-  local url vendor vendor_dir skill_md skill_dir skill_name
+  local url vendor_dir
   for url in "${REPOSITORIES[@]}"; do
-    vendor="$(dotfiles::claude_skills::extract_vendor "${url}")"
-    vendor_dir="${SKILLS_DIR}/${vendor}-skills"
-
+    vendor_dir="$(dotfiles::claude_skills::vendor_dir "${url}")"
     dotfiles::claude_skills::sync_repository "${url}" "${vendor_dir}"
+  done
+}
+
+#######################################
+# Walk every local checkout, prompting the user to create or remove the
+# symlink for each discovered skill.
+# Globals:
+#   REPOSITORIES, CLAUDE_SKILLS_DIR
+#######################################
+dotfiles::claude_skills::cmd_install() {
+  mkdir -p "${CLAUDE_SKILLS_DIR}"
+
+  local url vendor_dir skill_md skill_dir skill_name
+  for url in "${REPOSITORIES[@]}"; do
+    vendor_dir="$(dotfiles::claude_skills::vendor_dir "${url}")"
+
+    if [[ ! -d "${vendor_dir}" ]]; then
+      dotfiles::log::warn "$(dotfiles::log::highlight "${vendor_dir}") does not exist; run 'update' first"
+      continue
+    fi
 
     # Feed `find` on FD 3 so the loop body keeps stdin attached to the
     # terminal — otherwise the interactive `read` in ask_confirm would
@@ -129,6 +165,44 @@ dotfiles::claude_skills::main() {
       -type d \( -name .git -o -name deprecated \) -prune \
       -o -type f -name SKILL.md -print0 | sort -z)
   done
+}
+
+dotfiles::claude_skills::usage() {
+  cat <<EOF
+Usage: $(basename "$0") <command>
+
+Commands:
+  update    Clone configured repositories or fast-forward their default branch
+  install   Create or remove symlinks under ${CLAUDE_SKILLS_DIR}
+EOF
+}
+
+dotfiles::claude_skills::main() {
+  [[ -z "${HOME_DIR}" ]] && dotfiles::log::fatal "HOME directory cannot be an empty string"
+
+  dotfiles::lib::is_installed git
+
+  local -r command="${1:-}"
+  case "${command}" in
+    update)
+      dotfiles::claude_skills::cmd_update
+      ;;
+    install)
+      dotfiles::claude_skills::cmd_install
+      ;;
+    -h|--help|help)
+      dotfiles::claude_skills::usage
+      ;;
+    "")
+      dotfiles::claude_skills::usage >&2
+      exit 1
+      ;;
+    *)
+      dotfiles::log::error "unknown command: ${command}"
+      dotfiles::claude_skills::usage >&2
+      exit 1
+      ;;
+  esac
 }
 
 dotfiles::claude_skills::main "$@"
